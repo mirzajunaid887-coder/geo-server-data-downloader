@@ -147,15 +147,21 @@ export async function fetchLayersAsGeoJSON(
         });
       }
 
-      let stringified = geojson.features
-        .map((f) => JSON.stringify(f))
-        .join(",");
-      if (firstPage) {
-        firstPage = false;
-      } else {
-        stringified = `, ${stringified}`;
-      }
-      writer.write(stringified);
+      // Skip empty pages — writing a bare comma breaks GeoJSON for GDAL
+if (!geojson.features || geojson.features.length === 0) {
+  return;
+}
+
+let stringified = geojson.features
+  .map((f) => JSON.stringify(f))
+  .join(",");
+
+if (firstPage) {
+  firstPage = false;
+} else {
+  stringified = `,${stringified}`;
+}
+writer.write(stringified);
       if (!json.features) {
         console.log("json features empty");
       }
