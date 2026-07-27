@@ -21,7 +21,7 @@ export default function FeedbackModal({
     setResult('idle');
 
     const formData = new FormData(event.currentTarget);
-    formData.append("access_key", import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || 'YOUR_ACCESS_KEY_HERE');
+    formData.append("access_key", import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || '7db35a4c-9463-434b-be89-bada3ecda906');
     formData.append("subject", "New Feedback from Geo Server Data Downloader");
 
     try {
