@@ -1,3 +1,4 @@
+import Search from "@arcgis/core/widgets/Search";
 import { useCallback } from "react";
 import { useEffect, useRef, useState } from "react";
 import { setLoadingWhile } from "./loading";
@@ -37,38 +38,31 @@ const esriDocLinkProps = (t: "POLYGON" | "ENVELOPE") => ({
   href: `${GEOMETRY_LINK}#${t}`,
 });
 
-
 export const extentPickerAction = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData()
-  const boundary = formData.get("boundary") as string
-  const mapConfig = await getMapConfigLocal()
-  mapConfig.map.boundary = boundary
-  saveMapConfigLocal(mapConfig)
-  return boundary
-}
-
+  const formData = await request.formData();
+  const boundary = formData.get("boundary") as string;
+  const mapConfig = await getMapConfigLocal();
+  mapConfig.map.boundary = boundary;
+  saveMapConfigLocal(mapConfig);
+  return boundary;
+};
 
 export function ExtentPicker() {
-
-  const params = useSearchParams()
-  const extent = params["extent"]
-  const data = useLoaderData() as Awaited<ReturnType<typeof mapCreatorLoader>>
-  const fetcher = useFetcher()
-  const { layers, mapConfig } = data
+  const params = useSearchParams();
+  const data = useLoaderData() as Awaited<ReturnType<typeof mapCreatorLoader>>;
+  const fetcher = useFetcher();
+  const { layers, mapConfig } = data;
   const { setMapView } = useMapViewContext();
-  
-  // Form State variables
+
   const [loading, setLoading] = useState(false);
   const [boundaryErrMsg, setBoundaryErrMsg] = useState("");
   const [boundaryAlertType, setBoundaryAlertType] =
     useState<AlertType>(undefined);
   const [textBoxDisabled, setTextBoxDisabled] = useState(false);
   const [textBoxValue, setTextBoxValue] = useState<string>(
-    typeof mapConfig.map.boundary === "string" ?
-      mapConfig.map.boundary : ""
+    typeof mapConfig.map.boundary === "string" ? mapConfig.map.boundary : ""
   );
 
-  // ArcGIS Map State  variables
   const elRef = useRef(null);
   const [filterGeometry, setFilterGeometry] = useState<Geometry | undefined>();
   const [map] = useState(
@@ -79,20 +73,25 @@ export function ExtentPicker() {
   );
 
   const [mapView] = useState(
-    () =>
-      new MapView({
-        map: map,
-        center: [-97.498699, 39.079974],
-        zoom: 3,
-        popup: {
-          dockEnabled: true,
-          dockOptions: {
-            buttonEnabled: false,
-            breakpoint: false
-          }
-        }
-      })
-  );
+  () =>
+    new MapView({
+      map: map,
+      center: [-97.498699, 39.079974],
+      zoom: 3,
+      popup: {
+        dockEnabled: true,
+        dockOptions: {
+          buttonEnabled: true,
+          breakpoint: false,
+          position: "center",
+        },
+        // Keep popup open and usable with many attributes
+        collapseEnabled: true,
+        defaultPopupTemplateEnabled: true,
+      },
+    })
+);
+
   const [sketchLayer] = useState(() => new GraphicsLayer());
   const [sketch] = useState(
     () =>
@@ -105,12 +104,12 @@ export function ExtentPicker() {
         defaultUpdateOptions: {
           enableRotation: false,
           enableScaling: false,
-          toggleToolOnClick: false
-        }
+          toggleToolOnClick: false,
+        },
       })
   );
 
-  const prefersDark = useMediaQuery("(prefers-color-scheme: dark)")
+  const prefersDark = useMediaQuery("(prefers-color-scheme: dark)");
 
   const [basemapToggle] = useState<BasemapToggle>(
     () =>
@@ -120,13 +119,19 @@ export function ExtentPicker() {
       })
   );
 
-  // Updates filterGeometry and textBoxValue when sketchLayer is updated
+  const [searchWidget] = useState(
+    () =>
+      new Search({
+        view: mapView,
+        popupEnabled: true,
+        resultGraphicEnabled: true,
+      })
+  );
+
   const onSketchUpdate = useCallback(() => {
     const sketchGeometries = sketchLayer.graphics
       ?.filter((g) => g?.geometry?.spatialReference !== undefined)
       .map((g) => g.geometry);
-    // If there's any sketchGeometries defined, union those geometries into a single
-    // filter geometry so the query can be updated
     if (sketchGeometries && sketchGeometries.length > 0) {
       const unionedGeometry = geometryUnion(sketchGeometries.toArray());
       setFilterGeometry(unionedGeometry);
@@ -144,20 +149,19 @@ export function ExtentPicker() {
     if (textBoxValue !== mapConfig.map.boundary && fetcher.state === "idle") {
       fetcher.submit(
         { boundary: textBoxValue },
-        { method: "post", action: "/maps/create/boundary" })
+        { method: "post", action: "/maps/create/boundary" }
+      );
     }
-  }, [fetcher, textBoxValue])
+  }, [fetcher, textBoxValue]);
 
-  // Ensure MapView popup is always enabled
   useEffect(() => {
-    if (mapView && mapView.popup) {
-      mapView.popup.autoOpenEnabled = true;
-    }
-  }, [mapView])
+  if (mapView && mapView.popup) {
+    mapView.popup.autoOpenEnabled = true;
+  }
+}, [mapView]);
 
-  // Dynamically load ArcGIS theme based on dark mode preference
   useEffect(() => {
-    const themeLink = document.getElementById('arcgis-theme') as HTMLLinkElement;
+    const themeLink = document.getElementById("arcgis-theme") as HTMLLinkElement;
     const themePath = prefersDark
       ? "https://js.arcgis.com/4.22/@arcgis/core/assets/esri/themes/dark/main.css"
       : "https://js.arcgis.com/4.22/@arcgis/core/assets/esri/themes/light/main.css";
@@ -165,22 +169,19 @@ export function ExtentPicker() {
     if (themeLink) {
       themeLink.href = themePath;
     } else {
-      // Create the theme link if it doesn't exist
-      const link = document.createElement('link');
-      link.id = 'arcgis-theme';
-      link.rel = 'stylesheet';
+      const link = document.createElement("link");
+      link.id = "arcgis-theme";
+      link.rel = "stylesheet";
       link.href = themePath;
       document.head.appendChild(link);
     }
-  }, [prefersDark])
+  }, [prefersDark]);
 
-  // Set the mapView in context when it's created
   useEffect(() => {
     setMapView(mapView);
     return () => setMapView(undefined);
   }, [mapView, setMapView]);
 
-  // Attaches map to ref
   useEffect(() => {
     async function attachView() {
       await setLoadingWhile(async () => {
@@ -192,29 +193,29 @@ export function ExtentPicker() {
     void attachView();
   }, [layers, mapView]);
 
-  // Add sketch widget to map
+  // Search widget – top-right
+  useEffect(() => {
+    mapView.ui.add(searchWidget, "top-right");
+    return () => mapView.ui.remove(searchWidget);
+  }, [mapView, searchWidget]);
+
+  // Sketch tools – bottom-right
   useEffect(() => {
     mapView.ui.add(sketch, "bottom-right");
     return () => mapView.ui.remove(sketch);
   }, [mapView, sketch]);
 
-  // Register update listen for new sketch geometries to set filterGeometry
   useEffect(() => {
     sketch.on("update", onSketchUpdate);
   }, [sketch, onSketchUpdate]);
 
-  // Add the sketch widget to the map
   useEffect(() => {
     map.add(sketchLayer);
   }, [map, sketchLayer]);
 
-  // Layer visibility is now managed by individual LayerDropdownMenu components
-  // This ensures dynamic toggling works correctly without conflicts
-
   useEffect(() => {
     mapView.ui.add(basemapToggle, "bottom-left");
 
-    // Listen for basemap toggle changes to update nextBasemap
     const handle = basemapToggle.watch("activeBasemap", () => {
       const themeBasemap = prefersDark ? "dark-gray-vector" : "topo-vector";
       const currentBasemapId = map.basemap.id;
@@ -235,32 +236,29 @@ export function ExtentPicker() {
   useEffect(() => {
     const modeToId = (prefersDark: boolean) => {
       if (prefersDark) {
-        return "dark-gray-vector"
+        return "dark-gray-vector";
       }
-      return "topo-vector"
+      return "topo-vector";
     };
     const themeBasemap = modeToId(prefersDark);
     const currentBasemapId = map.basemap.id;
 
-    // Only switch basemap if we're on a theme-based basemap (not satellite)
-    // This preserves satellite view when theme changes
-    if (currentBasemapId === "topo-vector" || currentBasemapId === "dark-gray-vector") {
+    if (
+      currentBasemapId === "topo-vector" ||
+      currentBasemapId === "dark-gray-vector"
+    ) {
       if (themeBasemap !== currentBasemapId) {
         map.set("basemap", Basemap.fromId(themeBasemap));
       }
     }
 
-    // Update the toggle's next basemap based on current state
     if (currentBasemapId === "hybrid") {
-      // If on satellite, next should be the theme-appropriate basemap
       basemapToggle.set("nextBasemap", themeBasemap);
     } else {
-      // If on theme basemap, next should be satellite
       basemapToggle.set("nextBasemap", "hybrid");
     }
   }, [map, prefersDark, basemapToggle]);
 
-  // Grayscale out non-included layers.
   useEffect(() => {
     if (layers && filterGeometry) {
       for (const layer of layers) {
@@ -268,24 +266,22 @@ export function ExtentPicker() {
           filter: new FeatureFilter({
             geometry: filterGeometry,
             spatialRelationship: "intersects",
-            where: mapConfig.layers.find(l => l.url === getRealUrl(layer.esri))?.where_clause ?? "1=1",
+            where:
+              mapConfig.layers.find((l) => l.url === getRealUrl(layer.esri))
+                ?.where_clause ?? "1=1",
           }),
           excludedEffect: "grayscale(100%) opacity(30%)",
-        })
+        });
       }
     }
   }, [layers, filterGeometry, mapConfig]);
 
-
-  // Test if new text in TextField contains filter geometry
-  // If so, update filterGeometry and remove any previous geometries on the layer
   const onTextBoxChange = useCallback(
     async (val: string) => {
       setTextBoxValue(val);
       await setLoadingWhile(async () => {
         try {
           const geo = parseGeometryFromString(val);
-          // If the change hasn't actually changed the geometry, bail out of expensive op early
           if (filterGeometry && equals(geo, filterGeometry)) {
             return;
           }
@@ -304,13 +300,10 @@ export function ExtentPicker() {
             })
           );
           setFilterGeometry(geo);
-          // we made it here, so reset the alertType so it doesn't show
           setBoundaryAlertType(undefined);
         } catch (e) {
-          // We can't parse text for some reason, so assume no filterGeometry
           setFilterGeometry(undefined);
           sketchLayer.removeAll();
-          // If there's text in the TextField and we're here, that's an error so let the user know
           if (val) {
             const err = e as Error;
             setBoundaryErrMsg(err.message);
@@ -324,12 +317,11 @@ export function ExtentPicker() {
 
   useEffect(() => {
     if (mapConfig.map.boundary) {
-      onTextBoxChange(mapConfig.map.boundary as string)
-      setTextBoxDisabled(true)
+      onTextBoxChange(mapConfig.map.boundary as string);
+      setTextBoxDisabled(true);
     }
-  }, [])
+  }, []);
 
-  // ExtentAdornment contains an EditToggle and a Copy to Clipboard button
   function BoundaryAdornment({ content }: { content: string }) {
     const handleEditClick = () => {
       setTextBoxDisabled((d) => !d);
@@ -358,24 +350,24 @@ export function ExtentPicker() {
     <div
       className="dark:bg-dark-bg p-2"
       style={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.5rem',
-        overflow: 'hidden'
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.5rem",
+        overflow: "hidden",
       }}
     >
       <div
         ref={elRef}
         className="w-full"
         style={{
-          height: 'calc(100% - 105px)', // Subtract space for boundary input (~48px) + gap + margin
+          height: "calc(100% - 105px)",
           minHeight: 0,
-          overflow: 'hidden'
+          overflow: "hidden",
         }}
       />
-      <div className="flex flex-row gap-1" style={{ flex: '0 0 auto' }}>
+      <div className="flex flex-row gap-1" style={{ flex: "0 0 auto" }}>
         <input
           className="w-full text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-dark-text-bg dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           type="search"
@@ -383,14 +375,14 @@ export function ExtentPicker() {
           id="boundary-text-field"
           value={textBoxValue}
           placeholder="Draw on map using tools (Or you can also paste a JSON boundary in this box)"
-          onChange={e => onTextBoxChange(e.currentTarget.value)}
+          onChange={(e) => onTextBoxChange(e.currentTarget.value)}
           required
           {...(textBoxDisabled ? { readOnly: true } : {})}
         />
         <BoundaryAdornment content={textBoxValue} />
       </div>
       {(boundaryAlertType || loading) && (
-        <div style={{ flex: '0 0 auto' }}>
+        <div style={{ flex: "0 0 auto" }}>
           <StatusAlert
             msg={
               <div>

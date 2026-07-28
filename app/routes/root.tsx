@@ -3,9 +3,11 @@ import { useState } from "react";
 import logo from "/IMG_1039.png";
 import "flowbite";
 import FeedbackModal from "../FeedbackModal";
+import CitySearchModal from "../CitySearchModal";
 
 export default function Root() {
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [showSearchModal, setShowSearchModal] = useState(false);
   const [showWfsModal, setShowWfsModal] = useState(
     () => localStorage.getItem("wfs-modal-dismissed") !== "1"
   );
@@ -28,6 +30,28 @@ export default function Root() {
               </a>
             </div>
             <div className="flex flex-row justify-between items-center gap-3">
+              {/* Search Datasets Button */}
+              <button
+                onClick={() => setShowSearchModal(true)}
+                className="inline-flex items-center h-[28px] px-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-4 h-4 mr-1.5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                  />
+                </svg>
+                Search Datasets
+              </button>
+
               <button
                 onClick={() => setShowFeedbackModal(true)}
                 className="inline-flex items-center h-[28px] px-3 text-sm font-medium text-gray-900 dark:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -52,6 +76,34 @@ export default function Root() {
           </div>
         </nav>
       </header>
+
+      {/* Search Dataset Modal Popup */}
+      {showSearchModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
+          <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-lg bg-white dark:bg-gray-800 p-6 shadow-xl border border-gray-200 dark:border-gray-700">
+            <button
+              onClick={() => setShowSearchModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-5 h-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+            <CitySearchModal />
+          </div>
+        </div>
+      )}
 
       {showFeedbackModal && (
         <FeedbackModal
@@ -136,7 +188,7 @@ export default function Root() {
                 <a href="https://github.com/bugra9/gdal3.js" target="_blank" rel="noreferrer" className="underline hover:text-gray-700 dark:hover:text-gray-300">
                   gdal3.js
                 </a>
-                . Big thanks to everyone who's contributed to these projects.
+                . Big thanks to Junaid who's contributed to these projects.
               </p>
 
               <button

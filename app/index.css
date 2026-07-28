@@ -4,15 +4,15 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
@@ -27,7 +27,7 @@ code {
   border-radius: 8px !important;
 }
 
-/* ── Esri Popup widget ──────────────────────────────────────── */
+/* ── Esri Popup widget (dark theme) ─────────────────────────── */
 @media (prefers-color-scheme: dark) {
   .esri-popup__main-container {
     background: #1c1917 !important;
@@ -63,9 +63,7 @@ code {
   .esri-feature__fields-content tr:nth-child(even) {
     background: rgba(255, 255, 255, 0.04) !important;
   }
-}
 
-@media (prefers-color-scheme: dark) {
   .esri-sketch,
   .esri-sketch__panel {
     background: rgba(28, 25, 23, 0.88) !important;
@@ -102,4 +100,79 @@ code {
     border: 1px solid rgba(0, 0, 0, 0.08) !important;
     backdrop-filter: blur(8px);
   }
+}
+
+/* ========== Scrollable ArcGIS Identify Popup ========== */
+
+/* Outer shell */
+.esri-popup__main-container {
+  max-height: min(75vh, 560px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  z-index: 40 !important;
+}
+
+/* Header stays fixed (no scroll) */
+.esri-popup__header {
+  flex-shrink: 0 !important;
+}
+
+/* Footer stays fixed if present */
+.esri-popup__footer {
+  flex-shrink: 0 !important;
+}
+
+/*
+ * THIS is the scrollable area.
+ * max-height forces a scrollbar when there are many attributes.
+ * padding-bottom keeps the last row fully readable.
+ */
+.esri-popup__content {
+  flex: 1 1 auto !important;
+  max-height: min(55vh, 420px) !important; /* keeps scroll */
+  min-height: 0 !important;
+  overflow-y: auto !important;             /* scrollbar here */
+  overflow-x: hidden !important;
+  padding-bottom: 20px !important;         /* last row not cut off */
+  box-sizing: border-box !important;
+}
+
+/* Feature body – do not add a second scrollbar */
+.esri-popup__content .esri-feature,
+.esri-feature {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.esri-feature__main-container,
+.esri-feature__content-element,
+.esri-feature__fields,
+.esri-feature__fields-element,
+.esri-feature__field-data {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Table expands; parent .esri-popup__content scrolls */
+.esri-widget__table {
+  display: table !important;
+  width: 100% !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Extra space under the last attribute row */
+.esri-popup__content .esri-widget__table tr:last-child td,
+.esri-popup__content .esri-feature-fields__field-data:last-child {
+  padding-bottom: 10px !important;
+}
+
+/* Docked popup */
+.esri-popup--is-docked .esri-popup__main-container {
+  max-height: min(70vh, 560px) !important;
+}
+
+.esri-popup--is-docked .esri-popup__content {
+  max-height: min(55vh, 420px) !important;
 }

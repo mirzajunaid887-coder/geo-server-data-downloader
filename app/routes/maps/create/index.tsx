@@ -265,9 +265,8 @@ export default function MapCreator() {
   const [showLoadingModal, setShowLoadingModal] = useState(false)
   const fetcher = useFetcher()
 
-  // Panel resize state
-  const [leftPanelWidth, setLeftPanelWidth] = useState(320) // 320px = w-80
-  const [rightPanelWidth, setRightPanelWidth] = useState(280) // Default width for download panel
+  const [leftPanelWidth, setLeftPanelWidth] = useState(360)
+const [rightPanelWidth, setRightPanelWidth] = useState(0)
   const [isResizingLeft, setIsResizingLeft] = useState(false)
   const [isResizingRight, setIsResizingRight] = useState(false)
 
@@ -498,372 +497,416 @@ export default function MapCreator() {
     <MapViewProvider>
       <div style={{ height: 'calc(100vh - 64px)' }} className="flex flex-col p-2">
         <div className="flex flex-row flex-1 overflow-hidden gap-2">
-          {/* Left Panel - Layers */}
-          <div
-            style={{ width: isLayersPanelCollapsed ? '48px' : `${leftPanelWidth}px` }}
-            className="h-full overflow-hidden p-4 flex-none bg-white dark:bg-dark-bg transition-all duration-300 flex flex-col"
-          >
-            <div className="flex items-center justify-between mb-4 flex-none">
-              {!isLayersPanelCollapsed && (
-                <>
-                  <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">Layers</h5>
+       {/* Left Panel - Layers + Download */}
+<div
+  style={{ width: isLayersPanelCollapsed ? "48px" : `${leftPanelWidth}px` }}
+  className="h-full overflow-hidden p-4 flex-none bg-white dark:bg-dark-bg transition-all duration-300 flex flex-col"
+>
+  <div className="flex items-center justify-between mb-4 flex-none">
+    {!isLayersPanelCollapsed && (
+      <>
+        <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
+          Layers
+        </h5>
+        <button
+          onClick={() => setShowRemoveModal((srm) => !srm)}
+          className="inline-flex items-center p-2 text-sm font-medium rounded-lg text-primary-700 hover:bg-gray-100 dark:text-primary-500 dark:hover:bg-gray-700"
+        >
+          Remove All
+        </button>
+      </>
+    )}
+    <button
+      onClick={() => setIsLayersPanelCollapsed(!isLayersPanelCollapsed)}
+      className="inline-flex items-center p-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+      title={isLayersPanelCollapsed ? "Expand layers panel" : "Collapse layers panel"}
+    >
+      {isLayersPanelCollapsed ? (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      ) : (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+      )}
+    </button>
+    <RemoveLayerModal url="" show={showRemoveModal} setShow={setShowRemoveModal} />
+  </div>
 
-                  <button
-                    onClick={() => setShowRemoveModal(srm => !srm)}
-                    className="inline-flex items-center p-2 text-sm font-medium rounded-lg text-primary-700 hover:bg-gray-100 dark:text-primary-500 dark:hover:bg-gray-700">
-                    Remove All
-                  </button>
-                </>
-              )}
-              <button
-                onClick={() => setIsLayersPanelCollapsed(!isLayersPanelCollapsed)}
-                className="inline-flex items-center p-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
-                title={isLayersPanelCollapsed ? "Expand layers panel" : "Collapse layers panel"}
-              >
-                {isLayersPanelCollapsed ? (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                ) : (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                )}
-              </button>
-              <RemoveLayerModal
-                url=""
-                show={showRemoveModal}
-                setShow={setShowRemoveModal}
+  {!isLayersPanelCollapsed && (
+    <>
+      {/* Layer list */}
+      <div className="flow-root flex-1 overflow-y-auto overflow-x-hidden min-h-0">
+        <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
+          {loaderData.layers.length > 0 ? (
+            loaderData.layers.map((layer) => (
+              <LayerDropdownMenu
+                key={layer?.config?.url}
+                layer={layer}
+                boundary={filterExtent}
               />
-            </div>
-
-            {/* Broken layers are handled via modal now */}
-
-            {!isLayersPanelCollapsed && (
-              <>
-                <div className="flow-root flex-1 overflow-y-auto overflow-x-hidden min-h-0">
-                  <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
-                    {loaderData.layers.length > 0 ? loaderData.layers.map((layer) =>
-                      <LayerDropdownMenu
-                        key={layer?.config?.url}
-                        layer={layer}
-                        boundary={filterExtent}
-                      />
-                    )
-                      :
-                      <li className="h-full flex flex-col items-center justify-items-center">
-                        <p className="text-gray-400">
-                          Add some layers :)
-                        </p>
-                      </li>
-                    }
-                  </ul>
-                </div>
-                {loaderData.layers.length > 0 && (
-                  <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 text-sm text-gray-500 dark:text-gray-400 text-center flex-none">
-                    Only checked layers are downloaded
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-
-          {/* Resize handle for left panel */}
-          {!isLayersPanelCollapsed && (
-            <div
-              className="w-px cursor-col-resize bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
-              onMouseDown={(e) => {
-                e.preventDefault();
-                setIsResizingLeft(true);
-              }}
-            />
+            ))
+          ) : (
+            <li className="h-full flex flex-col items-center justify-center py-8">
+              <p className="text-gray-400 text-sm">Add some layers :)</p>
+            </li>
           )}
+        </ul>
+      </div>
 
-          {/* Main content area */}
-          <div className="flex flex-col flex-1 overflow-hidden bg-white dark:bg-dark-bg">
-            {/* Top bar with search form */}
-            <div className="flex-none p-2">
-              <fetcher.Form method="post" onSubmit={handleLayerSubmit}>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <svg aria-hidden="true" className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                  </div>
-                  <input
-                    type="search"
-                    name="layer-url"
-                    id="default-search"
-                    className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-dark-text-bg dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Add Layer Url Here (Like: https://gismaps.kingcounty.gov/arcgis/rest/services/Environment/KingCo_SensitiveAreas/MapServer/11)"
-                    value={layerUrlInput}
-                    onChange={(event) => setLayerUrlInput(event.currentTarget.value)}
-                    autoComplete="off"
-                    required
-                  />
-                  <button type="submit" name="intent" value="add-layer" className="text-white text-sm absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    Add
-                  </button>
-                </div>
-                {showLoadingModal && (
-                  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60" onClick={() => setShowLoadingModal(false)}>
-                    <div className="w-full max-w-md rounded-lg bg-white dark:bg-[#1c1917] border border-gray-200 dark:border-gray-700 shadow-xl p-6" onClick={e => e.stopPropagation()}>
-                      <div className="text-center">
-                        <HiOutlineArrowCircleDown className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
-                        <h3 className="mb-5 text-lg font-normal text-black dark:text-white truncate max-w-[400px]">
-                          {loadingMessage
-                            ? loadingMessage
-                            : fetcher.formData?.get("layer-url")
-                              ? `Loading layer ${fetcher.formData?.get("layer-url") as string}`
-                              : "Loading layer..."}
-                        </h3>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </fetcher.Form>
-              {(analyzingUrl || layerAlert.alertType) && (
-                <div className="mt-2">
-                  <StatusAlert loading={analyzingUrl} {...layerAlert} />
-                </div>
-              )}
-              {layerExplorerResult && (
-                <FeatureLayerExplorerModal
-                  visible={layerExplorerVisible}
-                  traversal={layerExplorerResult}
-                  onClose={handleExplorerClose}
-                  onAddLayer={handleExplorerAdd}
-                />
-              )}
-            </div>
-            {/* Map area - takes remaining space */}
-            <div style={{ flex: '1 1 0', minHeight: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
-              <Outlet />
-            </div>
-          </div>
+      {loaderData.layers.length > 0 && (
+        <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700 text-xs text-gray-500 dark:text-gray-400 text-center flex-none">
+          Only checked layers are downloaded
+        </div>
+      )}
 
-          {/* Resize handle for right panel */}
-          <div
-            className="w-px cursor-col-resize bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
-            onMouseDown={(e) => {
-              e.preventDefault();
-              setIsResizingRight(true);
-            }}
-          />
-
-          {/* Right Panel - Download Settings */}
-          <div
-            style={{ width: `${rightPanelWidth}px` }}
-            className="overflow-y-auto p-4 flex-none bg-white dark:bg-dark-bg"
+      {/* ── Download section (moved from right panel) ── */}
+      <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex-none space-y-4">
+        <div>
+          <label
+            htmlFor="format"
+            className="block mb-1.5 text-sm font-medium text-gray-900 dark:text-white"
           >
-            <Form className="space-y-6" method="post">
-              <div>
-                <label htmlFor="format" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Format</label>
-                <select id="format" name="format" value={format} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-dark-text-bg dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  onChange={e => setFormat(e.currentTarget.value)}
-                >
-                  {Object.keys(Drivers).map(format =>
-                    <option key={format} value={format}>{format}</option>
-                  )}
-                </select>
-              </div>
-
-              {format === "PMTiles" && (
-                <div className="space-y-3">
-                  <div>
-                    <label htmlFor="min-zoom" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                      Min Zoom ({minZoom})
-                    </label>
-                    <input
-                      id="min-zoom"
-                      type="range"
-                      min="0"
-                      max="22"
-                      step="1"
-                      value={minZoom}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
-                      onChange={e => {
-                        const val = parseInt(e.currentTarget.value);
-                        setMinZoom(val);
-                        if (val > maxZoom) setMaxZoom(val);
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="max-zoom" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                      Max Zoom ({maxZoom})
-                    </label>
-                    <input
-                      id="max-zoom"
-                      type="range"
-                      min="0"
-                      max="22"
-                      step="1"
-                      value={maxZoom}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
-                      onChange={e => {
-                        const val = parseInt(e.currentTarget.value);
-                        setMaxZoom(val);
-                        if (val < minZoom) setMinZoom(val);
-                      }}
-                    />
-                  </div>
-                </div>
-              )}
-
-              <div>
-                <label htmlFor="steps-range" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Concurrent Requests ({concurrent})</label>
-                <input
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
-                  id="steps-range"
-                  type="range"
-                  min="1"
-                  max="9"
-                  step="1"
-                  value={concurrent}
-                  onChange={e => setConcurrent(parseInt(e.currentTarget.value))}
-                />
-              </div>
-              {/*<button className="w-full ml-2 text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800"
-            >
-              Schedule
-            </button>*/}
-              <button
-                type="button"
-                className="w-full ml-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={loaderData.layers.length === 0 || visibleLayerCount === 0}
-                title={
-                  loaderData.layers.length === 0
-                    ? "Add at least one layer to enable download"
-                    : visibleLayerCount === 0
-                      ? "Select at least one layer to enable download"
-                      : "Download layers"
-                }
-                onClick={(e) => {
-                  // Prevent any parent <Form> submission in production environments/browsers
-                  e.preventDefault();
-                  e.stopPropagation();
-
-                  const mapConfig = getMapConfigSync();
-                  const visibleLayerUrls = new Set(
-                    mapConfig.layers
-                      .filter((l: any) => l.visible !== false)
-                      .map((l: any) => l.url)
-                  );
-                  const boundary = mapConfig.map?.boundary || "";
-
-                  // Prepare layer configurations for the download page, filtering by current visibility
-                  const layerConfigs = loaderData.layers
-                    .filter(layer => visibleLayerUrls.has(layer.config?.url || layer.esri.url))
-                    .map(layer => ({
-                      url: layer.config?.url || layer.esri.url,
-                      where: layer.config?.where_clause || "1=1",
-                      columnMapping: layer.config?.column_mapping as Record<string, string> | undefined,
-                      service_type: layer.config?.service_type,
-                      wfs_type_name: layer.config?.wfs_type_name,
-                      wfs_version: layer.config?.wfs_version,
-                      wfs_title: layer.config?.wfs_title || layer.esri.title || layer.config?.name,
-                    }));
-
-                  // Create URL with parameters
-                  const params = new URLSearchParams({
-                    format: String(format),
-                    concurrent: String(concurrent),
-                    layers: JSON.stringify(layerConfigs),
-                  });
-
-                  if (format === "PMTiles") {
-                    params.set("minZoom", String(minZoom));
-                    params.set("maxZoom", String(maxZoom));
-                  }
-
-                  // Add boundary if it exists
-                  if (boundary) {
-                    params.set('boundary', boundary);
-                  }
-
-                  const href = `/download?${params.toString()}`;
-                  // Safari-safe: open a blank tab first, then navigate and sever opener.
-                  // This avoids WebKit occasionally using same-tab for window.open(url, '_blank', 'noopener').
-                  const newWin = window.open('', '_blank');
-                  if (newWin) {
-                    try { newWin.opener = null; } catch { }
-                    newWin.location.href = href;
-                  } else {
-                    // Popup blocked: fall back to same-tab navigation
-                    window.location.href = href;
-                  }
-                }}
-              >
-                Download
-              </button>
-            </Form>
-          </div>
+            Format
+          </label>
+          <select
+            id="format"
+            name="format"
+            value={format}
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-dark-text-bg dark:border-gray-600 dark:text-white"
+            onChange={(e) => setFormat(e.currentTarget.value)}
+          >
+            {Object.keys(Drivers).map((f) => (
+              <option key={f} value={f}>
+                {f}
+              </option>
+            ))}
+          </select>
         </div>
 
-        {/* WFS feature type explorer modal */}
-        {wfsExplorerVisible && wfsCapabilities && (
-          <WfsFeatureExplorerModal
-            capabilities={wfsCapabilities}
-            baseUrl={wfsBaseUrl}
-            onAdd={handleExplorerAddWfs}
-            onClose={closeWfsExplorer}
-          />
-        )}
-
-        {/* Modal explaining broken layers with a single "Remove all" action */}
-        {broken?.length > 0 && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
-            <div className="relative w-full max-w-3xl rounded-lg bg-white dark:bg-[#1c1917] border border-gray-200 dark:border-gray-700 shadow-xl">
-              <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-200 dark:border-gray-700">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Some layers couldn’t be loaded</h3>
-              </div>
-              <div className="px-6 py-4 space-y-3">
-                <p className="text-sm text-gray-700 dark:text-gray-300">
-                  One or more saved layers failed to load. They may have been removed, moved, or require authentication now.
-                  To keep your map stable, remove these broken layers.
-                </p>
-                <div className="max-h-64 overflow-y-auto border border-gray-200 dark:border-gray-600 rounded-md">
-                  <Table hoverable>
-                    <Table.Head>
-                      <Table.HeadCell>Name</Table.HeadCell>
-                      <Table.HeadCell>URL</Table.HeadCell>
-                      <Table.HeadCell>Reason</Table.HeadCell>
-                    </Table.Head>
-                    <Table.Body className="divide-y">
-                      {broken.map((b) => (
-                        <Table.Row key={b.url} className="bg-white dark:bg-dark-text-bg">
-                          <Table.Cell className="font-medium text-gray-900 dark:text-white truncate max-w-[200px]">
-                            {b.name ?? "—"}
-                          </Table.Cell>
-                          <Table.Cell className="text-xs text-gray-600 dark:text-gray-300 break-all max-w-[360px]">
-                            {b.url}
-                          </Table.Cell>
-                          <Table.Cell className="text-xs text-gray-600 dark:text-gray-300 truncate max-w-[260px]" title={b.reason}>
-                            {b.reason}
-                          </Table.Cell>
-                        </Table.Row>
-                      ))}
-                    </Table.Body>
-                  </Table>
-                </div>
-                <div className="flex justify-end gap-2">
-                  <Button color="gray" onClick={handleRetryBrokenCheck} disabled={retryingBrokenCheck}>
-                    {retryingBrokenCheck ? "Retrying…" : "Retry check"}
-                  </Button>
-                  <Button color="failure" onClick={() => {
-                    const brokenUrls = new Set(broken.map(b => b.url))
-                    const next = { ...loaderData.mapConfig, layers: loaderData.mapConfig.layers.filter(l => !brokenUrls.has(l.url)) }
-                    saveMapConfigLocal(next)
-                    window.location.reload()
-                  }} disabled={retryingBrokenCheck}>
-                    Remove all broken layers
-                  </Button>
-                </div>
-              </div>
+        {format === "PMTiles" && (
+          <div className="space-y-3">
+            <div>
+              <label className="block mb-1.5 text-sm font-medium text-gray-900 dark:text-white">
+                Min Zoom ({minZoom})
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="22"
+                step="1"
+                value={minZoom}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                onChange={(e) => {
+                  const val = parseInt(e.currentTarget.value);
+                  setMinZoom(val);
+                  if (val > maxZoom) setMaxZoom(val);
+                }}
+              />
+            </div>
+            <div>
+              <label className="block mb-1.5 text-sm font-medium text-gray-900 dark:text-white">
+                Max Zoom ({maxZoom})
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="22"
+                step="1"
+                value={maxZoom}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                onChange={(e) => {
+                  const val = parseInt(e.currentTarget.value);
+                  setMaxZoom(val);
+                  if (val < minZoom) setMinZoom(val);
+                }}
+              />
             </div>
           </div>
         )}
+
+        <div>
+          <label className="block mb-1.5 text-sm font-medium text-gray-900 dark:text-white">
+            Concurrent Requests ({concurrent})
+          </label>
+          <input
+            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+            type="range"
+            min="1"
+            max="9"
+            step="1"
+            value={concurrent}
+            onChange={(e) => setConcurrent(parseInt(e.currentTarget.value))}
+          />
+        </div>
+
+        <button
+          type="button"
+          className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={loaderData.layers.length === 0 || visibleLayerCount === 0}
+          title={
+            loaderData.layers.length === 0
+              ? "Add at least one layer to enable download"
+              : visibleLayerCount === 0
+              ? "Select at least one layer to enable download"
+              : "Download layers"
+          }
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const mapConfig = getMapConfigSync();
+            const visibleLayerUrls = new Set(
+              mapConfig.layers
+                .filter((l: any) => l.visible !== false)
+                .map((l: any) => l.url)
+            );
+            const boundary = mapConfig.map?.boundary || "";
+
+            const layerConfigs = loaderData.layers
+              .filter((layer) =>
+                visibleLayerUrls.has(layer.config?.url || layer.esri.url)
+              )
+              .map((layer) => ({
+                url: layer.config?.url || layer.esri.url,
+                where: layer.config?.where_clause || "1=1",
+                columnMapping: layer.config?.column_mapping as
+                  | Record<string, string>
+                  | undefined,
+                service_type: layer.config?.service_type,
+                wfs_type_name: layer.config?.wfs_type_name,
+                wfs_version: layer.config?.wfs_version,
+                wfs_title:
+                  layer.config?.wfs_title ||
+                  layer.esri.title ||
+                  layer.config?.name,
+              }));
+
+            const params = new URLSearchParams({
+              format: String(format),
+              concurrent: String(concurrent),
+              layers: JSON.stringify(layerConfigs),
+            });
+
+            if (format === "PMTiles") {
+              params.set("minZoom", String(minZoom));
+              params.set("maxZoom", String(maxZoom));
+            }
+            if (boundary) {
+              params.set("boundary", boundary);
+            }
+
+            const href = `/download?${params.toString()}`;
+            const newWin = window.open("", "_blank");
+            if (newWin) {
+              try {
+                newWin.opener = null;
+              } catch {}
+              newWin.location.href = href;
+            } else {
+              window.location.href = href;
+            }
+          }}
+        >
+          Download
+        </button>
       </div>
-    </MapViewProvider>
+    </>
+  )}
+</div>
+
+{/* Resize handle for left panel */}
+{!isLayersPanelCollapsed && (
+  <div
+    className="w-px cursor-col-resize bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
+    onMouseDown={(e) => {
+      e.preventDefault();
+      setIsResizingLeft(true);
+    }}
+  />
+)}
+
+{/* Main content area – full remaining width */}
+<div className="flex flex-col flex-1 overflow-hidden bg-white dark:bg-dark-bg">
+  {/* Top bar – Add Layer URL */}
+  <div className="flex-none p-2">
+    <fetcher.Form method="post" onSubmit={handleLayerSubmit}>
+      <div className="relative">
+        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <svg
+            aria-hidden="true"
+            className="w-5 h-5 text-gray-500 dark:text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+        </div>
+        <input
+          type="search"
+          name="layer-url"
+          id="default-search"
+          className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-dark-text-bg dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+          placeholder="Add Layer Url Here (Like: https://gismaps.kingcounty.gov/arcgis/rest/services/.../MapServer/11)"
+          value={layerUrlInput}
+          onChange={(event) => setLayerUrlInput(event.currentTarget.value)}
+          autoComplete="off"
+          required
+        />
+        <button
+          type="submit"
+          name="intent"
+          value="add-layer"
+          className="text-white text-sm absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700"
+        >
+          Add
+        </button>
+      </div>
+      {showLoadingModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60"
+          onClick={() => setShowLoadingModal(false)}
+        >
+          <div
+            className="w-full max-w-md rounded-lg bg-white dark:bg-[#1c1917] border border-gray-200 dark:border-gray-700 shadow-xl p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="text-center">
+              <HiOutlineArrowCircleDown className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+              <h3 className="mb-5 text-lg font-normal text-black dark:text-white truncate max-w-[400px]">
+                {loadingMessage
+                  ? loadingMessage
+                  : fetcher.formData?.get("layer-url")
+                  ? `Loading layer ${fetcher.formData?.get("layer-url") as string}`
+                  : "Loading layer..."}
+              </h3>
+            </div>
+          </div>
+        </div>
+      )}
+    </fetcher.Form>
+    {(analyzingUrl || layerAlert.alertType) && (
+      <div className="mt-2">
+        <StatusAlert loading={analyzingUrl} {...layerAlert} />
+      </div>
+    )}
+    {layerExplorerResult && (
+      <FeatureLayerExplorerModal
+        visible={layerExplorerVisible}
+        traversal={layerExplorerResult}
+        onClose={handleExplorerClose}
+        onAddLayer={handleExplorerAdd}
+      />
+    )}
+  </div>
+
+  {/* Map area */}
+  <div
+    style={{
+      flex: "1 1 0",
+      minHeight: 0,
+      height: "100%",
+      display: "flex",
+      flexDirection: "column",
+    }}
+  >
+                <Outlet />
+          </div>
+        </div>
+      </div>
+
+      {wfsExplorerVisible && wfsCapabilities && (
+        <WfsFeatureExplorerModal
+          capabilities={wfsCapabilities}
+          baseUrl={wfsBaseUrl}
+          onAdd={handleExplorerAddWfs}
+          onClose={closeWfsExplorer}
+        />
+      )}
+
+      {broken?.length > 0 && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
+          <div className="relative w-full max-w-3xl rounded-lg bg-white dark:bg-[#1c1917] border border-gray-200 dark:border-gray-700 shadow-xl">
+            <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Some layers couldn’t be loaded
+              </h3>
+            </div>
+            <div className="px-6 py-4 space-y-3">
+              <p className="text-sm text-gray-700 dark:text-gray-300">
+                One or more saved layers failed to load. They may have been
+                removed, moved, or require authentication now. To keep your map
+                stable, remove these broken layers.
+              </p>
+              <div className="max-h-64 overflow-y-auto border border-gray-200 dark:border-gray-600 rounded-md">
+                <Table hoverable>
+                  <Table.Head>
+                    <Table.HeadCell>Name</Table.HeadCell>
+                    <Table.HeadCell>URL</Table.HeadCell>
+                    <Table.HeadCell>Reason</Table.HeadCell>
+                  </Table.Head>
+                  <Table.Body className="divide-y">
+                    {broken.map((b) => (
+                      <Table.Row
+                        key={b.url}
+                        className="bg-white dark:bg-dark-text-bg"
+                      >
+                        <Table.Cell className="font-medium text-gray-900 dark:text-white truncate max-w-[200px]">
+                          {b.name ?? "—"}
+                        </Table.Cell>
+                        <Table.Cell className="text-xs text-gray-600 dark:text-gray-300 break-all max-w-[360px]">
+                          {b.url}
+                        </Table.Cell>
+                        <Table.Cell
+                          className="text-xs text-gray-600 dark:text-gray-300 truncate max-w-[260px]"
+                          title={b.reason}
+                        >
+                          {b.reason}
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
+                  </Table.Body>
+                </Table>
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button
+                  color="gray"
+                  onClick={handleRetryBrokenCheck}
+                  disabled={retryingBrokenCheck}
+                >
+                  {retryingBrokenCheck ? "Retrying…" : "Retry check"}
+                </Button>
+                <Button
+                  color="failure"
+                  onClick={() => {
+                    const brokenUrls = new Set(broken.map((b) => b.url));
+                    const next = {
+                      ...loaderData.mapConfig,
+                      layers: loaderData.mapConfig.layers.filter(
+                        (l) => !brokenUrls.has(l.url)
+                      ),
+                    };
+                    saveMapConfigLocal(next);
+                    window.location.reload();
+                  }}
+                  disabled={retryingBrokenCheck}
+                >
+                  Remove all broken layers
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  </MapViewProvider>
   );
 }
 
