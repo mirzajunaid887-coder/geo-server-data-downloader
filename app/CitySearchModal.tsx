@@ -14,14 +14,15 @@ interface FlattenedDataset {
   url: string;
 }
 
+// 1. Update interface prop types
 interface CitySearchModalProps {
-  onAddLayers?: (urls: string[]) => void;
+  onAddLayers?: (layers: FlattenedDataset[]) => void;
   onClose?: () => void;
 }
 
 export default function CitySearchModal({ onAddLayers, onClose }: CitySearchModalProps) {
   const [datasets, setDatasets] = useState<FlattenedDataset[]>([]);
-  const [selectedUrls, setSelectedUrls] = useState<Set<string>>(new Set());
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -139,14 +140,27 @@ export default function CitySearchModal({ onAddLayers, onClose }: CitySearchModa
   };
 
   // Add a single item directly to map
-  const handleAddSingle = (url: string) => {
-    if (onAddLayers) {
-      onAddLayers([url]);
-    }
-    if (onClose) {
-      onClose();
-    }
-  };
+  const handleAddSingle = (item: FlattenedDataset) => {
+  if (onAddLayers) {
+    onAddLayers([item]);
+  }
+  if (onClose) {
+    onClose();
+  }
+};
+
+// 4. Update handleAddSelected
+const handleAddSelected = () => {
+  if (selectedIds.size === 0) return;
+  
+  const selectedDatasets = datasets.filter((item) => selectedIds.has(item.id));
+  if (onAddLayers) {
+    onAddLayers(selectedDatasets);
+  }
+  if (onClose) {
+    onClose();
+  }
+};
 
   const isAllVisibleSelected =
     filteredDatasets.length > 0 &&
@@ -165,7 +179,7 @@ export default function CitySearchModal({ onAddLayers, onClose }: CitySearchModa
       <div className="relative">
         <input
           type="text"
-          placeholder="Search by city (e.g. Miami), county, or layer type (e.g. Parcel Data, Road Network)..."
+          placeholder="Search by city (e.g. London), Region, or layer type (e.g. Parcel Data, Road Network)..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full px-4 py-2.5 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
