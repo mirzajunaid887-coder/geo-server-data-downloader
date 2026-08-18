@@ -175,7 +175,7 @@ export default function CitySearchModal({ onAddLayers, onClose }: CitySearchModa
       {/* Loading & Error States */}
       {loading && (
         <div className="text-center py-8 text-sm text-gray-400">
-          Loading catalog from Google Sheets...
+          Loading catalog please wait...
         </div>
       )}
 
