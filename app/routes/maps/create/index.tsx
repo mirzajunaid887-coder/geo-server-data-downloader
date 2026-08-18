@@ -266,9 +266,46 @@ export default function MapCreator() {
   const fetcher = useFetcher()
 
   const [leftPanelWidth, setLeftPanelWidth] = useState(360)
-const [rightPanelWidth, setRightPanelWidth] = useState(0)
+  const [rightPanelWidth, setRightPanelWidth] = useState(0)
   const [isResizingLeft, setIsResizingLeft] = useState(false)
   const [isResizingRight, setIsResizingRight] = useState(false)
+
+  const closeExplorer = useCallback(() => {
+    setLayerExplorerVisible(false);
+    setLayerExplorerResult(null);
+  }, [setLayerExplorerVisible, setLayerExplorerResult]);
+
+  const submitAddLayer = useCallback(
+    (layerUrl: string) => {
+      const normalized = layerUrl.trim();
+      if (!normalized) {
+        return;
+      }
+      closeExplorer();
+      setLayerAlert("", undefined);
+      setLoadingMessage(`Loading layer ${normalized}`);
+      const data = new FormData();
+      data.set("layer-url", normalized);
+      data.set("intent", "add-layer");
+      fetcher.submit(data, { method: "post" });
+    },
+    [closeExplorer, fetcher, setLayerAlert, setLoadingMessage]
+  );
+
+  // Step 2: Custom Event Listener for add-layer-url
+  useEffect(() => {
+    const handleAddLayerEvent = (event: CustomEvent<{ url: string; title?: string }>) => {
+      const { url } = event.detail || {};
+      if (url) {
+        submitAddLayer(url);
+      }
+    };
+
+    window.addEventListener("add-layer-url" as any, handleAddLayerEvent);
+    return () => {
+      window.removeEventListener("add-layer-url" as any, handleAddLayerEvent);
+    };
+  }, [submitAddLayer]);
 
   // Handle panel resizing
   const handleMouseMoveLeft = useCallback((e: MouseEvent) => {
@@ -309,7 +346,6 @@ const [rightPanelWidth, setRightPanelWidth] = useState(0)
       };
     }
 
-    // Ensure the effect callback always returns a cleanup function so all code paths return a value
     return () => { /* noop cleanup */ };
   }, [isResizingLeft, isResizingRight, handleMouseMoveLeft, handleMouseMoveRight, handleMouseUp]);
 
@@ -329,28 +365,6 @@ const [rightPanelWidth, setRightPanelWidth] = useState(0)
       window.removeEventListener('layerVisibilityChanged', updateVisibleCount);
     };
   }, [loaderData.layers]);
-
-  const closeExplorer = useCallback(() => {
-    setLayerExplorerVisible(false);
-    setLayerExplorerResult(null);
-  }, [setLayerExplorerVisible, setLayerExplorerResult]);
-
-  const submitAddLayer = useCallback(
-    (layerUrl: string) => {
-      const normalized = layerUrl.trim();
-      if (!normalized) {
-        return;
-      }
-      closeExplorer();
-      setLayerAlert("", undefined);
-      setLoadingMessage(`Loading layer ${normalized}`);
-      const data = new FormData();
-      data.set("layer-url", normalized);
-      data.set("intent", "add-layer");
-      fetcher.submit(data, { method: "post" });
-    },
-    [closeExplorer, fetcher, setLayerAlert, setLoadingMessage]
-  );
 
   const handleExplorerClose = useCallback(() => {
     closeExplorer();
@@ -561,7 +575,7 @@ const [rightPanelWidth, setRightPanelWidth] = useState(0)
         </div>
       )}
 
-      {/* ── Download section (moved from right panel) ── */}
+      {/* ── Download section ── */}
       <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex-none space-y-4">
         <div>
           <label
@@ -817,10 +831,10 @@ const [rightPanelWidth, setRightPanelWidth] = useState(0)
       flexDirection: "column",
     }}
   >
-                <Outlet />
-          </div>
+          <Outlet />
         </div>
       </div>
+    </div>
 
       {wfsExplorerVisible && wfsCapabilities && (
         <WfsFeatureExplorerModal
@@ -984,13 +998,10 @@ function LayerDropdownMenu({ layer, boundary }: LayerDropdownMenuProps) {
   }
   useEffect(() => {
     function handleOutsideClick(e: MouseEvent | TouchEvent) {
-      // Only attempt to close if currently open; prevents opening on outside clicks
       if (!isDropDownOpen) return;
       const target = e.target as Node | null;
       if (!containerRef.current || !target) return;
-      // if clicked inside the component, do nothing
       if (containerRef.current.contains(target)) return;
-      // otherwise, close the dropdown
       closeDropdown()
     }
 
@@ -1008,7 +1019,6 @@ function LayerDropdownMenu({ layer, boundary }: LayerDropdownMenuProps) {
       return;
     }
 
-    // For WFS layers use fullExtent; for ArcGIS layers use sourceJSON extent
     const goToTarget = wfs
       ? layer.esri.fullExtent
       : (() => {
