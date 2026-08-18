@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Papa from "papaparse";
 
-// Paste your published Google Sheet CSV URL here
 const GOOGLE_SHEET_CSV_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vRYQGHV6DSMUeWHNBIM7poL9O97rksg8vay22Eh733EqMX161-SM6cRFFvlloCYVgnbynJJl4ZQhiha/pub?output=csv";
 
-interface FlattenedDataset {
+export interface FlattenedDataset {
   id: string;
   title: string;
   city: string;
@@ -14,7 +13,6 @@ interface FlattenedDataset {
   url: string;
 }
 
-// 1. Update interface prop types
 interface CitySearchModalProps {
   onAddLayers?: (layers: FlattenedDataset[]) => void;
   onClose?: () => void;
@@ -103,36 +101,37 @@ export default function CitySearchModal({ onAddLayers, onClose }: CitySearchModa
     );
   });
 
-  // Toggle single item selection
-  const toggleSelectUrl = (url: string) => {
-    const updated = new Set(selectedUrls);
-    if (updated.has(url)) {
-      updated.delete(url);
+  // Toggle single item selection by unique ID
+  const toggleSelectId = (id: string) => {
+    const updated = new Set(selectedIds);
+    if (updated.has(id)) {
+      updated.delete(id);
     } else {
-      updated.add(url);
+      updated.add(id);
     }
-    setSelectedUrls(updated);
+    setSelectedIds(updated);
   };
 
   // Select / Deselect all visible items
   const toggleSelectAllVisible = () => {
-    const visibleUrls = filteredDatasets.map((d) => d.url);
-    const allSelected = visibleUrls.every((url) => selectedUrls.has(url));
+    const visibleIds = filteredDatasets.map((d) => d.id);
+    const allSelected = visibleIds.every((id) => selectedIds.has(id));
 
-    const updated = new Set(selectedUrls);
+    const updated = new Set(selectedIds);
     if (allSelected) {
-      visibleUrls.forEach((url) => updated.delete(url));
+      visibleIds.forEach((id) => updated.delete(id));
     } else {
-      visibleUrls.forEach((url) => updated.add(url));
+      visibleIds.forEach((id) => updated.add(id));
     }
-    setSelectedUrls(updated);
+    setSelectedIds(updated);
   };
 
   // Add selected items to map
   const handleAddSelected = () => {
-    if (selectedUrls.size === 0) return;
+    if (selectedIds.size === 0) return;
+    const selectedDatasets = datasets.filter((item) => selectedIds.has(item.id));
     if (onAddLayers) {
-      onAddLayers(Array.from(selectedUrls));
+      onAddLayers(selectedDatasets);
     }
     if (onClose) {
       onClose();
@@ -141,30 +140,17 @@ export default function CitySearchModal({ onAddLayers, onClose }: CitySearchModa
 
   // Add a single item directly to map
   const handleAddSingle = (item: FlattenedDataset) => {
-  if (onAddLayers) {
-    onAddLayers([item]);
-  }
-  if (onClose) {
-    onClose();
-  }
-};
-
-// 4. Update handleAddSelected
-const handleAddSelected = () => {
-  if (selectedIds.size === 0) return;
-  
-  const selectedDatasets = datasets.filter((item) => selectedIds.has(item.id));
-  if (onAddLayers) {
-    onAddLayers(selectedDatasets);
-  }
-  if (onClose) {
-    onClose();
-  }
-};
+    if (onAddLayers) {
+      onAddLayers([item]);
+    }
+    if (onClose) {
+      onClose();
+    }
+  };
 
   const isAllVisibleSelected =
     filteredDatasets.length > 0 &&
-    filteredDatasets.every((item) => selectedUrls.has(item.url));
+    filteredDatasets.every((item) => selectedIds.has(item.id));
 
   return (
     <div className="space-y-4 text-gray-900 dark:text-white p-2">
@@ -225,7 +211,7 @@ const handleAddSelected = () => {
                     const locationStr =
                       [item.city, item.county, item.state].filter(Boolean).join(", ") ||
                       "N/A";
-                    const isSelected = selectedUrls.has(item.url);
+                    const isSelected = selectedIds.has(item.id);
 
                     return (
                       <tr
@@ -240,7 +226,7 @@ const handleAddSelected = () => {
                           <input
                             type="checkbox"
                             checked={isSelected}
-                            onChange={() => toggleSelectUrl(item.url)}
+                            onChange={() => toggleSelectId(item.id)}
                             className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"
                           />
                         </td>
@@ -250,7 +236,7 @@ const handleAddSelected = () => {
                         <td className="px-4 py-3">{locationStr}</td>
                         <td className="px-4 py-3 text-right">
                           <button
-                            onClick={() => handleAddSingle(item.url)}
+                            onClick={() => handleAddSingle(item)}
                             className="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition inline-flex items-center gap-1"
                           >
                             <svg
@@ -287,18 +273,18 @@ const handleAddSelected = () => {
           {/* Footer Batch Selection Action Bar */}
           <div className="flex items-center justify-between pt-2">
             <span className="text-xs text-gray-500 dark:text-gray-400">
-              {selectedUrls.size} layer(s) selected
+              {selectedIds.size} layer(s) selected
             </span>
             <button
-              disabled={selectedUrls.size === 0}
+              disabled={selectedIds.size === 0}
               onClick={handleAddSelected}
               className={`px-4 py-2 text-sm font-medium rounded-lg transition text-white ${
-                selectedUrls.size > 0
+                selectedIds.size > 0
                   ? "bg-emerald-600 hover:bg-emerald-700"
                   : "bg-gray-400 cursor-not-allowed dark:bg-gray-700"
               }`}
             >
-              Add Selected ({selectedUrls.size}) to Map
+              Add Selected ({selectedIds.size}) to Map
             </button>
           </div>
         </>
