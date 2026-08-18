@@ -3,7 +3,7 @@ import { useState } from "react";
 import logo from "/IMG_1039.png";
 import "flowbite";
 import FeedbackModal from "../FeedbackModal";
-import CitySearchModal from "../CitySearchModal";
+import CitySearchModal, { FlattenedDataset } from "../CitySearchModal";
 
 export default function Root() {
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
@@ -12,12 +12,17 @@ export default function Root() {
     () => localStorage.getItem("wfs-modal-dismissed") !== "1"
   );
 
-  // Handler to receive selected layer URLs from CitySearchModal
-  const handleAddLayersFromModal = (urls: string[]) => {
-    urls.forEach((url) => {
-      // Dispatches a custom event so your main map component or state can listen and load the layer
+  // Updated handler to accept dataset objects from CitySearchModal
+  const handleAddLayersFromModal = (layers: FlattenedDataset[] | string[]) => {
+    layers.forEach((item) => {
+      const url = typeof item === "string" ? item : item.url;
+      const title = typeof item === "string" ? "Catalog Layer" : item.title;
+
+      // Dispatch event to main map component
       window.dispatchEvent(
-        new CustomEvent("add-layer-url", { detail: { url } })
+        new CustomEvent("add-layer-url", {
+          detail: { url, title },
+        })
       );
     });
   };
@@ -40,7 +45,6 @@ export default function Root() {
               </a>
             </div>
             <div className="flex flex-row justify-between items-center gap-3">
-              {/* Search Datasets Button */}
               <button
                 onClick={() => setShowSearchModal(true)}
                 className="inline-flex items-center h-[28px] px-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
@@ -223,49 +227,6 @@ export default function Root() {
                   </ul>
                 </div>
               </div>
-
-              <div className="rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/40 p-3 text-sm text-blue-800 dark:text-blue-300">
-                <p className="font-medium mb-1">🆕 WFS support was just added!</p>
-                <p>
-                  Paste a WFS endpoint URL to browse its feature types and add
-                  them to your map. Need to find WFS endpoints? Check out{" "}
-                  <a
-                    href="https://geoseer.net"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="underline hover:text-blue-600 dark:hover:text-blue-100"
-                  >
-                    geoseer.net
-                  </a>
-                  , a searchable directory of public geospatial services.
-                </p>
-                <p className="mt-1.5 text-xs opacity-75">
-                  Note: Only WFS (vector features) is supported, not WMS (raster
-                  map images).
-                </p>
-              </div>
-
-              <p className="text-xs text-gray-500 dark:text-gray-500 text-center">
-                This site wouldn't be possible without{" "}
-                <a
-                  href="https://gdal.org"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline hover:text-gray-700 dark:hover:text-gray-300"
-                >
-                  GDAL
-                </a>
-                , compiled to WebAssembly by{" "}
-                <a
-                  href="https://github.com/bugra9/gdal3.js"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline hover:text-gray-700 dark:hover:text-gray-300"
-                >
-                  gdal3.js
-                </a>
-                . Big thanks to Junaid who's contributed to these projects.
-              </p>
 
               <button
                 className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm transition-colors"
