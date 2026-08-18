@@ -6,6 +6,7 @@ const GOOGLE_SHEET_CSV_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vRYQGHV6DSMUeWHNBIM7poL9O97rksg8vay22Eh733EqMX161-SM6cRFFvlloCYVgnbynJJl4ZQhiha/pub?output=csv";
 
 interface FlattenedDataset {
+  id: string;
   title: string;
   city: string;
   county: string;
@@ -13,8 +14,14 @@ interface FlattenedDataset {
   url: string;
 }
 
-export default function CitySearchModal() {
+interface CitySearchModalProps {
+  onAddLayers?: (urls: string[]) => void;
+  onClose?: () => void;
+}
+
+export default function CitySearchModal({ onAddLayers, onClose }: CitySearchModalProps) {
   const [datasets, setDatasets] = useState<FlattenedDataset[]>([]);
+  const [selectedUrls, setSelectedUrls] = useState<Set<string>>(new Set());
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,13 +41,11 @@ export default function CitySearchModal() {
         const rawData = results.data as Record<string, string>[];
         const flattenedList: FlattenedDataset[] = [];
 
-        rawData.forEach((row) => {
-          // Flexible key matching for City, County, State columns
+        rawData.forEach((row, rowIdx) => {
           const city = row["City Name"] || row["City"] || row["city"] || "";
           const county = row["County Name"] || row["County"] || row["county"] || "";
           const state = row["State Name"] || row["State"] || row["state"] || "";
 
-          // Exclude metadata/location columns to find dataset category columns
           const ignoreKeys = [
             "",
             "City Name",
@@ -53,11 +58,10 @@ export default function CitySearchModal() {
             "Notes",
           ];
 
-          Object.entries(row).forEach(([key, val]) => {
+          Object.entries(row).forEach(([key, val], colIdx) => {
             const cleanKey = key.trim();
             const cleanVal = val ? val.trim() : "";
 
-            // Check if column is a dataset type with a valid URL
             if (
               !ignoreKeys.includes(cleanKey) &&
               cleanVal &&
@@ -65,6 +69,7 @@ export default function CitySearchModal() {
               cleanVal.startsWith("http")
             ) {
               flattenedList.push({
+                id: `${rowIdx}-${colIdx}`,
                 title: cleanKey,
                 city,
                 county,
@@ -86,7 +91,7 @@ export default function CitySearchModal() {
     });
   }, []);
 
-  // Filter datasets by keyword across title, city, county, or state
+  // Filter datasets by search keyword
   const filteredDatasets = datasets.filter((item) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -97,16 +102,66 @@ export default function CitySearchModal() {
     );
   });
 
+  // Toggle single item selection
+  const toggleSelectUrl = (url: string) => {
+    const updated = new Set(selectedUrls);
+    if (updated.has(url)) {
+      updated.delete(url);
+    } else {
+      updated.add(url);
+    }
+    setSelectedUrls(updated);
+  };
+
+  // Select / Deselect all visible items
+  const toggleSelectAllVisible = () => {
+    const visibleUrls = filteredDatasets.map((d) => d.url);
+    const allSelected = visibleUrls.every((url) => selectedUrls.has(url));
+
+    const updated = new Set(selectedUrls);
+    if (allSelected) {
+      visibleUrls.forEach((url) => updated.delete(url));
+    } else {
+      visibleUrls.forEach((url) => updated.add(url));
+    }
+    setSelectedUrls(updated);
+  };
+
+  // Add selected items to map
+  const handleAddSelected = () => {
+    if (selectedUrls.size === 0) return;
+    if (onAddLayers) {
+      onAddLayers(Array.from(selectedUrls));
+    }
+    if (onClose) {
+      onClose();
+    }
+  };
+
+  // Add a single item directly to map
+  const handleAddSingle = (url: string) => {
+    if (onAddLayers) {
+      onAddLayers([url]);
+    }
+    if (onClose) {
+      onClose();
+    }
+  };
+
+  const isAllVisibleSelected =
+    filteredDatasets.length > 0 &&
+    filteredDatasets.every((item) => selectedUrls.has(item.url));
+
   return (
     <div className="space-y-4 text-gray-900 dark:text-white p-2">
       <div className="border-b border-gray-200 dark:border-gray-700 pb-3">
         <h2 className="text-xl font-bold">Search Dataset Catalog</h2>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          Search layers by city, county, state, or dataset type.
+          Select single or multiple layers to load them directly onto your map.
         </p>
       </div>
 
-      {/* Search Input Box */}
+      {/* Search Bar */}
       <div className="relative">
         <input
           type="text"
@@ -130,59 +185,109 @@ export default function CitySearchModal() {
         </div>
       )}
 
-      {/* Results Table */}
+      {/* Dataset Results Table */}
       {!loading && !error && (
-        <div className="max-h-[55vh] overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg">
-          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-300 sticky top-0">
-              <tr>
-                <th className="px-4 py-3">Dataset / Layer Name</th>
-                <th className="px-4 py-3">Location</th>
-                <th className="px-4 py-3 text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredDatasets.length > 0 ? (
-                filteredDatasets.map((item, idx) => {
-                  const locationStr =
-                    [item.city, item.county, item.state].filter(Boolean).join(", ") ||
-                    "N/A";
-
-                  return (
-                    <tr
-                      key={idx}
-                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition"
-                    >
-                      <td className="px-4 py-3 font-semibold text-gray-900 dark:text-white">
-                        {item.title}
-                      </td>
-                      <td className="px-4 py-3">{locationStr}</td>
-                      <td className="px-4 py-3 text-right">
-                        <button
-                          onClick={() => {
-                            navigator.clipboard.writeText(item.url);
-                            alert(
-                              `Copied ${item.title} URL to clipboard!\n\nPaste it into the top Add Layer bar.`
-                            );
-                          }}
-                          className="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition"
-                        >
-                          Copy URL
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
+        <>
+          <div className="max-h-[50vh] overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg">
+            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-300 sticky top-0 z-10">
                 <tr>
-                  <td colSpan={3} className="px-4 py-8 text-center text-gray-400">
-                    No matching datasets found for "{searchTerm}".
-                  </td>
+                  <th className="p-4 w-4">
+                    <input
+                      type="checkbox"
+                      checked={isAllVisibleSelected}
+                      onChange={toggleSelectAllVisible}
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"
+                    />
+                  </th>
+                  <th className="px-4 py-3">Dataset / Layer Name</th>
+                  <th className="px-4 py-3">Location</th>
+                  <th className="px-4 py-3 text-right">Action</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {filteredDatasets.length > 0 ? (
+                  filteredDatasets.map((item) => {
+                    const locationStr =
+                      [item.city, item.county, item.state].filter(Boolean).join(", ") ||
+                      "N/A";
+                    const isSelected = selectedUrls.has(item.url);
+
+                    return (
+                      <tr
+                        key={item.id}
+                        className={`border-b dark:border-gray-700 transition ${
+                          isSelected
+                            ? "bg-blue-50/50 dark:bg-blue-900/20"
+                            : "bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                        }`}
+                      >
+                        <td className="w-4 p-4">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleSelectUrl(item.url)}
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"
+                          />
+                        </td>
+                        <td className="px-4 py-3 font-semibold text-gray-900 dark:text-white">
+                          {item.title}
+                        </td>
+                        <td className="px-4 py-3">{locationStr}</td>
+                        <td className="px-4 py-3 text-right">
+                          <button
+                            onClick={() => handleAddSingle(item.url)}
+                            className="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition inline-flex items-center gap-1"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={2}
+                              stroke="currentColor"
+                              className="w-3.5 h-3.5"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M12 4.5v15m7.5-7.5h-15"
+                              />
+                            </svg>
+                            Add to Map
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan={4} className="px-4 py-8 text-center text-gray-400">
+                      No matching datasets found for "{searchTerm}".
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Footer Batch Selection Action Bar */}
+          <div className="flex items-center justify-between pt-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              {selectedUrls.size} layer(s) selected
+            </span>
+            <button
+              disabled={selectedUrls.size === 0}
+              onClick={handleAddSelected}
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition text-white ${
+                selectedUrls.size > 0
+                  ? "bg-emerald-600 hover:bg-emerald-700"
+                  : "bg-gray-400 cursor-not-allowed dark:bg-gray-700"
+              }`}
+            >
+              Add Selected ({selectedUrls.size}) to Map
+            </button>
+          </div>
+        </>
       )}
     </div>
   );

@@ -12,6 +12,16 @@ export default function Root() {
     () => localStorage.getItem("wfs-modal-dismissed") !== "1"
   );
 
+  // Handler to receive selected layer URLs from CitySearchModal
+  const handleAddLayersFromModal = (urls: string[]) => {
+    urls.forEach((url) => {
+      // Dispatches a custom event so your main map component or state can listen and load the layer
+      window.dispatchEvent(
+        new CustomEvent("add-layer-url", { detail: { url } })
+      );
+    });
+  };
+
   return (
     <div>
       <header className="z-40">
@@ -100,7 +110,10 @@ export default function Root() {
                 />
               </svg>
             </button>
-            <CitySearchModal />
+            <CitySearchModal
+              onAddLayers={handleAddLayersFromModal}
+              onClose={() => setShowSearchModal(false)}
+            />
           </div>
         </div>
       )}
@@ -123,43 +136,89 @@ export default function Root() {
               }}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-5 h-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
             <div className="overflow-y-auto max-h-[85vh] p-6 space-y-5">
               <div className="flex items-start gap-4">
-                <img src={logo as string} className="h-14 w-14 rounded-xl flex-shrink-0" alt="Geo Server Data Downloader Logo" />
+                <img
+                  src={logo as string}
+                  className="h-14 w-14 rounded-xl flex-shrink-0"
+                  alt="Geo Server Data Downloader Logo"
+                />
                 <div>
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
                     Welcome to Geo Server Data Downloader
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    This is a free tool that makes downloading geospatial data way easier.
+                    This is a free tool that makes downloading geospatial data
+                    way easier.
                   </p>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="rounded-lg bg-gray-100 dark:bg-stone-800 p-4 space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                  <p className="font-medium text-gray-900 dark:text-white">How it works:</p>
+                  <p className="font-medium text-gray-900 dark:text-white">
+                    How it works:
+                  </p>
                   <ol className="list-decimal list-inside space-y-1.5">
-                    <li>Paste a service URL and click <strong>Add</strong></li>
-                    <li>The layer appears on the map. Optionally draw a boundary to limit the download area</li>
+                    <li>
+                      Paste a service URL and click <strong>Add</strong>
+                    </li>
+                    <li>
+                      The layer appears on the map. Optionally draw a boundary
+                      to limit the download area
+                    </li>
                     <li>Pick an output format</li>
-                    <li>Click <strong>Download</strong>. The data is processed in your browser and saved to your computer</li>
+                    <li>
+                      Click <strong>Download</strong>. The data is processed in
+                      your browser and saved to your computer
+                    </li>
                   </ol>
                 </div>
                 <div className="rounded-lg bg-gray-100 dark:bg-stone-800 p-4 space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                  <p className="font-medium text-gray-900 dark:text-white">Supported services:</p>
+                  <p className="font-medium text-gray-900 dark:text-white">
+                    Supported services:
+                  </p>
                   <ul className="space-y-2">
                     <li>
-                      <span className="font-medium text-gray-900 dark:text-white">ArcGIS REST</span>
-                      {" "}— URLs containing <code className="text-xs bg-gray-200 dark:bg-stone-700 px-1 rounded">/FeatureServer</code> or <code className="text-xs bg-gray-200 dark:bg-stone-700 px-1 rounded">/MapServer</code>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        ArcGIS REST
+                      </span>{" "}
+                      — URLs containing{" "}
+                      <code className="text-xs bg-gray-200 dark:bg-stone-700 px-1 rounded">
+                        /FeatureServer
+                      </code>{" "}
+                      or{" "}
+                      <code className="text-xs bg-gray-200 dark:bg-stone-700 px-1 rounded">
+                        /MapServer
+                      </code>
                     </li>
                     <li>
-                      <span className="font-medium text-gray-900 dark:text-white">OGC WFS</span>
-                      {" "}— URLs containing <code className="text-xs bg-gray-200 dark:bg-stone-700 px-1 rounded">SERVICE=WFS</code> or ending in <code className="text-xs bg-gray-200 dark:bg-stone-700 px-1 rounded">/wfs</code>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        OGC WFS
+                      </span>{" "}
+                      — URLs containing{" "}
+                      <code className="text-xs bg-gray-200 dark:bg-stone-700 px-1 rounded">
+                        SERVICE=WFS
+                      </code>{" "}
+                      or ending in{" "}
+                      <code className="text-xs bg-gray-200 dark:bg-stone-700 px-1 rounded">
+                        /wfs
+                      </code>
                     </li>
                   </ul>
                 </div>
@@ -168,24 +227,41 @@ export default function Root() {
               <div className="rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/40 p-3 text-sm text-blue-800 dark:text-blue-300">
                 <p className="font-medium mb-1">🆕 WFS support was just added!</p>
                 <p>
-                  Paste a WFS endpoint URL to browse its feature types and add them to your map. Need to find WFS endpoints? Check out{" "}
-                  <a href="https://geoseer.net" target="_blank" rel="noreferrer" className="underline hover:text-blue-600 dark:hover:text-blue-100">
+                  Paste a WFS endpoint URL to browse its feature types and add
+                  them to your map. Need to find WFS endpoints? Check out{" "}
+                  <a
+                    href="https://geoseer.net"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline hover:text-blue-600 dark:hover:text-blue-100"
+                  >
                     geoseer.net
                   </a>
                   , a searchable directory of public geospatial services.
                 </p>
                 <p className="mt-1.5 text-xs opacity-75">
-                  Note: Only WFS (vector features) is supported, not WMS (raster map images).
+                  Note: Only WFS (vector features) is supported, not WMS (raster
+                  map images).
                 </p>
               </div>
 
               <p className="text-xs text-gray-500 dark:text-gray-500 text-center">
                 This site wouldn't be possible without{" "}
-                <a href="https://gdal.org" target="_blank" rel="noreferrer" className="underline hover:text-gray-700 dark:hover:text-gray-300">
+                <a
+                  href="https://gdal.org"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline hover:text-gray-700 dark:hover:text-gray-300"
+                >
                   GDAL
                 </a>
                 , compiled to WebAssembly by{" "}
-                <a href="https://github.com/bugra9/gdal3.js" target="_blank" rel="noreferrer" className="underline hover:text-gray-700 dark:hover:text-gray-300">
+                <a
+                  href="https://github.com/bugra9/gdal3.js"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline hover:text-gray-700 dark:hover:text-gray-300"
+                >
                   gdal3.js
                 </a>
                 . Big thanks to Junaid who's contributed to these projects.
