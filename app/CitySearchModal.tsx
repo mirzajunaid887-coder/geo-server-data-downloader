@@ -308,7 +308,6 @@ export default function CitySearchModal({ onAddLayers, onClose }: CitySearchModa
                 </table>
               </div>
 
-<<<<<<< HEAD
               <div className="flex items-center justify-between pt-2">
                 <span className="text-xs text-gray-500 dark:text-gray-400">
                   {selectedSubLayerIds.size} sub-layer(s) selected
@@ -327,12 +326,6 @@ export default function CitySearchModal({ onAddLayers, onClose }: CitySearchModa
               </div>
             </>
           )}
-=======
-      {/* Loading & Error States */}
-      {loading && (
-        <div className="text-center py-8 text-sm text-gray-400">
-          Loading catalog please wait...
->>>>>>> 1ac88521cf8847de9348d2defe50ab135278620a
         </div>
       ) : (
         /* VIEW MODE 2: Main Dataset Search Table */
