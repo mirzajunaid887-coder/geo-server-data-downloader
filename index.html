@@ -2,6 +2,66 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="msapplication-TileColor" content="#ffffff" />
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
+
+    <!-- Primary Search Engine Optimization (SEO) -->
+    <title>GeoServer Data Downloader | WebGIS Map Dashboard & Vector Layers</title>
+    <meta
+      name="title"
+      content="GeoServer Data Downloader | WebGIS Map Dashboard & Vector Layers"
+    />
+    <meta
+      name="description"
+      content="Interactive WebGIS dashboard to search, preview, inspect, and export spatial vector datasets from any ESRI ArcGIS Server or GeoServer directly in your browser with no size limit."
+    />
+    <meta
+      name="keywords"
+      content="WebGIS dashboard, GeoServer data downloader, ArcGIS server vector layers, GIS data exporter, spatial data extractor, online GIS map, MapLibre dashboard, QGIS style viewer, spatial dataset browser, Download GIS Data, Free GIS Data, GIS, Remote Sensing, Download Free Vector Data"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="GeoServer Data Downloader" />
+
+    <!-- Canonical Link (Replace with your live custom domain URL once active) -->
+    <link rel="canonical" href="www.geo-server-data-downloader.com" />
+
+    <!-- Open Graph / Facebook / LinkedIn Preview -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="www.geo-server-data-downloader.com" />
+    <meta property="og:title" content="GeoServer Data Downloader & Interactive WebGIS Dashboard" />
+    <meta
+      property="og:description"
+      content="Query live spatial layers, explore ArcGIS vector services, and export datasets straight from your browser."
+    />
+    <meta property="og:image" content="/android-icon-192x192.png" />
+
+    <!-- Twitter Card Preview -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="www.geo-server-data-downloader.com" />
+    <meta property="twitter:title" content="GeoServer Data Downloader & Interactive WebGIS Dashboard" />
+    <meta
+      property="twitter:description"
+      content="Search, preview, and download GIS vector spatial layers directly from ESRI ArcGIS and GeoServer."
+    />
+    <meta property="twitter:image" content="/android-icon-192x192.png" />
+
+    <!-- Structured Data (JSON-LD) for Google Rich Search Snippets -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "GeoServer Data Downloader & WebGIS Dashboard",
+        "url": "www.geo-server-data-downloader.com",
+        "description": "An interactive browser-based WebGIS application for querying, inspecting sub-layers, and exporting GIS vector spatial data from ESRI ArcGIS and GeoServer services.",
+        "applicationCategory": "GeographicInformationSystem",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript"
+      }
+    </script>
+
+    <!-- Icons & Manifest -->
     <link rel="icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png" />
     <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png" />
@@ -12,26 +72,17 @@
     <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png" />
     <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png" />
+    <link rel="apple-touch-icon" href="/logo192.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="manifest" href="/manifest.json" />
-    <meta name="msapplication-TileColor" content="#ffffff" />
-    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
-    <meta name="theme-color" content="#ffffff" />
+
+    <!-- External Stylesheets -->
     <link rel="stylesheet" href="https://js.arcgis.com/4.22/esri/themes/light/main.css" media="none" />
     <link rel="stylesheet" href="https://js.arcgis.com/4.22/esri/themes/dark/main.css" media="none" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Geo Server Data Downloader downloads spatial data from any ESRI ArcGIS Server. It has no max size and downloads entirely in your browser"
-    />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.6/flowbite.min.css" rel="stylesheet" />
-    <link rel="apple-touch-icon" href="/logo192.png" />
-    <link rel="manifest" href="/manifest.json" />
-    <title>Geo Server Data Downloader</title>
   </head>
   <body class="dark:bg-dark-bg bg-white">
     <form name="feedback" data-netlify="true" netlify-honeypot="bot-field" hidden>
@@ -48,9 +99,19 @@
       <input name="error" type="text" />
     </form>
 
-    <script type="module" src="/app/index.tsx"></script>
+    <!-- Fallback Content for Web Crawlers (Indexing boost before React loads) -->
+    <div id="root">
+      <div style="padding: 20px; font-family: sans-serif; display: none;">
+        <h1>GeoServer Data Downloader & WebGIS Map Dashboard</h1>
+        <p>
+          Download spatial vector data from any ESRI ArcGIS Server or GeoServer directly in your browser.
+          Inspect sub-layers, query live vector services, customize map basemaps, and export spatial datasets seamlessly.
+        </p>
+      </div>
+    </div>
+
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <script type="module" src="/app/index.tsx"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.6/flowbite.min.js"></script>
   </body>
 </html>
