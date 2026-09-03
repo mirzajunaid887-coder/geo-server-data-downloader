@@ -1,6 +1,6 @@
 # geodatadownloader.com (GDD)
 
-This repo contains _all_ of the code for <https://geodatadownloader.com>
+This repo contains _all_ of the code for <https://www.geo-server-data-downloader.com>
 
 [![Playwright Tests](https://github.com/mchaynes/geodatadownloader/actions/workflows/playwright.yml/badge.svg)](https://github.com/mchaynes/geodatadownloader/actions/workflows/playwright.yml)
 
