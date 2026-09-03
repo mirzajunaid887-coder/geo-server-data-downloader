@@ -7,61 +7,66 @@
     <meta name="msapplication-TileColor" content="#ffffff" />
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
 
-    <!-- Primary Search Engine Optimization (SEO) -->
-    <title>GeoServer Data Downloader | WebGIS Map Dashboard & Vector Layers</title>
+    <!-- Primary SEO & Search Keywords -->
+    <title>GeoServer Data Downloader | WebGIS Map Dashboard & ArcGIS Vector Layer Exporter</title>
     <meta
       name="title"
-      content="GeoServer Data Downloader | WebGIS Map Dashboard & Vector Layers"
+      content="GeoServer Data Downloader | WebGIS Map Dashboard & ArcGIS Vector Layer Exporter"
     />
     <meta
       name="description"
-      content="Interactive WebGIS dashboard to search, preview, inspect, and export spatial vector datasets from any ESRI ArcGIS Server or GeoServer directly in your browser with no size limit."
+      content="Free online WebGIS map dashboard to search, inspect sub-layers, and download ESRI ArcGIS Server vector datasets, GeoJSON, shapefiles, and GeoServer spatial data with no size limits directly in your browser."
     />
     <meta
       name="keywords"
-      content="WebGIS dashboard, GeoServer data downloader, ArcGIS server vector layers, GIS data exporter, spatial data extractor, online GIS map, MapLibre dashboard, QGIS style viewer, spatial dataset browser, Download GIS Data, Free GIS Data, GIS, Remote Sensing, Download Free Vector Data"
+      content="geoserver data downloader, arcgis vector downloader, arcgis rest layer exporter, webgis map dashboard, spatial data extractor, online gis tool, extract shapefile arcgis rest, arcgis feature service downloader, maplibre gis dashboard, qgis layer viewer, gis vector data converter, Geo, Free GIS Data download, Download Geo Data, Free GIS Data, Vector Data, Esri, ArcGIS, Zoning, Shapefile Downloader, Free data, GIS, GIS Gynix, Geomatics, Geo Informatics, Geography, Geology, data exporter, data converter, GeoJson, GeoPkg, Pakistan vector data, download esri data, ArcGIS Online"
     />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="author" content="GeoServer Data Downloader" />
 
-    <!-- Canonical Link (Replace with your live custom domain URL once active) -->
-    <link rel="canonical" href="www.geo-server-data-downloader.com" />
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://www.geo-server-data-downloader.com/" />
 
-    <!-- Open Graph / Facebook / LinkedIn Preview -->
+    <!-- Open Graph / Social Media Preview (Facebook, LinkedIn) -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="www.geo-server-data-downloader.com" />
-    <meta property="og:title" content="GeoServer Data Downloader & Interactive WebGIS Dashboard" />
+    <meta property="og:url" content="https://www.geo-server-data-downloader.com/" />
+    <meta property="og:title" content="GeoServer Data Downloader | WebGIS Map Dashboard & Vector Exporter" />
     <meta
       property="og:description"
-      content="Query live spatial layers, explore ArcGIS vector services, and export datasets straight from your browser."
+      content="Search live spatial datasets, inspect sub-layers, and download ArcGIS vector feature services straight from your browser."
     />
-    <meta property="og:image" content="/android-icon-192x192.png" />
+    <meta property="og:image" content="https://www.geo-server-data-downloader.com/android-icon-192x192.png" />
 
     <!-- Twitter Card Preview -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="www.geo-server-data-downloader.com" />
-    <meta property="twitter:title" content="GeoServer Data Downloader & Interactive WebGIS Dashboard" />
+    <meta property="twitter:url" content="https://www.geo-server-data-downloader.com/" />
+    <meta property="twitter:title" content="GeoServer Data Downloader | WebGIS Map Dashboard & Vector Exporter" />
     <meta
       property="twitter:description"
-      content="Search, preview, and download GIS vector spatial layers directly from ESRI ArcGIS and GeoServer."
+      content="Search live spatial datasets, inspect sub-layers, and download ArcGIS vector feature services straight from your browser."
     />
-    <meta property="twitter:image" content="/android-icon-192x192.png" />
+    <meta property="twitter:image" content="https://www.geo-server-data-downloader.com/android-icon-192x192.png" />
 
-    <!-- Structured Data (JSON-LD) for Google Rich Search Snippets -->
+    <!-- JSON-LD Structured Data for Google Rich Results -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "GeoServer Data Downloader & WebGIS Dashboard",
-        "url": "www.geo-server-data-downloader.com",
-        "description": "An interactive browser-based WebGIS application for querying, inspecting sub-layers, and exporting GIS vector spatial data from ESRI ArcGIS and GeoServer services.",
+        "name": "GeoServer Data Downloader & WebGIS Map Dashboard",
+        "url": "https://www.geo-server-data-downloader.com",
+        "description": "An open browser-based WebGIS application for querying, inspecting sub-layer geometries, and downloading spatial vector data from ESRI ArcGIS Server and GeoServer web services.",
         "applicationCategory": "GeographicInformationSystem",
         "operatingSystem": "All",
-        "browserRequirements": "Requires JavaScript"
+        "browserRequirements": "Requires JavaScript",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
       }
     </script>
 
-    <!-- Icons & Manifest -->
+    <!-- App Icons & Manifest -->
     <link rel="icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png" />
     <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png" />
@@ -85,6 +90,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.6/flowbite.min.css" rel="stylesheet" />
   </head>
   <body class="dark:bg-dark-bg bg-white">
+    <!-- Hidden Forms for Netlify/Bot Handling -->
     <form name="feedback" data-netlify="true" netlify-honeypot="bot-field" hidden>
       <input name="dismissed" type="text" />
       <input name="email" type="email" />
@@ -99,13 +105,14 @@
       <input name="error" type="text" />
     </form>
 
-    <!-- Fallback Content for Web Crawlers (Indexing boost before React loads) -->
+    <!-- Fallback Search Engine Beacon (Crawled by Google before React hydrates) -->
     <div id="root">
-      <div style="padding: 20px; font-family: sans-serif; display: none;">
-        <h1>GeoServer Data Downloader & WebGIS Map Dashboard</h1>
+      <div style="display: none; padding: 20px; font-family: sans-serif;">
+        <h1>GeoServer Data Downloader & Interactive WebGIS Map Dashboard</h1>
+        <h2>Online Tool to Extract, Inspect, and Export Spatial Vector Layers</h2>
         <p>
-          Download spatial vector data from any ESRI ArcGIS Server or GeoServer directly in your browser.
-          Inspect sub-layers, query live vector services, customize map basemaps, and export spatial datasets seamlessly.
+          Download spatial vector data from any ESRI ArcGIS Server or GeoServer directly in your browser without size restrictions. 
+          Inspect sub-layer geometries, query live ArcGIS REST feature services, preview spatial datasets, and export GIS data seamlessly.
         </p>
       </div>
     </div>
