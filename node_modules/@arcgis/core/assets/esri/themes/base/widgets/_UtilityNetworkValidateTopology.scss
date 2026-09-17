@@ -1,0 +1,46 @@
+@mixin utilityNetworkValidateTopology() {
+  .esri-un-validate-topology {
+    $header_height: 48px;
+    $icon_width: 32px;
+
+    &__action {
+      height: $header_height;
+    }
+
+    &__container {
+      width: 330px;
+    }
+
+    &__content {
+      margin: 0;
+      border-bottom: none;
+    }
+
+    &__controls-container {
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    &__status-icon {
+      width: $icon_width;
+
+      &-blank {
+        width: $icon_width;
+      }
+
+      &-error {
+        width: $icon_width;
+        color: var(--calcite-color-high-saturation-yellow-h-yy-060);
+      }
+
+      &-success {
+        width: $icon_width;
+        color: var(--calcite-color-high-saturation-green-h-gg-060);
+      }
+    }
+  }
+}
+
+@if $include_UtilityNetworkValidateTopology == true {
+  @include utilityNetworkValidateTopology();
+}

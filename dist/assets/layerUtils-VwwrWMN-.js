@@ -1,0 +1,1 @@
+function n(e){return(e==null?void 0:e.type)==="fill"}function r(e){return(e==null?void 0:e.type)==="extrude"}function u(e){return(e==null?void 0:e.type)==="object"}function o(e){return(e==null?void 0:e.type)==="text"}export{u as e,r as n,n as t,o as u};
