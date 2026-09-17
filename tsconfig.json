@@ -7,6 +7,7 @@
     "moduleResolution": "bundler",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "jsx": "react-jsx",
+    "types": ["geojson"]
 
     // Outputs & Interop
     "sourceMap": true,
