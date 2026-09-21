@@ -5,7 +5,7 @@ export const Documentation: React.FC = () => {
     <div className="max-w-4xl mx-auto px-4 py-12 space-y-6">
       <h1 className="text-3xl font-bold">Documentation</h1>
       <p className="text-sm text-slate-600 dark:text-slate-400">
-        Welcome to the Geo Server Data Downloader user guide and technical documentation.
+        Welcome to the Geo Server Data Downloader user guide and technical documentation.Built By Junaid.
       </p>
       <section className="space-y-2">
         <h2 className="text-xl font-semibold">Direct Service Workflow</h2>
