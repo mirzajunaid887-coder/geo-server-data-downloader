@@ -1,10 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-export default defineConfig(({ command }) => {
-  const isProduction = command === 'build';
-  return {
-    plugins: [react()],
-    base: isProduction ? '/index.html/' : '/',
-  };
+export default defineConfig({
+  plugins: [react()],
+  base: '/', // Must be root for Vercel deployments
 });
