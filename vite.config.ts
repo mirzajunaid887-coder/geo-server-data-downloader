@@ -5,6 +5,6 @@ export default defineConfig(({ command }) => {
   const isProduction = command === 'build';
   return {
     plugins: [react()],
-    base: isProduction ? '/gis-layer-downloader/' : '/',
+    base: isProduction ? '/geo-server-data-downloader/' : '/',
   };
 });
