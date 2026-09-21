@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "node ./node_modules/vite/bin/vite.js build",
     "preview": "vite preview"
-  }
+  },
   "dependencies": {
     "@arcgis/core": "^5.1.23",
     "@types/esri-leaflet": "^3.0.4",
