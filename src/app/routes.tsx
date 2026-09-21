@@ -7,12 +7,13 @@ import { Documentation } from '../pages/Documentation';
 import { About } from '../pages/About';
 import { Privacy } from '../pages/Privacy';
 import { Terms } from '../pages/Terms';
-import { ExportProgress } from '../pages/ExportProgress'; // New background export progress page
+import { ExportProgress } from '../pages/ExportProgress';
 
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/downloader" element={<Downloader />} />
       <Route path="/download" element={<Downloader />} />
       <Route path="/discover" element={<Discover />} />
       <Route path="/documentation" element={<Documentation />} />

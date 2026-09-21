@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { MapView } from '../components/map/MapView';
 import { fetchArcGISMetadata } from '../services/arcgis/service';
 import { fetchObjectIds } from '../services/arcgis/objectIds';
 import { fetchFeaturesBatch } from '../services/arcgis/query';
 import { SublayerSelectionModal } from '../components/SublayerSelectionModal';
 import { ExportModal } from '../components/ExportModal';
-import { Download, Layers, AlertCircle, Trash2, MoreVertical, ArrowUpDown, ArrowUp, ArrowDown, Minimize2, Maximize2, ChevronUp, Eye } from 'lucide-react';
+import { Download, Layers, AlertCircle, Trash2, MoreVertical, ArrowUpDown, ArrowUp, ArrowDown, Minimize2, Maximize2, ChevronUp, Eye, Search, Loader2, Plus } from 'lucide-react';
 import JSZip from 'jszip';
 
 interface LoadedLayer {
@@ -18,6 +19,12 @@ interface LoadedLayer {
 }
 
 export const Downloader: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const endpointParam = searchParams.get('url');
+
+  // Ref tracker to prevent double-adding bug from React strict mode/re-renders
+  const hasProcessedUrlRef = useRef(false);
+
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [exporting, setExporting] = useState(false);
@@ -25,6 +32,13 @@ export const Downloader: React.FC = () => {
   const [layers, setLayers] = useState<LoadedLayer[]>([]);
   const [progress, setProgress] = useState<string>('');
   
+  const [activeTab, setActiveTab] = useState<'url' | 'search'>('url');
+  
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [loadingItemId, setLoadingItemId] = useState<string | null>(null);
+
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
 
   const [pendingSublayers, setPendingSublayers] = useState<{ serviceUrl: string; sublayers: any[] } | null>(null);
@@ -37,7 +51,6 @@ export const Downloader: React.FC = () => {
   const [tableLoading, setTableLoading] = useState(false);
   const [tableProgress, setTableProgress] = useState<string>('');
 
-  // Pagination & Lazy Loading States
   const [tablePage, setTablePage] = useState<number>(0);
   const [pageSize] = useState<number>(50);
   const [totalRecordCount, setTotalRecordCount] = useState<number>(0);
@@ -67,7 +80,128 @@ export const Downloader: React.FC = () => {
     };
   }, []);
 
-  // Robustly fetch and pin map-clicked features into the attribute table records instantly
+  const executeLoadService = async (rawUrl: string) => {
+    let cleanUrl = rawUrl.trim();
+    if (!cleanUrl) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      if (cleanUrl.includes('/home/item.html?id=') || cleanUrl.includes('/sharing/rest/content/items/')) {
+        setProgress('Resolving ArcGIS Online Item ID...');
+        const match = cleanUrl.match(/id=([a-fA-F0-9]+)/) || cleanUrl.match(/\/items\/([a-fA-F0-9]+)/);
+        if (match && match[1]) {
+          const itemId = match[1];
+          const itemRes = await fetch(`https://www.arcgis.com/sharing/rest/content/items/${itemId}?f=json`);
+          const itemData = await itemRes.json();
+          if (itemData.url) {
+            cleanUrl = itemData.url;
+          } else {
+            throw new Error('Could not resolve a valid service URL from this ArcGIS Item ID.');
+          }
+        }
+      }
+
+      if ((cleanUrl.includes('FeatureServer') || cleanUrl.includes('MapServer')) && !cleanUrl.match(/\/\d+$/)) {
+        setProgress('Checking service for sublayers...');
+        try {
+          const res = await fetch(`${cleanUrl}?f=json`);
+          const data = await res.json();
+
+          if (data.layers && data.layers.length > 0) {
+            if (data.layers.length === 1) {
+              cleanUrl = `${cleanUrl}/${data.layers[0].id ?? 0}`;
+            } else {
+              setPendingSublayers({ serviceUrl: cleanUrl, sublayers: data.layers });
+              setLoading(false);
+              setProgress('');
+              return;
+            }
+          } else {
+            cleanUrl = `${cleanUrl}/0`;
+          }
+        } catch {
+          cleanUrl = `${cleanUrl}/0`;
+        }
+      }
+
+      setProgress('Fetching service metadata...');
+      const meta = await fetchArcGISMetadata(cleanUrl);
+
+      const newLayer: LoadedLayer = {
+        id: Math.random().toString(36).substring(2, 9),
+        name: meta.name || 'Unnamed Layer',
+        url: cleanUrl,
+        geometryType: meta.geometryType || 'Unknown',
+        visible: true,
+        extent: meta.extent,
+      };
+
+      setLayers((prev) => [newLayer, ...prev]);
+      setUrl('');
+      setProgress('Layer successfully added to map!');
+
+      if (meta.extent) {
+        setZoomTarget({ layerId: newLayer.id, extent: meta.extent, time: Date.now() });
+      }
+    } catch (err: any) {
+      setError(err.message || 'Failed to load service layer.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Automatically load service once when URL query parameter is present from Discovery tool
+  useEffect(() => {
+    if (endpointParam && !hasProcessedUrlRef.current) {
+      hasProcessedUrlRef.current = true;
+      const decodedUrl = decodeURIComponent(endpointParam);
+      setSearchParams({}, { replace: true });
+      executeLoadService(decodedUrl);
+    }
+  }, [endpointParam, setSearchParams]);
+
+  const handleDatasetSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+
+    setSearching(true);
+    setError(null);
+
+    try {
+      const res = await fetch(`https://www.arcgis.com/sharing/rest/search?q=${encodeURIComponent(searchQuery + ' (type:"Feature Service" OR type:"Map Service")')}&f=json&num=15`);
+      const data = await res.json();
+      setSearchResults(data.results || []);
+    } catch (err: any) {
+      setError(err.message || 'Failed to search datasets.');
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  const handleAddSearchedItemToMap = async (item: any) => {
+    setLoadingItemId(item.id);
+    setError(null);
+    try {
+      let serviceUrl = item.url;
+      if (!serviceUrl || !serviceUrl.includes('Server')) {
+        const itemRes = await fetch(`https://www.arcgis.com/sharing/rest/content/items/${item.id}?f=json`);
+        const itemData = await itemRes.json();
+        if (itemData.url) {
+          serviceUrl = itemData.url;
+        } else {
+          throw new Error('This search result is not a direct feature service layer.');
+        }
+      }
+      await executeLoadService(serviceUrl);
+    } catch (err: any) {
+      setError(err.message || 'Failed to load searched dataset.');
+    } finally {
+      setLoadingItemId(null);
+    }
+  };
+
   useEffect(() => {
     if (!selectedFeature || !attributeTableLayer) return;
 
@@ -96,45 +230,7 @@ export const Downloader: React.FC = () => {
 
   const handleLoadService = async (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanUrl = url.trim();
-    if (!cleanUrl) return;
-
-    setLoading(true);
-    setError(null);
-    try {
-      if ((cleanUrl.includes('FeatureServer') || cleanUrl.includes('MapServer')) && !cleanUrl.match(/\/\d+$/)) {
-        setProgress('Checking service for sublayers...');
-        const res = await fetch(`${cleanUrl}?f=json`);
-        const data = await res.json();
-
-        if (data.layers && data.layers.length > 0) {
-          setPendingSublayers({ serviceUrl: cleanUrl, sublayers: data.layers });
-          setLoading(false);
-          setProgress('');
-          return;
-        }
-      }
-
-      setProgress('Fetching service metadata...');
-      const meta = await fetchArcGISMetadata(cleanUrl);
-
-      const newLayer: LoadedLayer = {
-        id: Math.random().toString(36).substring(2, 9),
-        name: meta.name || 'Unnamed Layer',
-        url: cleanUrl,
-        geometryType: meta.geometryType || 'Unknown',
-        visible: true,
-        extent: meta.extent,
-      };
-
-      setLayers((prev) => [newLayer, ...prev]);
-      setUrl('');
-      setProgress('Layer successfully added to map!');
-    } catch (err: any) {
-      setError(err.message || 'Failed to load service layer.');
-    } finally {
-      setLoading(false);
-    }
+    await executeLoadService(url);
   };
 
   const handleConfirmSublayers = async (selectedItems: { url: string; title: string }[]) => {
@@ -331,7 +427,6 @@ export const Downloader: React.FC = () => {
 </kml>`;
   };
 
-  // Bulk Export handler supporting massive datasets via batching & JSZip for multiple layers
   const handleBulkExport = async (selectedLayerIds: string[], format: string) => {
     setExporting(true);
     setError(null);
@@ -440,7 +535,7 @@ export const Downloader: React.FC = () => {
   return (
     <div style={{ 
       display: 'grid', 
-      gridTemplateColumns: isMobile ? '1fr' : '360px 1fr', 
+      gridTemplateColumns: isMobile ? '1fr' : '380px 1fr', 
       gap: '1rem', 
       padding: '0.5rem 0', 
       boxSizing: 'border-box', 
@@ -454,31 +549,111 @@ export const Downloader: React.FC = () => {
           <h2 style={{ fontSize: '1rem', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '0.50rem', margin: 0 }}>
             <Layers style={{ width: '1.125rem', height: '1.125rem', color: 'var(--accent-color)' }} /> GIS Service Loader
           </h2>
-          <form onSubmit={handleLoadService} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <div>
-              <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.25rem' }}>ArcGIS REST / WFS URL</label>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
+
+          <div style={{ display: 'flex', backgroundColor: 'rgba(255,255,255,0.05)', padding: '0.2rem', borderRadius: '0.375rem', gap: '0.25rem' }}>
+            <button
+              type="button"
+              onClick={() => setActiveTab('url')}
+              style={{
+                flex: 1,
+                padding: '0.4rem',
+                fontSize: '0.75rem',
+                fontWeight: '600',
+                backgroundColor: activeTab === 'url' ? 'var(--accent-color)' : 'transparent',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '0.25rem',
+                cursor: 'pointer',
+              }}
+            >
+              URL / Endpoint
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('search')}
+              style={{
+                flex: 1,
+                padding: '0.4rem',
+                fontSize: '0.75rem',
+                fontWeight: '600',
+                backgroundColor: activeTab === 'search' ? 'var(--accent-color)' : 'transparent',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '0.25rem',
+                cursor: 'pointer',
+              }}
+            >
+              Search Datasets
+            </button>
+          </div>
+
+          {activeTab === 'url' ? (
+            <form onSubmit={handleLoadService} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.25rem' }}>ArcGIS REST / WFS URL</label>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <input
+                    type="url"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    placeholder="https://services.arcgis.com/.../FeatureServer"
+                    required
+                    className="form-input"
+                    style={{ flex: 1, fontSize: '0.8rem' }}
+                  />
+                  <button type="submit" disabled={loading} className="btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.8rem', opacity: loading ? 0.6 : 1 }}>
+                    {loading ? 'Adding...' : 'Add'}
+                  </button>
+                </div>
+              </div>
+            </form>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <form onSubmit={handleDatasetSearch} style={{ display: 'flex', gap: '0.5rem' }}>
                 <input
-                  type="url"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  placeholder="https://services.arcgis.com/.../FeatureServer"
-                  required
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search datasets (e.g., hospitals, boundaries)..."
                   className="form-input"
                   style={{ flex: 1, fontSize: '0.8rem' }}
                 />
-                <button type="submit" disabled={loading} className="btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.8rem', opacity: loading ? 0.6 : 1 }}>
-                  {loading ? 'Adding...' : 'Add'}
+                <button type="submit" disabled={searching} className="btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.8rem' }}>
+                  {searching ? <Loader2 style={{ width: '0.8rem', height: '0.8rem', animation: 'spin 1s linear infinite' }} /> : <Search style={{ width: '0.8rem', height: '0.8rem' }} />}
                 </button>
-              </div>
+              </form>
+
+              {searchResults.length > 0 && (
+                <div style={{ maxHeight: '220px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem', paddingRight: '4px' }}>
+                  {searchResults.map((item) => (
+                    <div key={item.id} style={{ padding: '0.5rem', backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)', borderRadius: '0.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
+                      <div style={{ minWidth: 0, flex: 1 }}>
+                        <p style={{ fontSize: '0.75rem', fontWeight: '600', margin: '0 0 0.15rem 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.title}</p>
+                        <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>{item.type}</span>
+                      </div>
+                      <button
+                        onClick={() => handleAddSearchedItemToMap(item)}
+                        disabled={loadingItemId === item.id}
+                        style={{ backgroundColor: 'var(--accent-color)', color: '#fff', border: 'none', padding: '0.25rem 0.5rem', borderRadius: '0.25rem', fontSize: '0.7rem', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.2rem', flexShrink: 0 }}
+                      >
+                        {loadingItemId === item.id ? <Loader2 style={{ width: '0.7rem', height: '0.7rem', animation: 'spin 1s linear infinite' }} /> : <Plus style={{ width: '0.7rem', height: '0.7rem' }} />}
+                        Add
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          </form>
+          )}
 
           {progress && <p style={{ fontSize: '0.75rem', color: 'var(--accent-color)', fontWeight: '600', margin: 0 }}>{progress}</p>}
           {error && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: '#dc2626', backgroundColor: 'rgba(220, 38, 38, 0.1)', padding: '0.5rem', borderRadius: '0.375rem' }}>
-              <AlertCircle style={{ width: '1rem', height: '1rem', flexShrink: 0 }} />
-              <span>{error}</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', fontSize: '0.75rem', color: '#dc2626', backgroundColor: 'rgba(220, 38, 38, 0.1)', padding: '0.5rem', borderRadius: '0.375rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <AlertCircle style={{ width: '1rem', height: '1rem', flexShrink: 0 }} />
+                <span style={{ fontWeight: '600' }}>Unable to load this ArcGIS layer.</span>
+              </div>
+              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', wordBreak: 'break-all' }}>Reason: {error}</span>
             </div>
           )}
         </div>
@@ -503,7 +678,7 @@ export const Downloader: React.FC = () => {
 
           {layers.length === 0 ? (
             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center', margin: '2rem 0' }}>
-              No layers added yet. Paste a service URL above and click Add.
+              No layers added yet. Paste a service URL or search for datasets above to add them to your map.
             </p>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -645,7 +820,7 @@ export const Downloader: React.FC = () => {
       {attributeTableLayer && (
         <div style={{
           position: 'fixed',
-          left: isMobile ? '0.5rem' : '380px',
+          left: isMobile ? '0.5rem' : '390px',
           right: '0.5rem',
           backgroundColor: '#111827',
           borderTop: '2px solid var(--accent-color)',
@@ -711,7 +886,7 @@ export const Downloader: React.FC = () => {
               )}
 
               <button onClick={() => setAttributeTableLayer(null)} title="Close" style={{ ...iconBtnStyle, fontSize: '0.9rem', fontWeight: 'bold' }}>
-                ✕
+                ×
               </button>
             </div>
           </div>
@@ -797,7 +972,6 @@ export const Downloader: React.FC = () => {
         </div>
       )}
 
-      {/* Sublayer Selection Modal */}
       {pendingSublayers && (
         <SublayerSelectionModal
           serviceUrl={pendingSublayers.serviceUrl}
@@ -807,7 +981,6 @@ export const Downloader: React.FC = () => {
         />
       )}
 
-      {/* Export Modal */}
       {showExportModal && (
         <ExportModal
           layers={layers}
@@ -840,3 +1013,5 @@ const iconBtnStyle: React.CSSProperties = {
   alignItems: 'center',
   padding: '2px',
 };
+
+export default Downloader;

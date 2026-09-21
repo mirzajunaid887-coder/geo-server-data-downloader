@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { searchArcGISOnline } from '../services/arcgis-online/search';
 import { ArcGISOnlineItem } from '../types/arcgisOnline';
-import { Compass, Search, ExternalLink } from 'lucide-react';
+import { Compass, Search, ExternalLink, PlusCircle } from 'lucide-react';
 
 export const Discover: React.FC = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<ArcGISOnlineItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,6 +21,11 @@ export const Discover: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleAddToMap = (url: string) => {
+    const encodedUrl = encodeURIComponent(url);
+    navigate(`/downloader?url=${encodedUrl}`);
   };
 
   return (
@@ -58,16 +65,27 @@ export const Discover: React.FC = () => {
                 {item.snippet || item.description || 'No description provided.'}
               </p>
             </div>
-            {item.url && (
-              <a
-                href={item.url}
-                target="_blank"
-                rel="noreferrer"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.75rem', fontWeight: '600', color: 'var(--accent-color)', textDecoration: 'none', paddingTop: '0.5rem' }}
-              >
-                Access Endpoint <ExternalLink style={{ width: '0.75rem', height: '0.75rem' }} />
-              </a>
-            )}
+            
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.5rem', borderTop: '1px solid var(--border-color, #e2e8f0)' }}>
+              {item.url && (
+                <>
+                  <button
+                    onClick={() => handleAddToMap(item.url)}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.75rem', fontWeight: '600', backgroundColor: 'var(--accent-color, #4f46e5)', color: 'white', padding: '0.375rem 0.75rem', borderRadius: '0.375rem', border: 'none', cursor: 'pointer' }}
+                  >
+                    <PlusCircle style={{ width: '0.875rem', height: '0.875rem' }} /> Add to Map
+                  </button>
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.75rem', fontWeight: '500', color: 'var(--text-muted)', textDecoration: 'none' }}
+                  >
+                    Endpoint <ExternalLink style={{ width: '0.75rem', height: '0.75rem' }} />
+                  </a>
+                </>
+              )}
+            </div>
           </div>
         ))}
       </div>
