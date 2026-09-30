@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@arcgis/core": "^5.1.23",
+    "@arcgis/core": "^5.1.26",
     "@types/esri-leaflet": "^3.0.4",
     "clsx": "^2.1.1",
     "esri-leaflet": "^3.0.19",
