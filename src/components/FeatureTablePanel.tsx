@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import FeatureTable from '@arcgis/core/widgets/FeatureTable';
-import '@arcgis/core/assets/esri/themes/dark/main.css';
 
 interface FeatureTablePanelProps {
   layerUrl: string;
@@ -27,21 +26,17 @@ export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
 
     const init = async () => {
       try {
-        // 1. Create the layer
         featureLayer = new FeatureLayer({
           url: layerUrl,
           outFields: ['*'],
           title: layerTitle,
         });
 
-        // 2. IMPORTANT: wait until the layer's metadata is fully loaded
-        //    before handing it to the FeatureTable widget.
         setStatus('Loading layer metadata...');
         await featureLayer.load();
 
         if (isDestroyed || !containerRef.current) return;
 
-        // 3. Build the FeatureTable
         setStatus('Rendering table...');
         featureTable = new FeatureTable({
           layer: featureLayer,
@@ -75,16 +70,8 @@ export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
 
     return () => {
       isDestroyed = true;
-      try {
-        if (featureTable) featureTable.destroy();
-      } catch {
-        /* noop */
-      }
-      try {
-        if (featureLayer) featureLayer.destroy();
-      } catch {
-        /* noop */
-      }
+      try { if (featureTable) featureTable.destroy(); } catch {}
+      try { if (featureLayer) featureLayer.destroy(); } catch {}
     };
   }, [layerUrl, layerTitle]);
 
@@ -99,7 +86,6 @@ export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
         position: 'relative',
       }}
     >
-      {/* Header strip with title + close button */}
       <div
         style={{
           display: 'flex',
@@ -114,7 +100,7 @@ export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
           style={{
             fontSize: '0.8rem',
             fontWeight: 600,
-            color: '#f3f4f6',
+            color: 'var(--text-main)',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
@@ -126,12 +112,12 @@ export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
           onClick={onClose}
           title="Close"
           style={{
-            background: '#ef4444',
+            background: 'var(--danger-color)',
             color: '#fff',
             border: 'none',
             borderRadius: '4px',
-            padding: '2px 8px',
-            fontSize: '0.85rem',
+            padding: '4px 10px',
+            fontSize: '0.9rem',
             fontWeight: 'bold',
             cursor: 'pointer',
             lineHeight: 1,
@@ -142,16 +128,15 @@ export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
         </button>
       </div>
 
-      {/* Status / error message */}
       {status && (
         <div
           style={{
             padding: '0.5rem 0.75rem',
             fontSize: '0.75rem',
-            color: hasError ? '#f87171' : '#9ca3af',
+            color: hasError ? 'var(--danger-color)' : 'var(--text-muted)',
             backgroundColor: hasError
-              ? 'rgba(239, 68, 68, 0.08)'
-              : 'rgba(255,255,255,0.03)',
+              ? 'var(--danger-soft)'
+              : 'var(--bg-hover)',
             borderRadius: 4,
             marginBottom: '0.5rem',
             flexShrink: 0,
@@ -161,18 +146,14 @@ export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
         </div>
       )}
 
-      {/* Container the FeatureTable attaches to.
-          flex: 1 + minHeight: 0 lets it fill the remaining space
-          inside the flex column, which is required for the widget
-          to measure its own size correctly. */}
       <div
         ref={containerRef}
         style={{
           flex: 1,
           minHeight: 0,
           width: '100%',
-          backgroundColor: '#1f2937',
-          border: '1px solid #374151',
+          backgroundColor: 'var(--bg-input)',
+          border: '1px solid var(--border-color)',
           borderRadius: 4,
           overflow: 'hidden',
         }}

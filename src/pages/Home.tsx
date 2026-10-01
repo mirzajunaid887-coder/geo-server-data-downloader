@@ -6,18 +6,60 @@ import { AdContainer } from '../components/ads/AdContainer';
 
 export const Home: React.FC = () => {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', padding: '2rem 0' }}>
-      <div style={{ textAlign: 'center', maxWidth: '48rem', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1rem', padding: '0 1rem', boxSizing: 'border-box' }}>
-        <h1 style={{ fontSize: '3rem', fontWeight: '800', letterSpacing: '-0.025em', margin: 0, color: 'var(--text-main)' }}>
-          Download GIS Data Without the Hassle
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', padding: '1rem 0' }}>
+  <div
+    style={{
+      textAlign: 'center',
+      maxWidth: '48rem',
+      margin: '0 auto',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '1rem',
+      padding: '0 0.5rem',
+      boxSizing: 'border-box',
+    }}
+  >
+    <h1
+      style={{
+        fontSize: 'clamp(1.75rem, 6vw, 3rem)',
+        fontWeight: 800,
+        letterSpacing: '-0.025em',
+        margin: 0,
+        color: 'var(--text-main)',
+        lineHeight: 1.15,
+      }}
+    >
+      Download GIS Data Without the Hassle
         </h1>
-        <p style={{ fontSize: '1.125rem', color: 'var(--text-muted)', margin: 0 }}>
-          {APP_CONFIG.APP_DESCRIPTION}
-        </p>
-      </div>
+    <p
+      style={{
+        fontSize: 'clamp(0.95rem, 2.5vw, 1.125rem)',
+        color: 'var(--text-muted)',
+        margin: 0,
+      }}
+    >
+      {APP_CONFIG.APP_DESCRIPTION}
+    </p>
+  </div>
+
+  {/* The two feature cards grid — change gap to be responsive */}
+  <div
+    style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+      gap: '1.25rem',
+      maxWidth: '1000px',
+      margin: '0 auto',
+      width: '100%',
+      padding: '0 0.5rem',
+      boxSizing: 'border-box',
+    }}
+  >
+    {/* ... card content unchanged ... */}
+  </div>
 
       {/* Main Workflow Action Highlight Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem', maxWidth: '1000px', margin: '0 auto', width: '100%', padding: '0 1rem', boxSizing: 'border-box' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem', maxWidth: '1000px', margin: '0 auto', width: '100%', padding: '0 1rem', boxSizing: 'border-box' }}>
         
         {/* Direct URL Downloader Card */}
         <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '1.5rem', borderLeft: '4px solid var(--accent-color)', boxSizing: 'border-box', width: '100%' }}>

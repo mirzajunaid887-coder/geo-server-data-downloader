@@ -90,8 +90,31 @@ export const ExportProgress: React.FC = () => {
   }, []);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#111827', color: '#f3f4f6', fontFamily: 'sans-serif', padding: '1rem' }}>
-      <div style={{ backgroundColor: '#1f2937', border: '1px solid #374151', padding: '2rem', borderRadius: '0.5rem', width: '100%', maxWidth: '450px', textAlign: 'center', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.5)' }}>
+    <div
+  style={{
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '100vh',
+    backgroundColor: 'var(--bg-primary)',
+    color: 'var(--text-main)',
+    fontFamily: 'system-ui, -apple-system, sans-serif',
+    padding: '1rem',
+  }}
+>
+  <div
+    style={{
+      backgroundColor: 'var(--bg-card)',
+      border: '1px solid var(--border-color)',
+      padding: 'clamp(1.25rem, 5vw, 2rem)',
+      borderRadius: '0.5rem',
+      width: '100%',
+      maxWidth: '460px',
+      textAlign: 'center',
+      boxShadow: 'var(--shadow-lg)',
+    }}
+  >
         <h2 style={{ margin: '0 0 1rem 0', fontSize: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
           <Download style={{ color: 'var(--accent-color)' }} /> Exporting Geospatial Data
         </h2>
@@ -99,20 +122,20 @@ export const ExportProgress: React.FC = () => {
         {!error && !isComplete && (
           <div style={{ margin: '1.5rem 0' }}>
             <Loader2 style={{ width: '2.5rem', height: '2.5rem', animation: 'spin 1s linear infinite', color: 'var(--accent-color)', margin: '0 auto 1rem auto' }} />
-            <p style={{ fontSize: '0.85rem', color: '#9ca3af', margin: 0 }}>{status}</p>
-            <div style={{ width: '100%', backgroundColor: '#374151', height: '8px', borderRadius: '4px', marginTop: '1rem', overflow: 'hidden' }}>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>{status}</p>
+            <div style={{ width: '100%', backgroundColor: 'var(--bg-hover)', height: '8px', borderRadius: '4px', marginTop: '1rem', overflow: 'hidden' }}>
               <div style={{ width: `${progressPercent}%`, backgroundColor: 'var(--accent-color)', height: '100%', transition: 'width 0.3s ease' }} />
             </div>
-            <p style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '0.5rem' }}>{progressPercent}% Complete</p>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>{progressPercent}% Complete</p>
           </div>
         )}
 
         {isComplete && (
           <div style={{ margin: '1.5rem 0' }}>
-            <CheckCircle style={{ width: '2.5rem', height: '2.5rem', color: '#10b981', margin: '0 auto 1rem auto' }} />
-            <p style={{ fontSize: '0.9rem', fontWeight: '600', color: '#10b981' }}>Downloads Triggered Successfully!</p>
-            <p style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.5rem' }}>You can now safely close this window.</p>
-            <button onClick={() => window.close()} style={{ marginTop: '1rem', padding: '0.5rem 1rem', background: '#374151', color: '#fff', border: 'none', borderRadius: '0.375rem', cursor: 'pointer' }}>
+            <CheckCircle style={{ width: '2.5rem', height: '2.5rem', color: 'var(--success-color)', margin: '0 auto 1rem auto' }} />
+            <p style={{ fontSize: '0.9rem', fontWeight: '600', color: 'var(--success-color)' }}>Downloads Triggered Successfully!</p>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>You can now safely close this window.</p>
+            <button onClick={() => window.close()} style={{ marginTop: '1rem', padding: '0.5rem 1rem', background: 'var(--bg-hover)', color: '#fff', border: 'none', borderRadius: '0.375rem', cursor: 'pointer' }}>
               Close Window
             </button>
           </div>
@@ -120,8 +143,8 @@ export const ExportProgress: React.FC = () => {
 
         {error && (
           <div style={{ margin: '1.5rem 0' }}>
-            <AlertCircle style={{ width: '2.5rem', height: '2.5rem', color: '#ef4444', margin: '0 auto 1rem auto' }} />
-            <p style={{ fontSize: '0.85rem', color: '#ef4444', wordBreak: 'break-word' }}>{error}</p>
+            <AlertCircle style={{ width: '2.5rem', height: '2.5rem', color: 'var(--danger-color)', margin: '0 auto 1rem auto' }} />
+            <p style={{ fontSize: '0.85rem', color: 'var(--danger-color)', wordBreak: 'break-word' }}>{error}</p>
           </div>
         )}
       </div>

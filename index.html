@@ -4,6 +4,25 @@
     <meta charset="UTF-8" />
 
     <!-- ============================= -->
+    <!-- ANTI-FLASH THEME SCRIPT       -->
+    <!-- ============================= -->
+    <!-- Runs synchronously before paint so the correct theme is applied
+         on the very first frame. Without this, dark-mode users would
+         briefly see the light theme while React boots up. -->
+    <script>
+      (function () {
+        try {
+          var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = isDark ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+          document.documentElement.style.colorScheme = theme;
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
+
+    <!-- ============================= -->
     <!-- FAVICON / WEBSITE ICON        -->
     <!-- ============================= -->
 
@@ -20,8 +39,9 @@
     <!-- Web app manifest -->
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Browser UI theme color -->
-    <meta name="theme-color" content="#0f172a" />
+    <!-- Browser UI theme color (matches dark theme by default) -->
+    <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)" />
 
     <!-- ============================= -->
     <!-- RESPONSIVE                     -->
@@ -153,7 +173,7 @@
     </script>
   </head>
 
-  <body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
+  <body>
     <div id="root"></div>
 
     <script type="module" src="./src/main.tsx"></script>
