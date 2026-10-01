@@ -19,6 +19,15 @@ import {
   Plus,
 } from 'lucide-react';
 import JSZip from 'jszip';
+import { SEO } from '../components/SEO';
+
+// Inside the component's return statement:
+<SEO
+  title="GIS Data Downloader"
+  description="Load ArcGIS REST, WFS, and spatial web services and export them as GeoJSON, Shapefile, KML, GeoPackage, or CSV. Free, browser-based, no signup required."
+  keywords="ArcGIS downloader, FeatureServer export, WFS downloader, GIS layer exporter"
+  path="/download"
+/>
 
 interface LoadedLayer {
   id: string;

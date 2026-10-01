@@ -3,6 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { searchArcGISOnline } from '../services/arcgis-online/search';
 import { ArcGISOnlineItem } from '../types/arcgisOnline';
 import { Compass, Search, ExternalLink, PlusCircle } from 'lucide-react';
+import { SEO } from '../components/SEO';
+
+// Inside the component's return statement:
+<SEO
+  title="Discover ArcGIS Online Datasets"
+  description="Search thousands of public ArcGIS Online feature services, parcels, boundaries, and map layers — no prior URL needed."
+  keywords="ArcGIS Online search, find GIS data, public feature services, spatial data discovery"
+  path="/discover"
+/>
 
 export const Discover: React.FC = () => {
   const [query, setQuery] = useState('');

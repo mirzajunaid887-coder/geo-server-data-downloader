@@ -3,7 +3,17 @@ import { Link } from 'react-router-dom';
 import { Globe, Compass, ArrowRight, Zap, Database } from 'lucide-react';
 import { APP_CONFIG } from '../config/app';
 import { AdContainer } from '../components/ads/AdContainer';
+import { SEO } from '../components/SEO';
 
+// Inside the component's return statement:
+<>
+  <SEO
+    path="/"
+    description="Free online GIS data downloader. Export ArcGIS REST, WFS, and other spatial web services as Shapefile, GeoJSON, KML, and GeoPackage — entirely in your browser."
+    keywords="GIS data downloader, ArcGIS REST downloader, WFS to Shapefile, GeoJSON exporter, KML converter, GeoPackage export, free GIS tool"
+  />
+  {/* ... rest of your Home page JSX ... */}
+</>
 export const Home: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', padding: '1rem 0' }}>

@@ -1,4 +1,23 @@
 import React from 'react';
+import { SEO, buildFaqSchema } from '../components/SEO';
+
+// Inside the component's return statement:
+<SEO
+  title="Documentation & User Guide"
+  description="Learn how to download ArcGIS REST layers, WFS services, and ArcGIS Online datasets as Shapefile, GeoJSON, KML, or GeoPackage."
+  keywords="ArcGIS download guide, WFS tutorial, GIS export documentation"
+  path="/documentation"
+  structuredData={buildFaqSchema([
+    {
+      question: 'How do I download an ArcGIS REST service as a Shapefile?',
+      answer: 'Paste your FeatureServer URL into the Downloader, select the layer, and use the Bulk Export option to generate a Shapefile.'
+    },
+    {
+      question: 'Can I convert GeoJSON to KML with this tool?',
+      answer: 'Yes. Load a GeoJSON source or any ArcGIS layer and select KML as your export format in the Bulk Export dialog.'
+    }
+  ])}
+/>
 
 export const Documentation: React.FC = () => {
   return (
