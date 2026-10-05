@@ -31,6 +31,22 @@
     <priority>0.5</priority>
   </url>
   <url>
+  <loc>https://www.geo-server-data-downloader.com/blog</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.geo-server-data-downloader.com/blog/how-to-download-arcgis-rest-featureserver-data</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.geo-server-data-downloader.com/blog/geojson-vs-shapefile-vs-geopackage</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.geo-server-data-downloader.com/contact</loc>
+  <priority>0.5</priority>
+</url>
+  <url>
     <loc>https://geo-server-data-downloader.com/privacy</loc>
     <lastmod>2026-09-21</lastmod>
     <changefreq>yearly</changefreq>
@@ -42,4 +58,44 @@
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
+  <url>
+  <loc>https://www.geo-server-data-downloader.com/blog/how-to-find-free-parcel-data-us-counties</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.geo-server-data-downloader.com/blog/complete-guide-wfs-web-feature-service</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.geo-server-data-downloader.com/blog/how-to-convert-arcgis-online-layers-to-excel</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.geo-server-data-downloader.com/blog/ten-free-gis-data-sources-every-analyst-should-know</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.geo-server-data-downloader.com/blog/understanding-coordinate-systems-and-projections</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.geo-server-data-downloader.com/blog/how-to-load-gis-data-in-qgis-beginner-guide</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.geo-server-data-downloader.com/blog/what-is-arcgis-online-complete-introduction</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.geo-server-data-downloader.com/blog/how-to-use-arcgis-rest-api-query-parameters</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.geo-server-data-downloader.com/blog/beginners-guide-spatial-data-formats</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.geo-server-data-downloader.com/blog/how-to-download-census-data-for-gis-analysis</loc>
+  <priority>0.8</priority>
+</url>
 </urlset>

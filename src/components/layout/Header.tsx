@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { Database, Globe, Compass, BookOpen, Info, Menu, X } from 'lucide-react';
+import { Database, Globe, Compass, BookOpen, Info, Menu, X, Newspaper } from 'lucide-react';
 import { APP_CONFIG } from '../../config/app';
 
 const NAV_ITEMS = [
   { to: '/download', label: 'Downloader', icon: Globe },
   { to: '/discover', label: 'Discover AGOL', icon: Compass },
   { to: '/documentation', label: 'Documentation', icon: BookOpen },
+  { to: '/blog', label: 'Blog', icon: Newspaper },
   { to: '/about', label: 'About', icon: Info },
 ];
 

@@ -179,6 +179,16 @@ export const Footer: React.FC = () => {
           <h4 style={sectionHeadingStyle}>Information</h4>
           <ul style={listStyle}>
             <li>
+  <Link to="/contact" style={footerLinkStyle} onMouseEnter={hoverOn} onMouseLeave={hoverOff}>
+    Contact
+  </Link>
+</li>
+<li>
+  <Link to="/blog" style={footerLinkStyle} onMouseEnter={hoverOn} onMouseLeave={hoverOff}>
+    Blog &amp; Guides
+  </Link>
+</li>
+            <li>
               <Link
                 to="/privacy"
                 style={footerLinkStyle}
