@@ -10,7 +10,7 @@ const CONTACT = {
   email: 'gisgynix@gmail.com',
   fiverr: 'https://www.fiverr.com/gisgynix',
   upwork: 'https://www.upwork.com/freelancers/~014c5dfcb05a8b2acb',
-  //github: 'https://github.com/your-username',            // set to '' to hide
+  github: 'https://github.com/mirzajunaid887-coder',            // set to '' to hide
   linkedin: 'https://www.linkedin.com/in/muhammad-junaid-baig-38b102247/',  // set to '' to hide
   facebook: 'https://www.facebook.com/profile.php?id=61553547554500',                                           // optional, set to '' to hide
 };
@@ -70,56 +70,14 @@ export const Footer: React.FC = () => {
               color: 'var(--text-muted)',
             }}
           >
-            Free, browser-based tool for exploring and exporting ArcGIS REST,
+            Free, browser-based tool for exploring and downloading ArcGIS REST,
             WFS, and other spatial web services as Shapefile, GeoJSON, KML,
-            GeoPackage, and CSV.
+            GeoPackage, GPX and CSV. Plus you can also download the data available at
+            ArcGIS Online Store directly through the discovery tool.
           </p>
         </div>
 
-        {/* Hire Me / Contact */}
-        <div>
-          <h4 style={sectionHeadingStyle}>Hire Me</h4>
-          <ul style={listStyle}>
-            <li>
-              <a
-                href={`mailto:${CONTACT.email}`}
-                style={footerLinkStyle}
-                onMouseEnter={hoverOn}
-                onMouseLeave={hoverOff}
-              >
-                <Mail style={iconStyle} />
-                {CONTACT.email}
-              </a>
-            </li>
-            <li>
-              <a
-                href={CONTACT.fiverr}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={footerLinkStyle}
-                onMouseEnter={hoverOn}
-                onMouseLeave={hoverOff}
-              >
-                <MessageCircle style={iconStyle} />
-                Fiverr
-              </a>
-            </li>
-            <li>
-              <a
-                href={CONTACT.upwork}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={footerLinkStyle}
-                onMouseEnter={hoverOn}
-                onMouseLeave={hoverOff}
-              >
-                <Briefcase style={iconStyle} />
-                Upwork
-              </a>
-            </li>
-          </ul>
-        </div>
-
+       
         {/* Find Me Online */}
         {(CONTACT.github || CONTACT.linkedin || CONTACT.website) && (
           <div>
@@ -180,7 +138,7 @@ export const Footer: React.FC = () => {
           <ul style={listStyle}>
             <li>
   <Link to="/contact" style={footerLinkStyle} onMouseEnter={hoverOn} onMouseLeave={hoverOff}>
-    Contact
+    Contact Me
   </Link>
 </li>
 <li>
