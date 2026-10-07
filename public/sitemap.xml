@@ -1,101 +1,138 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- ================= CORE PAGES ================= -->
   <url>
-    <loc>https://geo-server-data-downloader.com/</loc>
-    <lastmod>2026-09-21</lastmod>
-    <changefreq>daily</changefreq>
+    <loc>https://www.geo-server-data-downloader.com/</loc>
+    <lastmod>2026-10-07</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://geo-server-data-downloader.com/download</loc>
-    <lastmod>2026-09-21</lastmod>
+    <loc>https://www.geo-server-data-downloader.com/download</loc>
+    <lastmod>2026-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://geo-server-data-downloader.com/discover</loc>
-    <lastmod>2026-09-21</lastmod>
+    <loc>https://www.geo-server-data-downloader.com/discover</loc>
+    <lastmod>2026-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://geo-server-data-downloader.com/documentation</loc>
-    <lastmod>2026-09-21</lastmod>
+    <loc>https://www.geo-server-data-downloader.com/documentation</loc>
+    <lastmod>2026-10-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+
+  <!-- ================= BLOG INDEX ================= -->
   <url>
-    <loc>https://geo-server-data-downloader.com/about</loc>
-    <lastmod>2026-09-21</lastmod>
+    <loc>https://www.geo-server-data-downloader.com/blog</loc>
+    <lastmod>2026-10-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- ================= BLOG POSTS ================= -->
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/blog/how-to-download-arcgis-rest-featureserver-data</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/blog/geojson-vs-shapefile-vs-geopackage</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/blog/how-to-find-free-parcel-data-us-counties</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/blog/complete-guide-wfs-web-feature-service</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/blog/how-to-convert-arcgis-online-layers-to-excel</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/blog/ten-free-gis-data-sources-every-analyst-should-know</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/blog/understanding-coordinate-systems-and-projections</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/blog/how-to-load-gis-data-in-qgis-beginner-guide</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/blog/what-is-arcgis-online-complete-introduction</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/blog/how-to-use-arcgis-rest-api-query-parameters</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/blog/beginners-guide-spatial-data-formats</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/blog/how-to-download-census-data-for-gis-analysis</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- ================= INFO PAGES ================= -->
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/about</loc>
+    <lastmod>2026-10-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-  <loc>https://www.geo-server-data-downloader.com/blog</loc>
-  <priority>0.8</priority>
-</url>
-<url>
-  <loc>https://www.geo-server-data-downloader.com/blog/how-to-download-arcgis-rest-featureserver-data</loc>
-  <priority>0.8</priority>
-</url>
-<url>
-  <loc>https://www.geo-server-data-downloader.com/blog/geojson-vs-shapefile-vs-geopackage</loc>
-  <priority>0.8</priority>
-</url>
-<url>
-  <loc>https://www.geo-server-data-downloader.com/contact</loc>
-  <priority>0.5</priority>
-</url>
+    <loc>https://www.geo-server-data-downloader.com/contact</loc>
+    <lastmod>2026-10-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
   <url>
-    <loc>https://geo-server-data-downloader.com/privacy</loc>
-    <lastmod>2026-09-21</lastmod>
+    <loc>https://www.geo-server-data-downloader.com/privacy</loc>
+    <lastmod>2026-10-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://geo-server-data-downloader.com/terms</loc>
-    <lastmod>2026-09-21</lastmod>
+    <loc>https://www.geo-server-data-downloader.com/terms</loc>
+    <lastmod>2026-10-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
-  <url>
-  <loc>https://www.geo-server-data-downloader.com/blog/how-to-find-free-parcel-data-us-counties</loc>
-  <priority>0.8</priority>
-</url>
-<url>
-  <loc>https://www.geo-server-data-downloader.com/blog/complete-guide-wfs-web-feature-service</loc>
-  <priority>0.8</priority>
-</url>
-<url>
-  <loc>https://www.geo-server-data-downloader.com/blog/how-to-convert-arcgis-online-layers-to-excel</loc>
-  <priority>0.8</priority>
-</url>
-<url>
-  <loc>https://www.geo-server-data-downloader.com/blog/ten-free-gis-data-sources-every-analyst-should-know</loc>
-  <priority>0.8</priority>
-</url>
-<url>
-  <loc>https://www.geo-server-data-downloader.com/blog/understanding-coordinate-systems-and-projections</loc>
-  <priority>0.8</priority>
-</url>
-<url>
-  <loc>https://www.geo-server-data-downloader.com/blog/how-to-load-gis-data-in-qgis-beginner-guide</loc>
-  <priority>0.8</priority>
-</url>
-<url>
-  <loc>https://www.geo-server-data-downloader.com/blog/what-is-arcgis-online-complete-introduction</loc>
-  <priority>0.8</priority>
-</url>
-<url>
-  <loc>https://www.geo-server-data-downloader.com/blog/how-to-use-arcgis-rest-api-query-parameters</loc>
-  <priority>0.8</priority>
-</url>
-<url>
-  <loc>https://www.geo-server-data-downloader.com/blog/beginners-guide-spatial-data-formats</loc>
-  <priority>0.8</priority>
-</url>
-<url>
-  <loc>https://www.geo-server-data-downloader.com/blog/how-to-download-census-data-for-gis-analysis</loc>
-  <priority>0.8</priority>
-</url>
+
 </urlset>

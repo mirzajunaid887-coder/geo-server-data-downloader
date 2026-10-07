@@ -1,4 +1,15 @@
+# ============================================================
+# robots.txt for Geo Server Data Downloader
+# ============================================================
+
 User-agent: *
 Allow: /
 
+# Do not crawl the background export worker — it's a utility
+# route, not user-facing content.
+Disallow: /export-progress
+
+# ============================================================
+# Sitemap
+# ============================================================
 Sitemap: https://www.geo-server-data-downloader.com/sitemap.xml
