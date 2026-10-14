@@ -2,14 +2,129 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+
+    <!-- =================================================================
+         ANTI-FLASH THEME SCRIPT
+         -----------------------------------------------------------------
+         Runs synchronously before paint so the correct light/dark theme
+         is applied on the very first frame. Without this, dark-mode users
+         would briefly see the light theme while React boots up.
+         ================================================================= -->
+    <script>
+      (function () {
+        try {
+          var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = isDark ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+          document.documentElement.style.colorScheme = theme;
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
+
+    <!-- =================================================================
+         FAVICON / WEBSITE ICON
+         ================================================================= -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- =================================================================
+         RESPONSIVE / MOBILE-FIRST
+         -----------------------------------------------------------------
+         Required for Google's mobile-first indexing.
+         ================================================================= -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Geo Server Data Downloader - Professional GIS Data Platform</title>
-    <meta name="description" content="Download and explore compatible GIS data from ArcGIS REST, WFS, and discoverable ArcGIS Online sources." />
-    <script type="module" crossorigin src="/gis-layer-downloader/assets/index-GdCjpdJ6.js"></script>
-    <link rel="stylesheet" crossorigin href="/gis-layer-downloader/assets/index-F_KwbYrK.css">
+
+    <!-- =================================================================
+         BROWSER UI THEME COLOR
+         -----------------------------------------------------------------
+         Two values — one for light, one for dark — so the mobile browser
+         address bar matches the app's active theme.
+         ================================================================= -->
+    <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)" />
+
+    <!-- =================================================================
+         SITE AUTHOR
+         ================================================================= -->
+    <meta name="author" content="Geo Server Data Downloader" />
+
+    <!-- =================================================================
+         ⚠️  PER-PAGE SEO IS NOW HANDLED BY REACT-HELMET-ASYNC
+         -----------------------------------------------------------------
+         The following tags are intentionally NOT in this file:
+
+           - <title>                       → set by <SEO> per page
+           - <meta name="description">     → set by <SEO> per page
+           - <meta name="keywords">        → set by <SEO> per page
+           - <meta name="robots">          → set by <SEO> per page
+           - <link rel="canonical">        → set by <SEO> per page
+           - All og:* (Open Graph) tags    → set by <SEO> per page
+           - All twitter:* tags            → set by <SEO> per page
+
+         Every page in src/pages/ imports the <SEO> component and passes
+         its own title, description, keywords, canonical path, and optional
+         JSON-LD structured data. react-helmet-async injects them into the
+         <head> automatically at runtime.
+
+         Keeping static duplicates here would create TWO titles and TWO
+         descriptions in the DOM, which hurts SEO. That's why they are
+         removed from this file.
+         ================================================================= -->
+
+    <!-- =================================================================
+         STRUCTURED DATA — SITE-WIDE (WebApplication)
+         -----------------------------------------------------------------
+         This block stays here because it describes the app itself and is
+         the same on every page. Per-page schema (Breadcrumbs, FAQPage,
+         Article) is injected by the <SEO> component via the
+         `structuredData` prop.
+         ================================================================= -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Geo Server Data Downloader",
+        "alternateName": "GSDD",
+        "url": "https://www.geo-server-data-downloader.com",
+        "description": "Free online GIS data downloader. Connect to ArcGIS REST, WFS, and spatial web services to export layers as Shapefile, GeoJSON, KML, and GeoPackage — entirely in your browser.",
+        "applicationCategory": "GISApplication",
+        "applicationSubCategory": "Data Downloader",
+        "operatingSystem": "Web Browser",
+        "browserRequirements": "Requires JavaScript. Works in Chrome, Firefox, Safari, Edge.",
+        "image": "https://www.geo-server-data-downloader.com/android-chrome-512x512.png",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "featureList": [
+          "Download ArcGIS REST FeatureServer layers",
+          "Export WFS services as Shapefile or GeoJSON",
+          "Convert GIS data to KML, GeoPackage, and CSV",
+          "Search public ArcGIS Online datasets",
+          "Client-side processing — no server uploads"
+        ],
+        "publisher": {
+          "@type": "Organization",
+          "name": "Geo Server Data Downloader",
+          "url": "https://www.geo-server-data-downloader.com",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.geo-server-data-downloader.com/android-chrome-512x512.png"
+          }
+        }
+      }
+    </script>
+    <script type="module" crossorigin src="/assets/index-CWs_sSCs.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-_8sv4hFz.css">
   </head>
-  <body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
+
+  <body>
     <div id="root"></div>
   </body>
 </html>

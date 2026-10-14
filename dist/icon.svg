@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Geo Server Data Downloader</title>
+  <desc id="desc">Modern GIS globe with spatial grid lines and a download arrow.</desc>
+  <style>
+    :root{--navy:#0f172a;--teal:#14b8a6;--cyan:#22d3ee;--grid:#fff;--arrow:#fff}
+    @media(prefers-color-scheme:dark){:root{--navy:#e2e8f0;--teal:#2dd4bf;--cyan:#67e8f9;--grid:#0f172a;--arrow:#0f172a}}
+    .ring{fill:none;stroke:var(--navy);stroke-width:18}
+    .globe{fill:url(#g);stroke:var(--navy);stroke-width:14}
+    .grid{fill:none;stroke:var(--grid);stroke-width:7;opacity:.88}
+    .download{fill:var(--arrow)}
+    .download-ring{fill:var(--teal);stroke:var(--navy);stroke-width:10}
+  </style>
+  <defs>
+    <linearGradient id="g" x1="80" y1="70" x2="430" y2="450" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset=".52" stop-color="#14b8a6"/>
+      <stop offset="1" stop-color="#0f766e"/>
+    </linearGradient>
+    <clipPath id="clip"><circle cx="256" cy="244" r="170"/></clipPath>
+  </defs>
+
+  <circle class="ring" cx="256" cy="244" r="194"/>
+  <circle class="globe" cx="256" cy="244" r="170"/>
+
+  <g class="grid" clip-path="url(#clip)">
+    <ellipse cx="256" cy="244" rx="170" ry="58"/>
+    <ellipse cx="256" cy="178" rx="148" ry="38"/>
+    <ellipse cx="256" cy="310" rx="148" ry="38"/>
+    <ellipse cx="256" cy="244" rx="62" ry="170"/>
+    <ellipse cx="256" cy="244" rx="122" ry="170"/>
+    <path d="M256 74C222 119 206 180 206 244s16 125 50 170"/>
+    <path d="M256 74C290 119 306 180 306 244s-16 125-50 170"/>
+  </g>
+
+  <g fill="#e2e8f0" opacity=".92" clip-path="url(#clip)">
+    <path d="M126 173l42-35 31 10 18 28-20 22-31-4-20 22-27-13z"/>
+    <path d="M306 130l48 18 24 36-17 28-31-8-21-31z"/>
+    <path d="M294 287l47-11 37 27-21 35-39 11-26-26z"/>
+    <path d="M174 300l34 11 17 38-29 30-37-30z"/>
+  </g>
+
+  <circle class="download-ring" cx="366" cy="370" r="70"/>
+  <path class="download" d="M366 331c-7 0-12 5-12 12v35l-15-15c-5-5-13-5-18 0s-5 13 0 18l36 36c5 5 13 5 18 0l36-36c5-5 5-13 0-18s-13-5-18 0l-15 15v-35c0-7-5-12-12-12z"/>
+  <rect class="download" x="326" y="405" width="80" height="13" rx="6.5"/>
+
+  <g fill="var(--cyan)" stroke="var(--navy)" stroke-width="6">
+    <circle cx="115" cy="322" r="10"/>
+    <circle cx="404" cy="190" r="10"/>
+    <circle cx="171" cy="117" r="10"/>
+  </g>
+</svg>
