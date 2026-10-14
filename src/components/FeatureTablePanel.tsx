@@ -14,33 +14,82 @@ export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
   onClose,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const tableRef = useRef<FeatureTable | null>(null);
+  const layerRef = useRef<FeatureLayer | null>(null);
+
   const [status, setStatus] = useState<string>('Initializing attribute table...');
   const [hasError, setHasError] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    // Reset status for the new layer
+    setStatus('Initializing attribute table...');
+    setHasError(false);
 
-    let featureTable: FeatureTable | null = null;
-    let featureLayer: FeatureLayer | null = null;
     let isDestroyed = false;
+
+    // Helper to fully tear down the previous widget synchronously
+    const teardown = () => {
+      try {
+        if (tableRef.current) {
+          tableRef.current.destroy();
+          tableRef.current = null;
+        }
+      } catch {
+        /* noop */
+      }
+      try {
+        if (layerRef.current) {
+          layerRef.current.destroy();
+          layerRef.current = null;
+        }
+      } catch {
+        /* noop */
+      }
+      // Ensure the container is completely empty before reuse
+      try {
+        if (containerRef.current) {
+          containerRef.current.innerHTML = '';
+        }
+      } catch {
+        /* noop */
+      }
+    };
 
     const init = async () => {
       try {
-        featureLayer = new FeatureLayer({
+        const container = containerRef.current;
+        if (!container) return;
+
+        // 1. Create layer instance
+        const featureLayer = new FeatureLayer({
           url: layerUrl,
           outFields: ['*'],
           title: layerTitle,
         });
+        layerRef.current = featureLayer;
 
+        // 2. Wait for layer metadata to fully load
         setStatus('Loading layer metadata...');
         await featureLayer.load();
 
-        if (isDestroyed || !containerRef.current) return;
+        if (isDestroyed || !containerRef.current) {
+          // Component unmounted mid-load — clean up what we created
+          try { featureLayer.destroy(); } catch { /* noop */ }
+          return;
+        }
 
+        // 3. Guard: make sure we still own the same DOM node
+        if (containerRef.current !== container) {
+          try { featureLayer.destroy(); } catch { /* noop */ }
+          return;
+        }
+
+        // 4. Build the FeatureTable widget
         setStatus('Rendering table...');
-        featureTable = new FeatureTable({
+
+        const featureTable = new FeatureTable({
           layer: featureLayer,
-          container: containerRef.current,
+          container,
           multiSortEnabled: true,
           visibleElements: {
             header: true,
@@ -56,8 +105,18 @@ export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
           },
         });
 
+        // If the component unmounted while the widget was constructing,
+        // destroy it immediately and bail.
+        if (isDestroyed) {
+          try { featureTable.destroy(); } catch { /* noop */ }
+          try { featureLayer.destroy(); } catch { /* noop */ }
+          return;
+        }
+
+        tableRef.current = featureTable;
         setStatus('');
       } catch (err: any) {
+        if (isDestroyed) return;
         console.error('[FeatureTablePanel] Failed to initialize:', err);
         setHasError(true);
         setStatus(
@@ -70,8 +129,7 @@ export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
 
     return () => {
       isDestroyed = true;
-      try { if (featureTable) featureTable.destroy(); } catch {}
-      try { if (featureLayer) featureLayer.destroy(); } catch {}
+      teardown();
     };
   }, [layerUrl, layerTitle]);
 
@@ -86,13 +144,14 @@ export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
         position: 'relative',
       }}
     >
+      {/* Header */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: '0.5rem',
-          padding: '0.25rem 0.25rem 0.5rem 0.25rem',
+          padding: '0.25rem 0.25rem 0.5rem',
           flexShrink: 0,
         }}
       >
@@ -128,15 +187,14 @@ export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
         </button>
       </div>
 
+      {/* Status / error message */}
       {status && (
         <div
           style={{
             padding: '0.5rem 0.75rem',
             fontSize: '0.75rem',
             color: hasError ? 'var(--danger-color)' : 'var(--text-muted)',
-            backgroundColor: hasError
-              ? 'var(--danger-soft)'
-              : 'var(--bg-hover)',
+            backgroundColor: hasError ? 'var(--danger-soft)' : 'var(--bg-hover)',
             borderRadius: 4,
             marginBottom: '0.5rem',
             flexShrink: 0,
@@ -146,6 +204,7 @@ export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
         </div>
       )}
 
+      {/* Container — widget attaches here */}
       <div
         ref={containerRef}
         style={{

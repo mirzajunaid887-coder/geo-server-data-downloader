@@ -961,16 +961,17 @@ export const Downloader: React.FC = () => {
         </div>
       </div>
 
-      {/* Attribute Table Drawer */}
-      {tableLayerInfo && (
-        <div className="table-drawer">
-          <FeatureTablePanel
-            layerUrl={tableLayerInfo.url}
-            layerTitle={tableLayerInfo.title}
-            onClose={() => setTableLayerInfo(null)}
-          />
-        </div>
-      )}
+      {/* ArcGIS FeatureTable Drawer Panel */}
+{tableLayerInfo && (
+  <div className="table-drawer">
+    <FeatureTablePanel
+      key={tableLayerInfo.id}
+      layerUrl={tableLayerInfo.url}
+      layerTitle={tableLayerInfo.title}
+      onClose={() => setTableLayerInfo(null)}
+    />
+  </div>
+)}
 
       {pendingSublayers && (
         <SublayerSelectionModal
