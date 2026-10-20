@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-      "scripts": {
+  "scripts": {
     "dev": "vite",
     "build": "node ./node_modules/vite/bin/vite.js build && node scripts/prerender.mjs",
     "preview": "vite preview"
@@ -26,6 +26,7 @@
     "tailwind-merge": "^2.3.0"
   },
   "devDependencies": {
+    "@sparticuz/chromium": "^153.0.0",
     "@types/geojson": "^7946.0.16",
     "@types/leaflet": "^1.9.12",
     "@types/node": "^20.14.10",
@@ -33,10 +34,9 @@
     "@types/react-dom": "^18.3.3",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.19",
-    "express": "^5.3.0",
     "happy-dom": "^21.0.1",
     "postcss": "^8.4.38",
-    "puppeteer": "^25.14.0",
+    "puppeteer-core": "^25.15.0",
     "tailwindcss": "^3.4.4",
     "typescript": "^5.2.2",
     "vite": "^5.3.1",
