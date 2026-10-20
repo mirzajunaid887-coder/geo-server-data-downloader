@@ -13,7 +13,7 @@ export const About: React.FC = () => {
       <SEO
         title="About the Developer and the Project"
         description={`Learn about ${siteName}, a free client-side GIS data export tool created by Muhammad Junaid Baig, and the mission behind it.`}
-        keywords="about GIS downloader, Muhammad Junaid Baig, client-side GIS tool, free geospatial data export"
+        keywords="about GIS downloader, Muhammad Junaid Baig, client-side GIS tool, free geospatial data download"
         path="/about"
         structuredData={{
           '@context': 'https://schema.org',
@@ -39,7 +39,7 @@ export const About: React.FC = () => {
         <h1 style={h1Style}>About {siteName}</h1>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
           Built by a GIS developer, for GIS professionals, researchers, and
-          anyone who works with spatial data.
+          anyone who works with spatial data, ArcGIS REST API's, feature-server, map-server.
         </p>
 
         <section style={sectionStyle}>

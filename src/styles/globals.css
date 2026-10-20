@@ -517,158 +517,48 @@ h3 {
 }
 
 /* ============================================================
-   RESPONSIVE LAYOUT HELPERS
-   ============================================================ */
-
-/* Downloader grid — sidebar + map */
-/* ============================================================
-   DOWNLOADER LAYOUT
-   ------------------------------------------------------------
-   Goal on every viewport:
-     • The map panel keeps a stable size when layers are added
-     • Only the layers sidebar scrolls internally
-     • The whole grid never grows taller than the viewport
+   DOWNLOADER LAYOUT (Mobile-First)
    ============================================================ */
 
 .downloader-grid {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 0.75rem;
-  padding: 0.5rem 0;
+  padding: 0.4rem 0;
   box-sizing: border-box;
+  /* Mobile: Lock to viewport height so the page doesn't scroll, only internal panels do */
+  height: calc(100vh - 80px);
+  height: calc(100dvh - 80px); /* Dynamic Viewport Height for mobile address bars */
+  overflow: hidden;
 }
 
-/* ------------------------------------------------------------
-   MOBILE  (< 768px)
-   ------------------------------------------------------------
-   Stacked layout:
-     • Sidebar capped at 42vh, scrolls internally
-     • Map fills the remaining space
-     • Grid height locked to viewport so the map never moves
-   ------------------------------------------------------------ */
-@media (max-width: 767px) {
-  .downloader-grid {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-    /* Subtract header (~56px) + main padding (~24px) */
-    height: calc(100vh - 80px);
-    height: calc(100dvh - 80px); /* modern mobile browsers */
-    overflow: hidden;
-    padding: 0.4rem 0;
-  }
-
-  .downloader-sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    /* Sidebar cannot grow beyond 42% of the visible height */
-    max-height: 42vh;
-    /* min-height:0 is required for overflow to actually work in flex children */
-    min-height: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-right: 2px;
-    /* Subtle bottom divider to visually separate from the map */
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.6rem;
-  }
-
-  .map-card {
-    padding: 0.25rem;
-    height: 100%;
-    min-height: 200px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
+.downloader-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  /* Mobile: Sidebar takes exactly 40% of the available height */
+  flex: 0 0 40%;
+  min-height: 0; /* Crucial for internal scrolling */
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+  /* Visual separation between controls and map */
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.5rem;
 }
 
-/* Very small phones — give the map even more room */
-@media (max-width: 420px) {
-  .downloader-sidebar {
-    max-height: 38vh;
-  }
+.map-card {
+  /* Mobile: Map takes the remaining 60% */
+  flex: 1;
+  min-height: 0; /* Crucial: Prevents Map from overflowing and breaking the flex layout */
+  padding: 0.25rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-/* ------------------------------------------------------------
-   TABLET  (768px – 1023px)
-   ------------------------------------------------------------
-   Split layout with a narrower sidebar:
-     • Sidebar: 320px fixed column, scrolls internally
-     • Map card: fills the remaining width and the full viewport
-   ------------------------------------------------------------ */
-@media (min-width: 768px) and (max-width: 1023px) {
-  .downloader-grid {
-    grid-template-columns: 320px 1fr;
-    grid-template-rows: 1fr;
-    /* Header ~60px + main padding ~32px */
-    height: calc(100vh - 92px);
-    height: calc(100dvh - 92px);
-    gap: 0.9rem;
-    overflow: hidden;
-  }
-
-  .downloader-sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 0.85rem;
-    min-height: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-right: 4px;
-  }
-
-  .map-card {
-    padding: 0.4rem;
-    height: 100%;
-    min-height: 0;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-}
-
-/* ------------------------------------------------------------
-   DESKTOP  (>= 1024px)
-   ------------------------------------------------------------
-   Wide split layout:
-     • Sidebar: 380px fixed column, scrolls internally
-     • Map card: fills the remaining space
-   ------------------------------------------------------------ */
-@media (min-width: 1024px) {
-  .downloader-grid {
-    grid-template-columns: 380px 1fr;
-    grid-template-rows: 1fr;
-    /* Header ~64px + main padding ~40px */
-    height: calc(100vh - 104px);
-    height: calc(100dvh - 104px);
-    gap: 1rem;
-    overflow: hidden;
-  }
-
-  .downloader-sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    min-height: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-right: 4px;
-  }
-
-  .map-card {
-    padding: 0.5rem;
-    height: 100%;
-    min-height: 0;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-}
-
-/* Inner wrapper of the map — must fill the card in every breakpoint */
+/* Inner wrapper for the map — must fill the card */
 .map-card > div {
   flex: 1;
   min-height: 0;
@@ -676,7 +566,66 @@ h3 {
   width: 100%;
   height: 100%;
 }
-/* Attribute table drawer */
+
+/* Very small phones — adjust proportions slightly */
+@media (max-width: 420px) {
+  .downloader-sidebar {
+    flex: 0 0 38%;
+  }
+}
+
+/* ------------------------------------------------------------
+   TABLET (768px - 1023px)
+   ------------------------------------------------------------ */
+@media (min-width: 768px) {
+  .downloader-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    grid-template-rows: 1fr;
+    height: calc(100vh - 92px);
+    height: calc(100dvh - 92px);
+    gap: 0.9rem;
+    overflow: hidden;
+  }
+
+  .downloader-sidebar {
+    flex: none; /* Reset mobile flex */
+    height: 100%;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 4px;
+    border-bottom: none; /* Remove mobile border */
+    padding-bottom: 0;
+  }
+
+  .map-card {
+    flex: none;
+    height: 100%;
+    min-height: 0;
+    padding: 0.4rem;
+  }
+}
+
+/* ------------------------------------------------------------
+   DESKTOP (>= 1024px)
+   ------------------------------------------------------------ */
+@media (min-width: 1024px) {
+  .downloader-grid {
+    grid-template-columns: 380px 1fr;
+    height: calc(100vh - 104px);
+    height: calc(100dvh - 104px);
+    gap: 1rem;
+  }
+
+  .map-card {
+    padding: 0.5rem;
+  }
+}
+
+/* ============================================================
+   ATTRIBUTE TABLE DRAWER
+   ============================================================ */
+
 .table-drawer {
   position: fixed;
   left: 0.5rem;
@@ -697,25 +646,28 @@ h3 {
 
 @media (min-width: 768px) {
   .table-drawer {
-    left: 355px;
+    left: 335px; /* 320px sidebar + gap */
     height: 45vh;
   }
 }
 
 @media (min-width: 1024px) {
   .table-drawer {
-    left: 395px;
+    left: 395px; /* 380px sidebar + gap */
     height: 45vh;
   }
 }
 
-/* Modal wrapper: full-screen sheet on mobile, centered dialog on desktop */
+/* ============================================================
+   MODALS (Export / Sublayer)
+   ============================================================ */
+
 .modal-overlay {
   position: fixed;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.7);
   display: flex;
-  align-items: flex-end;
+  align-items: flex-end; /* Mobile: Push modal to bottom as a sheet */
   justify-content: center;
   z-index: 2000;
   padding: 0;
@@ -723,7 +675,7 @@ h3 {
 
 @media (min-width: 640px) {
   .modal-overlay {
-    align-items: center;
+    align-items: center; /* Desktop: Center modal */
     padding: 1rem;
     backdrop-filter: blur(3px);
   }
@@ -752,4 +704,3 @@ h3 {
     box-shadow: var(--shadow-lg);
   }
 }
-

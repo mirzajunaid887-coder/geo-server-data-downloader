@@ -1,0 +1,1 @@
+import{o as n}from"./index-DfcbhU1f.js";function p(r){r!=null&&r.writtenProperties&&r.writtenProperties.forEach(({target:t,propName:e,newOrigin:o})=>{n(t)&&o&&t.originOf(e)!==o&&t.updateOrigin(e,o)})}export{p as i};

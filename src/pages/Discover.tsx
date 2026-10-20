@@ -34,7 +34,7 @@ export const Discover: React.FC = () => {
       <SEO
         title="Discover ArcGIS Online Datasets"
         description="Search thousands of public ArcGIS Online feature services, parcels, boundaries, and map layers — no prior URL needed."
-        keywords="ArcGIS Online search, find GIS data, public feature services, spatial data discovery"
+        keywords="ArcGIS Online search, find GIS data, public feature services, spatial data discovery, download arcgis online data, freegisdata, gisdata, explore arcgis, arcgisonline"
         path="/discover"
       />
 

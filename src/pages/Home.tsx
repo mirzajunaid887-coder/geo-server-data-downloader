@@ -10,7 +10,7 @@ import { SEO } from '../components/SEO';
   <SEO
     path="/"
     description="Free online GIS data downloader. Export ArcGIS REST, WFS, and other spatial web services as Shapefile, GeoJSON, KML, and GeoPackage — entirely in your browser."
-    keywords="GIS data downloader, ArcGIS REST downloader, WFS to Shapefile, GeoJSON exporter, KML converter, GeoPackage export, free GIS tool"
+    keywords="GIS data downloader, ArcGIS REST downloader, WFS to Shapefile, GeoJSON exporter, KML converter, GeoPackage export, free GIS tool, download vector data for free, geodatenserver, qgis sample data download, arcgis online"
   />
   {/* ... rest of your Home page JSX ... */}
 </>
@@ -39,7 +39,7 @@ export const Home: React.FC = () => {
         lineHeight: 1.15,
       }}
     >
-      Download GIS Data Without the Hassle
+      Download GIS Data, Explore ArcGIS REST API's
         </h1>
     <p
       style={{

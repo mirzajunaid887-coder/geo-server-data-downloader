@@ -21,14 +21,6 @@ import {
 import JSZip from 'jszip';
 import { SEO } from '../components/SEO';
 
-// Inside the component's return statement:
-<SEO
-  title="GIS Data Downloader"
-  description="Load ArcGIS REST, WFS, and spatial web services and export them as GeoJSON, Shapefile, KML, GeoPackage, or CSV. Free, browser-based, no signup required."
-  keywords="ArcGIS downloader, FeatureServer export, WFS downloader, GIS layer exporter"
-  path="/download"
-/>
-
 interface LoadedLayer {
   id: string;
   name: string;
@@ -431,565 +423,574 @@ export const Downloader: React.FC = () => {
   };
 
   return (
-    <div className="downloader-grid">
-      {/* Sidebar Controls */}
-      <div className="downloader-sidebar">
-        <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-          <h2
-            style={{
-              fontSize: '1rem',
-              fontWeight: 700,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              margin: 0,
-            }}
-          >
-            <Layers
-              style={{
-                width: '1.125rem',
-                height: '1.125rem',
-                color: 'var(--accent-color)',
-              }}
-            />
-            GIS Service Loader
-          </h2>
+    <>
+      <SEO
+        title="GIS Data Downloader"
+        description="Load ArcGIS REST, spatial web services and export them as GeoJSON, Shapefile, KML, GeoPackage, or CSV. Free, browser-based, no signup required."
+        keywords="ArcGIS downloader, FeatureServer export, GIS layer exporter"
+        path="/download"
+      />
 
-          <div
-            style={{
-              display: 'flex',
-              backgroundColor: 'var(--bg-hover)',
-              padding: '0.2rem',
-              borderRadius: '0.375rem',
-              gap: '0.25rem',
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => setActiveTab('url')}
+      <div className="downloader-grid">
+        {/* Sidebar Controls */}
+        <div className="downloader-sidebar">
+          <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+            <h2
               style={{
-                flex: 1,
-                padding: '0.5rem 0.4rem',
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                backgroundColor:
-                  activeTab === 'url' ? 'var(--accent-color)' : 'transparent',
-                color: activeTab === 'url' ? '#fff' : 'var(--text-muted)',
-                border: 'none',
-                borderRadius: '0.25rem',
-                cursor: 'pointer',
-              }}
-            >
-              URL / Endpoint
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('search')}
-              style={{
-                flex: 1,
-                padding: '0.5rem 0.4rem',
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                backgroundColor:
-                  activeTab === 'search' ? 'var(--accent-color)' : 'transparent',
-                color: activeTab === 'search' ? '#fff' : 'var(--text-muted)',
-                border: 'none',
-                borderRadius: '0.25rem',
-                cursor: 'pointer',
-              }}
-            >
-              Search Datasets
-            </button>
-          </div>
-
-          {activeTab === 'url' ? (
-            <form
-              onSubmit={handleLoadService}
-              style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
-            >
-              <label
-                style={{
-                  display: 'block',
-                  fontSize: '0.7rem',
-                  fontWeight: 700,
-                  color: 'var(--text-muted)',
-                  textTransform: 'uppercase',
-                }}
-              >
-                ArcGIS REST / WFS URL
-              </label>
-              <input
-                type="url"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                placeholder="https://services.arcgis.com/.../FeatureServer"
-                required
-                className="form-input"
-              />
-              <button
-                type="submit"
-                disabled={loading}
-                className="btn-primary"
-                style={{ width: '100%' }}
-              >
-                {loading ? 'Adding...' : 'Add Layer'}
-              </button>
-            </form>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <form
-                onSubmit={handleDatasetSearch}
-                style={{ display: 'flex', gap: '0.5rem' }}
-              >
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search datasets..."
-                  className="form-input"
-                  style={{ flex: 1 }}
-                />
-                <button
-                  type="submit"
-                  disabled={searching}
-                  className="btn-primary"
-                  style={{ padding: '0.55rem 0.9rem' }}
-                >
-                  {searching ? (
-                    <Loader2
-                      style={{
-                        width: '0.9rem',
-                        height: '0.9rem',
-                        animation: 'spin 1s linear infinite',
-                      }}
-                    />
-                  ) : (
-                    <Search style={{ width: '0.9rem', height: '0.9rem' }} />
-                  )}
-                </button>
-              </form>
-
-              {searchResults.length > 0 && (
-                <div
-                  style={{
-                    maxHeight: '260px',
-                    overflowY: 'auto',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.5rem',
-                    paddingRight: '4px',
-                  }}
-                >
-                  {searchResults.map((item) => (
-                    <div
-                      key={item.id}
-                      style={{
-                        padding: '0.6rem',
-                        backgroundColor: 'var(--bg-hover)',
-                        border: '1px solid var(--border-color)',
-                        borderRadius: '0.375rem',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                      }}
-                    >
-                      <div style={{ minWidth: 0, flex: 1 }}>
-                        <p
-                          style={{
-                            fontSize: '0.78rem',
-                            fontWeight: 600,
-                            margin: '0 0 0.15rem 0',
-                            whiteSpace: 'nowrap',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            color: 'var(--text-main)',
-                          }}
-                        >
-                          {item.title}
-                        </p>
-                        <span
-                          style={{
-                            fontSize: '0.68rem',
-                            color: 'var(--text-muted)',
-                          }}
-                        >
-                          {item.type}
-                        </span>
-                      </div>
-                      <button
-                        onClick={() => handleAddSearchedItemToMap(item)}
-                        disabled={loadingItemId === item.id}
-                        className="btn-primary"
-                        style={{
-                          padding: '0.35rem 0.6rem',
-                          fontSize: '0.7rem',
-                          flexShrink: 0,
-                        }}
-                      >
-                        {loadingItemId === item.id ? (
-                          <Loader2
-                            style={{
-                              width: '0.75rem',
-                              height: '0.75rem',
-                              animation: 'spin 1s linear infinite',
-                            }}
-                          />
-                        ) : (
-                          <Plus style={{ width: '0.75rem', height: '0.75rem' }} />
-                        )}
-                        Add
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {progress && (
-            <p
-              style={{
-                fontSize: '0.75rem',
-                color: 'var(--accent-color)',
-                fontWeight: 600,
+                fontSize: '1rem',
+                fontWeight: 700,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
                 margin: 0,
               }}
             >
-              {progress}
-            </p>
-          )}
-          {error && (
+              <Layers
+                style={{
+                  width: '1.125rem',
+                  height: '1.125rem',
+                  color: 'var(--accent-color)',
+                }}
+              />
+              GIS Service Loader
+            </h2>
+
             <div
               style={{
                 display: 'flex',
-                flexDirection: 'column',
-                gap: '0.25rem',
-                fontSize: '0.75rem',
-                color: 'var(--danger-color)',
-                backgroundColor: 'var(--danger-soft)',
-                padding: '0.6rem',
+                backgroundColor: 'var(--bg-hover)',
+                padding: '0.2rem',
                 borderRadius: '0.375rem',
+                gap: '0.25rem',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <AlertCircle
-                  style={{ width: '1rem', height: '1rem', flexShrink: 0 }}
-                />
-                <span style={{ fontWeight: 600 }}>
-                  Unable to load this ArcGIS layer.
-                </span>
-              </div>
-              <span
+              <button
+                type="button"
+                onClick={() => setActiveTab('url')}
                 style={{
-                  fontSize: '0.7rem',
-                  color: 'var(--text-muted)',
-                  wordBreak: 'break-all',
+                  flex: 1,
+                  padding: '0.5rem 0.4rem',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  backgroundColor:
+                    activeTab === 'url' ? 'var(--accent-color)' : 'transparent',
+                  color: activeTab === 'url' ? '#fff' : 'var(--text-muted)',
+                  border: 'none',
+                  borderRadius: '0.25rem',
+                  cursor: 'pointer',
                 }}
               >
-                Reason: {error}
-              </span>
+                URL / Endpoint
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('search')}
+                style={{
+                  flex: 1,
+                  padding: '0.5rem 0.4rem',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  backgroundColor:
+                    activeTab === 'search' ? 'var(--accent-color)' : 'transparent',
+                  color: activeTab === 'search' ? '#fff' : 'var(--text-muted)',
+                  border: 'none',
+                  borderRadius: '0.25rem',
+                  cursor: 'pointer',
+                }}
+              >
+                Search Datasets
+              </button>
             </div>
-          )}
-        </div>
 
-        {/* Layers Management Box */}
-        <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              borderBottom: '1px solid var(--border-color)',
-              paddingBottom: '0.5rem',
-              flexWrap: 'wrap',
-              gap: '0.5rem',
-            }}
-          >
-            <h3 style={{ fontSize: '0.9rem', fontWeight: 700, margin: 0 }}>
-              Layers ({layers.length})
-            </h3>
-            {layers.length > 0 && (
-              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                <button
-                  onClick={() => setShowExportModal(true)}
+            {activeTab === 'url' ? (
+              <form
+                onSubmit={handleLoadService}
+                style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
+              >
+                <label
                   style={{
-                    background: 'none',
-                    border: 'none',
-                    color: 'var(--accent-color)',
-                    fontSize: '0.75rem',
-                    cursor: 'pointer',
-                    fontWeight: 600,
-                    padding: 0,
+                    display: 'block',
+                    fontSize: '0.7rem',
+                    fontWeight: 700,
+                    color: 'var(--text-muted)',
+                    textTransform: 'uppercase',
                   }}
                 >
-                  Bulk Export
-                </button>
+                  ArcGIS REST URL (FeatureServer / MapServer)
+                </label>
+                <input
+                  type="url"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  placeholder="https://services.arcgis.com/.../FeatureServer"
+                  required
+                  className="form-input"
+                />
                 <button
-                  onClick={removeAllLayers}
+                  type="submit"
+                  disabled={loading}
+                  className="btn-primary"
+                  style={{ width: '100%' }}
+                >
+                  {loading ? 'Adding...' : 'Add Layer'}
+                </button>
+              </form>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <form
+                  onSubmit={handleDatasetSearch}
+                  style={{ display: 'flex', gap: '0.5rem' }}
+                >
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search datasets..."
+                    className="form-input"
+                    style={{ flex: 1 }}
+                  />
+                  <button
+                    type="submit"
+                    disabled={searching}
+                    className="btn-primary"
+                    style={{ padding: '0.55rem 0.9rem' }}
+                  >
+                    {searching ? (
+                      <Loader2
+                        style={{
+                          width: '0.9rem',
+                          height: '0.9rem',
+                          animation: 'spin 1s linear infinite',
+                        }}
+                      />
+                    ) : (
+                      <Search style={{ width: '0.9rem', height: '0.9rem' }} />
+                    )}
+                  </button>
+                </form>
+
+                {searchResults.length > 0 && (
+                  <div
+                    style={{
+                      maxHeight: '260px',
+                      overflowY: 'auto',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.5rem',
+                      paddingRight: '4px',
+                    }}
+                  >
+                    {searchResults.map((item) => (
+                      <div
+                        key={item.id}
+                        style={{
+                          padding: '0.6rem',
+                          backgroundColor: 'var(--bg-hover)',
+                          border: '1px solid var(--border-color)',
+                          borderRadius: '0.375rem',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                        }}
+                      >
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                          <p
+                            style={{
+                              fontSize: '0.78rem',
+                              fontWeight: 600,
+                              margin: '0 0 0.15rem 0',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              color: 'var(--text-main)',
+                            }}
+                          >
+                            {item.title}
+                          </p>
+                          <span
+                            style={{
+                              fontSize: '0.68rem',
+                              color: 'var(--text-muted)',
+                            }}
+                          >
+                            {item.type}
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => handleAddSearchedItemToMap(item)}
+                          disabled={loadingItemId === item.id}
+                          className="btn-primary"
+                          style={{
+                            padding: '0.35rem 0.6rem',
+                            fontSize: '0.7rem',
+                            flexShrink: 0,
+                          }}
+                        >
+                          {loadingItemId === item.id ? (
+                            <Loader2
+                              style={{
+                                width: '0.75rem',
+                                height: '0.75rem',
+                                animation: 'spin 1s linear infinite',
+                              }}
+                            />
+                          ) : (
+                            <Plus style={{ width: '0.75rem', height: '0.75rem' }} />
+                          )}
+                          Add
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {progress && (
+              <p
+                style={{
+                  fontSize: '0.75rem',
+                  color: 'var(--accent-color)',
+                  fontWeight: 600,
+                  margin: 0,
+                }}
+              >
+                {progress}
+              </p>
+            )}
+            {error && (
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.25rem',
+                  fontSize: '0.75rem',
+                  color: 'var(--danger-color)',
+                  backgroundColor: 'var(--danger-soft)',
+                  padding: '0.6rem',
+                  borderRadius: '0.375rem',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <AlertCircle
+                    style={{ width: '1rem', height: '1rem', flexShrink: 0 }}
+                  />
+                  <span style={{ fontWeight: 600 }}>
+                    Unable to load this ArcGIS layer.
+                  </span>
+                </div>
+                <span
                   style={{
-                    background: 'none',
-                    border: 'none',
-                    color: 'var(--danger-color)',
-                    fontSize: '0.75rem',
-                    cursor: 'pointer',
-                    fontWeight: 600,
-                    padding: 0,
+                    fontSize: '0.7rem',
+                    color: 'var(--text-muted)',
+                    wordBreak: 'break-all',
                   }}
                 >
-                  Remove All
-                </button>
+                  Reason: {error}
+                </span>
               </div>
             )}
           </div>
 
-          {layers.length === 0 ? (
-            <p
+          {/* Layers Management Box */}
+          <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <div
               style={{
-                fontSize: '0.75rem',
-                color: 'var(--text-muted)',
-                textAlign: 'center',
-                margin: '2rem 0',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderBottom: '1px solid var(--border-color)',
+                paddingBottom: '0.5rem',
+                flexWrap: 'wrap',
+                gap: '0.5rem',
               }}
             >
-              No layers added yet. Paste a service URL or search for datasets
-              above to add them to your map.
-            </p>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {layers.map((layer) => (
-                <div
-                  key={layer.id}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.5rem',
-                    padding: '0.75rem',
-                    borderRadius: '0.5rem',
-                    backgroundColor: 'var(--bg-hover)',
-                    border: '1px solid var(--border-color)',
-                    position: 'relative',
-                  }}
-                >
+              <h3 style={{ fontSize: '0.9rem', fontWeight: 700, margin: 0 }}>
+                Layers ({layers.length})
+              </h3>
+              {layers.length > 0 && (
+                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                  <button
+                    onClick={() => setShowExportModal(true)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: 'var(--accent-color)',
+                      fontSize: '0.75rem',
+                      cursor: 'pointer',
+                      fontWeight: 600,
+                      padding: 0,
+                    }}
+                  >
+                    Bulk Export
+                  </button>
+                  <button
+                    onClick={removeAllLayers}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: 'var(--danger-color)',
+                      fontSize: '0.75rem',
+                      cursor: 'pointer',
+                      fontWeight: 600,
+                      padding: 0,
+                    }}
+                  >
+                    Remove All
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {layers.length === 0 ? (
+              <p
+                style={{
+                  fontSize: '0.75rem',
+                  color: 'var(--text-muted)',
+                  textAlign: 'center',
+                  margin: '2rem 0',
+                }}
+              >
+                No layers added yet. Paste a service URL or search for datasets
+                above to add them to your map.
+              </p>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                {layers.map((layer) => (
                   <div
+                    key={layer.id}
                     style={{
                       display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
+                      flexDirection: 'column',
                       gap: '0.5rem',
+                      padding: '0.75rem',
+                      borderRadius: '0.5rem',
+                      backgroundColor: 'var(--bg-hover)',
+                      border: '1px solid var(--border-color)',
+                      position: 'relative',
                     }}
                   >
                     <div
                       style={{
                         display: 'flex',
                         alignItems: 'center',
+                        justifyContent: 'space-between',
                         gap: '0.5rem',
-                        flex: 1,
-                        minWidth: 0,
                       }}
                     >
-                      <input
-                        type="checkbox"
-                        checked={layer.visible}
-                        onChange={() => toggleLayerVisibility(layer.id)}
-                        style={{ cursor: 'pointer', width: '1rem', height: '1rem' }}
-                      />
-                      <span
+                      <div
                         style={{
-                          fontSize: '0.85rem',
-                          fontWeight: 600,
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          color: 'var(--text-main)',
-                        }}
-                      >
-                        {layer.name}
-                      </span>
-                    </div>
-
-                    <div style={{ display: 'flex', gap: '0.35rem', alignItems: 'center', flexShrink: 0 }}>
-                      <button
-                        onClick={() => handleDownloadExport(layer)}
-                        disabled={exporting}
-                        style={{
-                          backgroundColor: 'var(--success-color)',
-                          color: '#fff',
-                          border: 'none',
-                          padding: '0.35rem 0.6rem',
-                          borderRadius: '0.375rem',
-                          fontSize: '0.7rem',
-                          fontWeight: 600,
-                          cursor: 'pointer',
                           display: 'flex',
                           alignItems: 'center',
-                          gap: '0.25rem',
+                          gap: '0.5rem',
+                          flex: 1,
+                          minWidth: 0,
                         }}
                       >
-                        <Download style={{ width: '0.75rem', height: '0.75rem' }} />
-                        <span className="hide-on-small">Export</span>
-                      </button>
-
-                      <div className="layer-menu-container" style={{ position: 'relative' }}>
-                        <button
-                          onClick={() =>
-                            setActiveMenuLayerId(
-                              activeMenuLayerId === layer.id ? null : layer.id
-                            )
-                          }
-                          title="Layer Options"
-                          className="icon-button"
-                          style={{ width: '2rem', height: '2rem' }}
+                        <input
+                          type="checkbox"
+                          checked={layer.visible}
+                          onChange={() => toggleLayerVisibility(layer.id)}
+                          style={{ cursor: 'pointer', width: '1rem', height: '1rem' }}
+                        />
+                        <span
+                          style={{
+                            fontSize: '0.85rem',
+                            fontWeight: 600,
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            color: 'var(--text-main)',
+                          }}
                         >
-                          <MoreVertical style={{ width: '0.9rem', height: '0.9rem' }} />
+                          {layer.name}
+                        </span>
+                      </div>
+
+                      <div style={{ display: 'flex', gap: '0.35rem', alignItems: 'center', flexShrink: 0 }}>
+                        <button
+                          onClick={() => handleDownloadExport(layer)}
+                          disabled={exporting}
+                          style={{
+                            backgroundColor: 'var(--success-color)',
+                            color: '#fff',
+                            border: 'none',
+                            padding: '0.35rem 0.6rem',
+                            borderRadius: '0.375rem',
+                            fontSize: '0.7rem',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.25rem',
+                          }}
+                        >
+                          <Download style={{ width: '0.75rem', height: '0.75rem' }} />
+                          <span className="hide-on-small">Export</span>
                         </button>
 
-                        {activeMenuLayerId === layer.id && (
-                          <div
-                            style={{
-                              position: 'absolute',
-                              right: 0,
-                              top: '100%',
-                              marginTop: '4px',
-                              backgroundColor: 'var(--bg-elevated)',
-                              border: '1px solid var(--border-color)',
-                              borderRadius: '0.5rem',
-                              boxShadow: 'var(--shadow-lg)',
-                              zIndex: 9999,
-                              minWidth: '180px',
-                              padding: '0.25rem 0',
-                            }}
+                        <div className="layer-menu-container" style={{ position: 'relative' }}>
+                          <button
+                            onClick={() =>
+                              setActiveMenuLayerId(
+                                activeMenuLayerId === layer.id ? null : layer.id
+                              )
+                            }
+                            title="Layer Options"
+                            className="icon-button"
+                            style={{ width: '2rem', height: '2rem' }}
                           >
-                            <button
-                              onClick={() => {
-                                setActiveMenuLayerId(null);
-                                setLayers((prev) =>
-                                  prev.map((l) =>
-                                    l.id === layer.id ? { ...l, visible: true } : l
-                                  )
-                                );
-                                setZoomTarget({
-                                  layerId: layer.id,
-                                  extent: layer.extent,
-                                  time: Date.now(),
-                                });
-                              }}
-                              style={dropdownItemStyle}
-                            >
-                              🔍 Zoom to Layer
-                            </button>
-                            <button
-                              onClick={() => {
-                                setActiveMenuLayerId(null);
-                                window.open(layer.url, '_blank');
-                              }}
-                              style={dropdownItemStyle}
-                            >
-                              🔗 View Endpoint
-                            </button>
-                            <button
-                              onClick={() => {
-                                setActiveMenuLayerId(null);
-                                setTableLayerInfo({
-                                  id: layer.id,
-                                  url: layer.url,
-                                  title: layer.name,
-                                });
-                              }}
-                              style={dropdownItemStyle}
-                            >
-                              📊 Attribute Table
-                            </button>
+                            <MoreVertical style={{ width: '0.9rem', height: '0.9rem' }} />
+                          </button>
+
+                          {activeMenuLayerId === layer.id && (
                             <div
                               style={{
-                                height: '1px',
-                                backgroundColor: 'var(--border-color)',
-                                margin: '0.25rem 0',
+                                position: 'absolute',
+                                right: 0,
+                                top: '100%',
+                                marginTop: '4px',
+                                backgroundColor: 'var(--bg-elevated)',
+                                border: '1px solid var(--border-color)',
+                                borderRadius: '0.5rem',
+                                boxShadow: 'var(--shadow-lg)',
+                                zIndex: 9999,
+                                minWidth: '180px',
+                                padding: '0.25rem 0',
                               }}
-                            />
-                            <button
-                              onClick={() => {
-                                setActiveMenuLayerId(null);
-                                removeLayer(layer.id);
-                              }}
-                              style={{ ...dropdownItemStyle, color: 'var(--danger-color)' }}
                             >
-                              <Trash2
+                              <button
+                                onClick={() => {
+                                  setActiveMenuLayerId(null);
+                                  setLayers((prev) =>
+                                    prev.map((l) =>
+                                      l.id === layer.id ? { ...l, visible: true } : l
+                                    )
+                                  );
+                                  setZoomTarget({
+                                    layerId: layer.id,
+                                    extent: layer.extent,
+                                    time: Date.now(),
+                                  });
+                                }}
+                                style={dropdownItemStyle}
+                              >
+                                🔍 Zoom to Layer
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setActiveMenuLayerId(null);
+                                  window.open(layer.url, '_blank');
+                                }}
+                                style={dropdownItemStyle}
+                              >
+                                🔗 View Endpoint
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setActiveMenuLayerId(null);
+                                  setTableLayerInfo({
+                                    id: layer.id,
+                                    url: layer.url,
+                                    title: layer.name,
+                                  });
+                                }}
+                                style={dropdownItemStyle}
+                              >
+                                📊 Attribute Table
+                              </button>
+                              <div
                                 style={{
-                                  width: '0.85rem',
-                                  height: '0.85rem',
-                                  display: 'inline',
-                                  marginRight: '6px',
-                                  verticalAlign: '-2px',
+                                  height: '1px',
+                                  backgroundColor: 'var(--border-color)',
+                                  margin: '0.25rem 0',
                                 }}
                               />
-                              Remove
-                            </button>
-                          </div>
-                        )}
+                              <button
+                                onClick={() => {
+                                  setActiveMenuLayerId(null);
+                                  removeLayer(layer.id);
+                                }}
+                                style={{ ...dropdownItemStyle, color: 'var(--danger-color)' }}
+                              >
+                                <Trash2
+                                  style={{
+                                    width: '0.85rem',
+                                    height: '0.85rem',
+                                    display: 'inline',
+                                    marginRight: '6px',
+                                    verticalAlign: '-2px',
+                                  }}
+                                />
+                                Remove
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
+                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                      {layer.geometryType}
+                    </span>
                   </div>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
-                    {layer.geometryType}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* Map Display Area */}
-      <div className="card map-card">
-        <div
-          style={{
-            flex: 1,
-            position: 'relative',
-            width: '100%',
-            height: '100%',
-            minHeight: 0,
-          }}
-        >
-          <MapView
-            layers={layers}
-            zoomTarget={zoomTarget}
-            onFeatureSelect={(attributes) => {
-              setSelectedFeature(attributes);
+        {/* Map Display Area */}
+        <div className="card map-card">
+          <div
+            style={{
+              flex: 1,
+              position: 'relative',
+              width: '100%',
+              height: '100%',
+              minHeight: 0,
             }}
-          />
+          >
+            <MapView
+              layers={layers}
+              zoomTarget={zoomTarget}
+              onFeatureSelect={(attributes) => {
+                setSelectedFeature(attributes);
+              }}
+            />
+          </div>
         </div>
+
+        {/* ArcGIS FeatureTable Drawer Panel */}
+        {tableLayerInfo && (
+          <div className="table-drawer">
+            <FeatureTablePanel
+              key={tableLayerInfo.id}
+              layerUrl={tableLayerInfo.url}
+              layerTitle={tableLayerInfo.title}
+              onClose={() => setTableLayerInfo(null)}
+            />
+          </div>
+        )}
+
+        {pendingSublayers && (
+          <SublayerSelectionModal
+            serviceUrl={pendingSublayers.serviceUrl}
+            sublayers={pendingSublayers.sublayers}
+            onAddLayers={handleConfirmSublayers}
+            onClose={() => setPendingSublayers(null)}
+          />
+        )}
+
+        {showExportModal && (
+          <ExportModal
+            layers={layers}
+            onClose={() => setShowExportModal(false)}
+            onExport={handleBulkExport}
+          />
+        )}
       </div>
-
-      {/* ArcGIS FeatureTable Drawer Panel */}
-{tableLayerInfo && (
-  <div className="table-drawer">
-    <FeatureTablePanel
-      key={tableLayerInfo.id}
-      layerUrl={tableLayerInfo.url}
-      layerTitle={tableLayerInfo.title}
-      onClose={() => setTableLayerInfo(null)}
-    />
-  </div>
-)}
-
-      {pendingSublayers && (
-        <SublayerSelectionModal
-          serviceUrl={pendingSublayers.serviceUrl}
-          sublayers={pendingSublayers.sublayers}
-          onAddLayers={handleConfirmSublayers}
-          onClose={() => setPendingSublayers(null)}
-        />
-      )}
-
-      {showExportModal && (
-        <ExportModal
-          layers={layers}
-          onClose={() => setShowExportModal(false)}
-          onExport={handleBulkExport}
-        />
-      )}
-    </div>
+    </>
   );
 };
 

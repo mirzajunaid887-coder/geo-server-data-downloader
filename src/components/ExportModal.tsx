@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Download, AlertCircle, ExternalLink } from 'lucide-react';
+import { useIsMobile } from '../hooks/useMediaQuery';
 
 interface LoadedLayer {
   id: string;
@@ -15,24 +16,6 @@ interface ExportModalProps {
   onExport?: (selectedLayerIds: string[], format: string) => Promise<void>;
 }
 
-/**
- * ARCHITECTURE NOTE
- * -----------------
- * This mirrors how mchaynes/geodatadownloader (geodatadownloader.com) works:
- * everything runs client-side, in the browser, with no backend.
- *
- * Clicking "Start Download":
- *   1. Opens a brand-new, self-contained popup window.
- *   2. Writes a standalone HTML document into it that duplicates the whole
- *      export pipeline (ArcGIS queries -> GDAL conversion -> file download),
- *      loading GDAL/JSZip from CDN as plain <script> tags.
- *   3. Immediately closes this modal.
- *
- * Because the popup is a completely separate window/document/JS context,
- * the main dashboard and map view are never blocked while the export runs.
- * Multiple exports can even run side-by-side in their own popups.
- */
-
 const FORMAT_OPTIONS: { value: string; label: string }[] = [
   { value: 'gpkg', label: 'GeoPackage (.gpkg) - Multi-layer container' },
   { value: 'shp', label: 'ESRI Shapefile (.zip) - Separate dataset archive' },
@@ -43,6 +26,7 @@ const FORMAT_OPTIONS: { value: string; label: string }[] = [
 ];
 
 export const ExportModal: React.FC<ExportModalProps> = ({ layers, onClose }) => {
+  const isMobile = useIsMobile();
   const [selectedLayerIds, setSelectedLayerIds] = useState<string[]>(
     layers.map((l) => l.id)
   );
@@ -84,6 +68,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ layers, onClose }) => 
     setError(null);
     setLaunching(true);
 
+    // Open popup synchronously to avoid mobile browser popup blockers
     const popup = openExportWindow(
       targetLayers.map((l) => ({ name: l.name, url: l.url })),
       format
@@ -97,7 +82,6 @@ export const ExportModal: React.FC<ExportModalProps> = ({ layers, onClose }) => 
       return;
     }
 
-    // The popup now owns the entire export pipeline independently.
     onClose();
   };
 
@@ -111,25 +95,28 @@ export const ExportModal: React.FC<ExportModalProps> = ({ layers, onClose }) => 
         bottom: 0,
         backgroundColor: 'rgba(0, 0, 0, 0.75)',
         display: 'flex',
-        alignItems: 'center',
+        alignItems: isMobile ? 'flex-end' : 'center',
         justifyContent: 'center',
         zIndex: 2000,
-        padding: '1rem',
+        padding: isMobile ? 0 : '1rem',
       }}
+      onClick={onClose}
     >
       <div
         style={{
           backgroundColor: '#111827',
           border: '1px solid var(--border-color)',
-          borderRadius: '0.5rem',
+          borderRadius: isMobile ? '1rem 1rem 0 0' : '0.5rem',
           width: '100%',
           maxWidth: '500px',
+          maxHeight: isMobile ? '90vh' : '85vh',
           boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
           color: '#f3f4f6',
         }}
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div
@@ -139,6 +126,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ layers, onClose }) => 
             alignItems: 'center',
             padding: '1rem',
             borderBottom: '1px solid var(--border-color)',
+            flexShrink: 0,
           }}
         >
           <h3
@@ -181,7 +169,6 @@ export const ExportModal: React.FC<ExportModalProps> = ({ layers, onClose }) => 
             display: 'flex',
             flexDirection: 'column',
             gap: '1rem',
-            maxHeight: '60vh',
             overflowY: 'auto',
           }}
         >
@@ -285,7 +272,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ layers, onClose }) => 
                     type="checkbox"
                     checked={selectedLayerIds.includes(layer.id)}
                     onChange={() => toggleLayer(layer.id)}
-                    style={{ cursor: 'pointer' }}
+                    style={{ cursor: 'pointer', width: '1rem', height: '1rem' }}
                   />
                   <span
                     style={{
@@ -358,6 +345,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ layers, onClose }) => 
             padding: '1rem',
             borderTop: '1px solid var(--border-color)',
             backgroundColor: '#1f2937',
+            flexShrink: 0,
           }}
         >
           <button
@@ -371,6 +359,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ layers, onClose }) => 
               borderRadius: '0.375rem',
               fontSize: '0.8rem',
               cursor: 'pointer',
+              flex: 1,
             }}
           >
             Cancel
@@ -384,6 +373,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ layers, onClose }) => 
               fontSize: '0.8rem',
               fontWeight: 600,
               opacity: launching ? 0.7 : 1,
+              flex: 2,
             }}
           >
             {launching ? 'Opening window...' : 'Start Download'}
@@ -430,14 +420,6 @@ function openExportWindow(
   return popup;
 }
 
-/**
- * Builds a fully self-contained HTML document for the popup window.
- * It duplicates the ArcGIS query + GDAL conversion pipeline as plain JS so
- * it has zero dependency on this app's bundle.
- *
- * The layer/format config is passed in as base64-encoded JSON to avoid any
- * escaping issues with quotes/backticks in layer names or URLs.
- */
 function buildExportDocument(
   exportLayers: ExportLayerConfig[],
   format: string
@@ -568,9 +550,6 @@ function buildExportDocument(
     '    return allFeatures;',
     '  }',
     '',
-    '  // Convert ArcGIS epoch-ms date fields to ISO 8601 strings so that',
-    '  // downstream GDAL drivers (CSV, KML) show readable dates instead of',
-    '  // raw timestamps. Non-date fields are left untouched.',
     '  function applyDateFormatting(features, fieldTypes) {',
     '    return features.map(function (f) {',
     '      const props = f.properties || f.attributes;',
@@ -646,11 +625,6 @@ function buildExportDocument(
     '',
     '      let blob, filename;',
     '',
-    '      // ------------------------------------------------------------------',
-    '      // Helper: collect every file GDAL produced whose filename starts with',
-    '      // one of our safe layer names. This avoids relying on the return',
-    '      // value of ogr2ogr(), whose shape varies by gdal3.js version.',
-    '      // ------------------------------------------------------------------',
     '      async function collectLayerOutputFiles(zipInstance) {',
     '        const outputFiles = await gdal.getOutputFiles();',
     '        for (const fileInfo of outputFiles) {',
@@ -702,15 +676,9 @@ function buildExportDocument(
     '          const item = layerDatasets[m];',
     '          setDetail(`Processing ${item.name} (${m + 1}/${layerDatasets.length})...`);',
     '          const options = ["-f", driver];',
-    '          // CSV: include geometry as a WKT column so the export is',
-    '          // spatially usable, not just a plain attribute dump.',
     '          if (driver === "CSV") {',
     '            options.push("-lco", "GEOMETRY=AS_WKT");',
     '          }',
-    '          // NOTE: do NOT rely on the return value of ogr2ogr() here.',
-    '          // In gdal3.js v2.8.1 its shape is not guaranteed to be a',
-    '          // single string path, which caused "outPath.split is not a',
-    '          // function". We enumerate outputs via getOutputFiles() instead.',
     '          await gdal.ogr2ogr(item.dataset, options, item.name);',
     '        }',
     '        setDetail("Collecting output files...");',
@@ -730,7 +698,7 @@ function buildExportDocument(
     '      link.download = filename;',
     '      document.body.appendChild(link);',
     '      link.click();',
-    '      link.remove();',
+    '      document.body.removeChild(link);',
     '',
     '      showDone(`${filename} has been saved to your downloads.`);',
     '    } catch (err) {',

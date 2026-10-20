@@ -16,7 +16,7 @@ export const Documentation: React.FC = () => {
       <SEO
         title="Documentation and User Guide"
         description="Complete guide to using Geo Server Data Downloader — load ArcGIS REST services, WFS endpoints, and ArcGIS Online datasets and export them as Shapefile, GeoJSON, KML, GeoPackage, or CSV."
-        keywords="ArcGIS download guide, WFS tutorial, GIS export documentation, convert FeatureServer to Shapefile, download ArcGIS layer"
+        keywords="ArcGIS download guide, WFS tutorial, GIS export documentation, convert FeatureServer to Shapefile, download ArcGIS layer, gisblogs, Blogs For GIS, Geo-Informatics"
         path="/documentation"
         structuredData={buildFaqSchema([
           {

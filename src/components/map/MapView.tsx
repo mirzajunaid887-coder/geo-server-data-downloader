@@ -23,17 +23,28 @@ interface EsriMapViewProps {
   onFeatureSelect?: (attributes: any | null) => void;
 }
 
-const WORLD_LOCATOR_URL = 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer';
+const WORLD_LOCATOR_URL =
+  'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer';
 
-export const EsriMapView: React.FC<EsriMapViewProps> = ({ layers = [], zoomTarget, onFeatureSelect }) => {
+const BATCH_SIZE = 4;
+const BATCH_DELAY_MS = 150;
+
+export const EsriMapView: React.FC<EsriMapViewProps> = ({
+  layers = [],
+  zoomTarget,
+  onFeatureSelect,
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<MapView | null>(null);
   const layerInstancesRef = useRef<{ [key: string]: any }>({});
   const selectionLayerRef = useRef<GraphicsLayer | null>(null);
   const isInitializedRef = useRef<boolean>(false);
-  
+  const pendingTimeoutsRef = useRef<number[]>([]);
+
   const [searchText, setSearchText] = useState<string>('');
-  const [suggestions, setSuggestions] = useState<Array<{ text: string; location?: any }>>([]);
+  const [suggestions, setSuggestions] = useState<
+    Array<{ text: string; location?: any }>
+  >([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
   const onFeatureSelectRef = useRef(onFeatureSelect);
@@ -103,10 +114,7 @@ export const EsriMapView: React.FC<EsriMapViewProps> = ({ layers = [], zoomTarge
             symbol: {
               type: 'simple-fill',
               color: [0, 245, 255, 0.25],
-              outline: {
-                color: [0, 245, 255, 1],
-                width: 3,
-              },
+              outline: { color: [0, 245, 255, 1], width: 3 },
             },
             attributes: foundAttributes,
             popupTemplate: {
@@ -136,12 +144,8 @@ export const EsriMapView: React.FC<EsriMapViewProps> = ({ layers = [], zoomTarge
             onFeatureSelectRef.current(foundAttributes);
           }
         } else {
-          if (view.popup) {
-            view.popup.close();
-          }
-          if (onFeatureSelectRef.current) {
-            onFeatureSelectRef.current(null);
-          }
+          if (view.popup) view.popup.close();
+          if (onFeatureSelectRef.current) onFeatureSelectRef.current(null);
         }
       } catch (err) {
         console.error('Feature highlight selection error:', err);
@@ -266,37 +270,88 @@ export const EsriMapView: React.FC<EsriMapViewProps> = ({ layers = [], zoomTarge
         const layerInstance = layerInstancesRef.current[id];
         if (layerInstance) {
           mapInstance.remove(layerInstance);
+          if (typeof layerInstance.destroy === 'function') {
+            layerInstance.destroy();
+          }
         }
         delete layerInstancesRef.current[id];
       }
     });
 
     layers.forEach((layerItem) => {
-      let layerInstance = layerInstancesRef.current[layerItem.id];
-      if (!layerInstance) {
+      const existing = layerInstancesRef.current[layerItem.id];
+      if (existing) {
+        existing.visible = layerItem.visible;
+      }
+    });
+
+    pendingTimeoutsRef.current.forEach((id) => window.clearTimeout(id));
+    pendingTimeoutsRef.current = [];
+
+    const pendingLayers = layers.filter(
+      (l) => !layerInstancesRef.current[l.id]
+    );
+
+    if (pendingLayers.length === 0) return;
+
+    const batchSize = pendingLayers.length > 25 ? 2 : BATCH_SIZE;
+    const delayMs = pendingLayers.length > 25 ? 220 : BATCH_DELAY_MS;
+
+    let cancelled = false;
+
+    const addOneLayer = (layerItem: LayerItem) => {
+      if (cancelled) return;
+
+      let layerInstance: any;
+      try {
         if (layerItem.url.includes('MapServer') && !layerItem.url.match(/\/\d+$/)) {
           layerInstance = new MapImageLayer({ url: layerItem.url });
         } else {
-          layerInstance = new FeatureLayer({ 
+          layerInstance = new FeatureLayer({
             url: layerItem.url,
             outFields: ['*'],
             popupEnabled: false,
           });
         }
-        layerInstancesRef.current[layerItem.id] = layerInstance;
-        mapInstance.add(layerInstance);
+      } catch (err) {
+        console.warn('[MapView] Failed to construct layer:', layerItem.url, err);
+        return;
+      }
 
-        layerInstance.when(() => {
-          if (layerInstance.fullExtent && !layerItem.extent) {
-            layerItem.extent = layerInstance.fullExtent;
-          }
-        }).catch((err: any) => {
-          if (err.name !== 'AbortError') console.error(err);
-        });
+      layerInstancesRef.current[layerItem.id] = layerInstance;
+
+      try {
+        mapInstance.add(layerInstance);
+      } catch (err) {
+        console.warn('[MapView] Failed to add layer to map:', err);
+        delete layerInstancesRef.current[layerItem.id];
+        return;
       }
 
       layerInstance.visible = layerItem.visible;
-    });
+    };
+
+    const scheduleBatch = (batchIndex: number) => {
+      if (cancelled) return;
+
+      const start = batchIndex * batchSize;
+      const batch = pendingLayers.slice(start, start + batchSize);
+      batch.forEach(addOneLayer);
+
+      const nextIndex = batchIndex + 1;
+      if (nextIndex * batchSize < pendingLayers.length) {
+        const tid = window.setTimeout(() => scheduleBatch(nextIndex), delayMs);
+        pendingTimeoutsRef.current.push(tid);
+      }
+    };
+
+    scheduleBatch(0);
+
+    return () => {
+      cancelled = true;
+      pendingTimeoutsRef.current.forEach((id) => window.clearTimeout(id));
+      pendingTimeoutsRef.current = [];
+    };
   }, [layers]);
 
   useEffect(() => {
@@ -307,18 +362,18 @@ export const EsriMapView: React.FC<EsriMapViewProps> = ({ layers = [], zoomTarge
 
     if (targetLayerInstance && targetLayerInstance.fullExtent) {
       view.goTo(targetLayerInstance.fullExtent, { duration: 1000 }).catch((err: any) => {
-        if (err.name !== 'AbortError') console.error('Error zooming to layer instance extent:', err);
+        if (err.name !== 'AbortError') console.error(err);
       });
     } else if (zoomTarget.extent) {
       view.goTo(zoomTarget.extent, { duration: 1000 }).catch((err: any) => {
-        if (err.name !== 'AbortError') console.error('Error zooming to metadata extent:', err);
+        if (err.name !== 'AbortError') console.error(err);
       });
     }
   }, [zoomTarget]);
 
   return (
-    <div style={{ width: '100%', height: '100%', minHeight: '520px', position: 'relative', outline: 'none', border: 'none', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', top: '12px', right: '16px', zIndex: 40, width: '280px' }}>
+    <div style={{ width: '100%', height: '100%', minHeight: '100%', position: 'relative', outline: 'none', border: 'none', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', top: '12px', right: '16px', zIndex: 40, width: '280px', maxWidth: 'calc(100% - 32px)' }}>
         <div style={{ display: 'flex', alignItems: 'center', backgroundColor: 'rgba(18, 18, 26, 0.95)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255, 255, 255, 0.15)', borderRadius: '6px', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.5)', padding: '0 8px', height: '36px' }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00f5ff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginRight: '8px' }}>
             <circle cx="11" cy="11" r="8"></circle>

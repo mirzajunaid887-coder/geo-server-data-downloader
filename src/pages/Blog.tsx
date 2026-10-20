@@ -13,7 +13,7 @@ export const Blog: React.FC = () => {
       <SEO
         title="GIS Tutorials and Guides"
         description="In-depth tutorials and practical guides on ArcGIS REST services, spatial data formats, GIS downloads, and everything related to working with vector geospatial data."
-        keywords="GIS tutorials, ArcGIS guides, spatial data format comparison, download GIS data guide, GeoJSON tutorial, Shapefile guide"
+        keywords="GIS tutorials, ArcGIS guides, spatial data format comparison, download GIS data guide, GeoJSON tutorial, Shapefile guide, geodatadownloader"
         path="/blog"
         structuredData={{
           '@context': 'https://schema.org',
