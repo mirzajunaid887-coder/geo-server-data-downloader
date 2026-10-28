@@ -1,95 +1,51 @@
 import React, { useEffect, useRef, useState } from 'react';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import FeatureTable from '@arcgis/core/widgets/FeatureTable';
+import { Minimize2, Maximize2, ChevronUp } from 'lucide-react';
 
 interface FeatureTablePanelProps {
   layerUrl: string;
   layerTitle: string;
   onClose: () => void;
+  tableMode: 'normal' | 'minimized' | 'maximized';
+  onToggleMode: (mode: 'normal' | 'minimized' | 'maximized') => void;
 }
 
 export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
   layerUrl,
   layerTitle,
   onClose,
+  tableMode,
+  onToggleMode,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const tableRef = useRef<FeatureTable | null>(null);
-  const layerRef = useRef<FeatureLayer | null>(null);
-
   const [status, setStatus] = useState<string>('Initializing attribute table...');
   const [hasError, setHasError] = useState<boolean>(false);
 
   useEffect(() => {
-    // Reset status for the new layer
-    setStatus('Initializing attribute table...');
-    setHasError(false);
+    if (!containerRef.current) return;
 
+    let featureTable: FeatureTable | null = null;
+    let featureLayer: FeatureLayer | null = null;
     let isDestroyed = false;
-
-    // Helper to fully tear down the previous widget synchronously
-    const teardown = () => {
-      try {
-        if (tableRef.current) {
-          tableRef.current.destroy();
-          tableRef.current = null;
-        }
-      } catch {
-        /* noop */
-      }
-      try {
-        if (layerRef.current) {
-          layerRef.current.destroy();
-          layerRef.current = null;
-        }
-      } catch {
-        /* noop */
-      }
-      // Ensure the container is completely empty before reuse
-      try {
-        if (containerRef.current) {
-          containerRef.current.innerHTML = '';
-        }
-      } catch {
-        /* noop */
-      }
-    };
 
     const init = async () => {
       try {
-        const container = containerRef.current;
-        if (!container) return;
-
-        // 1. Create layer instance
-        const featureLayer = new FeatureLayer({
+        featureLayer = new FeatureLayer({
           url: layerUrl,
           outFields: ['*'],
           title: layerTitle,
         });
-        layerRef.current = featureLayer;
 
-        // 2. Wait for layer metadata to fully load
         setStatus('Loading layer metadata...');
         await featureLayer.load();
 
-        if (isDestroyed || !containerRef.current) {
-          // Component unmounted mid-load — clean up what we created
-          try { featureLayer.destroy(); } catch { /* noop */ }
-          return;
-        }
+        if (isDestroyed || !containerRef.current) return;
 
-        // 3. Guard: make sure we still own the same DOM node
-        if (containerRef.current !== container) {
-          try { featureLayer.destroy(); } catch { /* noop */ }
-          return;
-        }
-
-        // 4. Build the FeatureTable widget
         setStatus('Rendering table...');
-
-        const featureTable = new FeatureTable({
+        featureTable = new FeatureTable({
           layer: featureLayer,
-          container,
+          container: containerRef.current,
           multiSortEnabled: true,
           visibleElements: {
             header: true,
@@ -105,18 +61,8 @@ export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
           },
         });
 
-        // If the component unmounted while the widget was constructing,
-        // destroy it immediately and bail.
-        if (isDestroyed) {
-          try { featureTable.destroy(); } catch { /* noop */ }
-          try { featureLayer.destroy(); } catch { /* noop */ }
-          return;
-        }
-
-        tableRef.current = featureTable;
         setStatus('');
       } catch (err: any) {
-        if (isDestroyed) return;
         console.error('[FeatureTablePanel] Failed to initialize:', err);
         setHasError(true);
         setStatus(
@@ -129,9 +75,23 @@ export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
 
     return () => {
       isDestroyed = true;
-      teardown();
+      try { if (featureTable) featureTable.destroy(); } catch {}
+      try { if (featureLayer) featureLayer.destroy(); } catch {}
     };
   }, [layerUrl, layerTitle]);
+
+  const iconBtnStyle: React.CSSProperties = {
+    background: 'rgba(255,255,255,0.06)',
+    border: '1px solid var(--border-color)',
+    color: 'var(--text-main)',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '4px 6px',
+    borderRadius: '4px',
+    lineHeight: 1,
+  };
 
   return (
     <div
@@ -144,14 +104,14 @@ export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
         position: 'relative',
       }}
     >
-      {/* Header */}
+      {/* Header strip */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: '0.5rem',
-          padding: '0.25rem 0.25rem 0.5rem',
+          padding: '0.25rem 0.25rem 0.5rem 0.25rem',
           flexShrink: 0,
         }}
       >
@@ -167,28 +127,53 @@ export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
         >
           📊 {layerTitle} — Attribute Table
         </span>
-        <button
-          onClick={onClose}
-          title="Close"
-          style={{
-            background: 'var(--danger-color)',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '4px',
-            padding: '4px 10px',
-            fontSize: '0.9rem',
-            fontWeight: 'bold',
-            cursor: 'pointer',
-            lineHeight: 1,
-            flexShrink: 0,
-          }}
-        >
-          ×
-        </button>
+        
+        {/* Controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexShrink: 0 }}>
+          {tableMode === 'minimized' ? (
+            <button
+              onClick={() => onToggleMode('normal')}
+              title="Restore"
+              style={iconBtnStyle}
+            >
+              <ChevronUp style={{ width: '0.9rem', height: '0.9rem' }} />
+            </button>
+          ) : (
+            <button
+              onClick={() => onToggleMode('minimized')}
+              title="Minimize"
+              style={iconBtnStyle}
+            >
+              <Minimize2 style={{ width: '0.8rem', height: '0.8rem' }} />
+            </button>
+          )}
+
+          {tableMode !== 'minimized' && (
+            <button
+              onClick={() => onToggleMode(tableMode === 'maximized' ? 'normal' : 'maximized')}
+              title={tableMode === 'maximized' ? 'Restore' : 'Maximize'}
+              style={iconBtnStyle}
+            >
+              {tableMode === 'maximized' ? (
+                <Minimize2 style={{ width: '0.8rem', height: '0.8rem' }} />
+              ) : (
+                <Maximize2 style={{ width: '0.8rem', height: '0.8rem' }} />
+              )}
+            </button>
+          )}
+
+          <button
+            onClick={onClose}
+            title="Close"
+            style={{ ...iconBtnStyle, background: '#ef4444', color: '#fff', border: 'none', fontSize: '0.9rem', fontWeight: 'bold', padding: '2px 8px' }}
+          >
+            ×
+          </button>
+        </div>
       </div>
 
       {/* Status / error message */}
-      {status && (
+      {status && tableMode !== 'minimized' && (
         <div
           style={{
             padding: '0.5rem 0.75rem',
@@ -204,10 +189,11 @@ export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
         </div>
       )}
 
-      {/* Container — widget attaches here */}
+      {/* Table Container - Hidden when minimized */}
       <div
         ref={containerRef}
         style={{
+          display: tableMode === 'minimized' ? 'none' : 'block',
           flex: 1,
           minHeight: 0,
           width: '100%',

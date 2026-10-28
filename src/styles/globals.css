@@ -517,18 +517,17 @@ h3 {
 }
 
 /* ============================================================
-   DOWNLOADER LAYOUT (Mobile-First)
+   DOWNLOADER LAYOUT (iOS Optimized)
    ============================================================ */
 
 .downloader-grid {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding: 0.4rem 0;
+  gap: 1rem;
+  padding: 0.5rem 0;
   box-sizing: border-box;
-  /* Mobile: Lock to viewport height so the page doesn't scroll, only internal panels do */
-  height: calc(100vh - 80px);
-  height: calc(100dvh - 80px); /* Dynamic Viewport Height for mobile address bars */
+  /* Reliable height calculation for iOS */
+  height: calc(100dvh - 80px); 
   overflow: hidden;
 }
 
@@ -536,21 +535,21 @@ h3 {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  /* Mobile: Sidebar takes exactly 40% of the available height */
-  flex: 0 0 40%;
-  min-height: 0; /* Crucial for internal scrolling */
+  /* Take up remaining space but max out at 45% of screen */
+  flex: 0 1 auto;
+  max-height: 45%;
+  min-height: 0; 
   overflow-y: auto;
   overflow-x: hidden;
-  padding-right: 4px;
-  /* Visual separation between controls and map */
+  -webkit-overflow-scrolling: touch;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 0.5rem;
 }
 
 .map-card {
-  /* Mobile: Map takes the remaining 60% */
-  flex: 1;
-  min-height: 0; /* Crucial: Prevents Map from overflowing and breaking the flex layout */
+  /* Map takes at least 300px, and expands to fill the rest */
+  flex: 1 1 auto;
+  min-height: 300px; /* CRITICAL: Prevents map from disappearing */
   padding: 0.25rem;
   box-sizing: border-box;
   display: flex;
@@ -558,7 +557,6 @@ h3 {
   overflow: hidden;
 }
 
-/* Inner wrapper for the map — must fill the card */
 .map-card > div {
   flex: 1;
   min-height: 0;
@@ -567,34 +565,23 @@ h3 {
   height: 100%;
 }
 
-/* Very small phones — adjust proportions slightly */
-@media (max-width: 420px) {
-  .downloader-sidebar {
-    flex: 0 0 38%;
-  }
-}
-
-/* ------------------------------------------------------------
-   TABLET (768px - 1023px)
-   ------------------------------------------------------------ */
+/* Tablet & Desktop */
 @media (min-width: 768px) {
   .downloader-grid {
     display: grid;
     grid-template-columns: 320px 1fr;
     grid-template-rows: 1fr;
-    height: calc(100vh - 92px);
     height: calc(100dvh - 92px);
     gap: 0.9rem;
     overflow: hidden;
   }
 
   .downloader-sidebar {
-    flex: none; /* Reset mobile flex */
+    flex: none;
+    max-height: none;
     height: 100%;
-    min-height: 0;
     overflow-y: auto;
-    padding-right: 4px;
-    border-bottom: none; /* Remove mobile border */
+    border-bottom: none;
     padding-bottom: 0;
   }
 
@@ -606,26 +593,18 @@ h3 {
   }
 }
 
-/* ------------------------------------------------------------
-   DESKTOP (>= 1024px)
-   ------------------------------------------------------------ */
 @media (min-width: 1024px) {
   .downloader-grid {
     grid-template-columns: 380px 1fr;
-    height: calc(100vh - 104px);
     height: calc(100dvh - 104px);
     gap: 1rem;
   }
-
   .map-card {
     padding: 0.5rem;
   }
 }
 
-/* ============================================================
-   ATTRIBUTE TABLE DRAWER
-   ============================================================ */
-
+/* Attribute table drawer - Base */
 .table-drawer {
   position: fixed;
   left: 0.5rem;
@@ -642,22 +621,43 @@ h3 {
   color: var(--text-main);
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
+  transition: height 0.25s ease, bottom 0.25s ease, border-radius 0.25s ease;
 }
 
 @media (min-width: 768px) {
   .table-drawer {
-    left: 335px; /* 320px sidebar + gap */
+    left: 335px;
     height: 45vh;
   }
 }
 
 @media (min-width: 1024px) {
   .table-drawer {
-    left: 395px; /* 380px sidebar + gap */
+    left: 395px;
     height: 45vh;
   }
 }
 
+/* ★ NEW: Minimized State */
+.table-drawer.minimized {
+  height: 52px !important;
+  overflow: hidden;
+}
+
+/* ★ NEW: Maximized State */
+.table-drawer.maximized {
+  height: calc(100vh - 80px) !important;
+  height: calc(100dvh - 80px) !important;
+  bottom: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .table-drawer.maximized {
+    height: calc(100vh - 100px) !important;
+    height: calc(100dvh - 100px) !important;
+  }
+}
 /* ============================================================
    MODALS (Export / Sublayer)
    ============================================================ */

@@ -60,6 +60,8 @@ export const Downloader: React.FC = () => {
   const [activeMenuLayerId, setActiveMenuLayerId] = useState<string | null>(null);
   const [zoomTarget, setZoomTarget] = useState<any>(null);
 
+  const [tableMode, setTableMode] = useState<'normal' | 'minimized' | 'maximized'>('normal');
+
   const [tableLayerInfo, setTableLayerInfo] = useState<{
     id: string;
     url: string;
@@ -887,19 +889,20 @@ export const Downloader: React.FC = () => {
                               >
                                 🔗 View Endpoint
                               </button>
-                              <button
-                                onClick={() => {
-                                  setActiveMenuLayerId(null);
-                                  setTableLayerInfo({
-                                    id: layer.id,
-                                    url: layer.url,
-                                    title: layer.name,
-                                  });
-                                }}
-                                style={dropdownItemStyle}
-                              >
-                                📊 Attribute Table
-                              </button>
+                                                          <button
+                              onClick={() => {
+                                setActiveMenuLayerId(null);
+                                setTableMode('normal'); // ← Reset mode when opening
+                                setTableLayerInfo({
+                                  id: layer.id,
+                                  url: layer.url,
+                                  title: layer.name,
+                                });
+                              }}
+                              style={dropdownItemStyle}
+                            >
+                              📊 Attribute Table
+                            </button>
                               <div
                                 style={{
                                   height: '1px',
@@ -940,7 +943,7 @@ export const Downloader: React.FC = () => {
           </div>
         </div>
 
-        {/* Map Display Area */}
+                {/* Map Display Area */}
         <div className="card map-card">
           <div
             style={{
@@ -948,7 +951,7 @@ export const Downloader: React.FC = () => {
               position: 'relative',
               width: '100%',
               height: '100%',
-              minHeight: 0,
+              minHeight: '250px', /* Add this safety net */
             }}
           >
             <MapView
@@ -961,14 +964,16 @@ export const Downloader: React.FC = () => {
           </div>
         </div>
 
-        {/* ArcGIS FeatureTable Drawer Panel */}
+                {/* ArcGIS FeatureTable Drawer Panel */}
         {tableLayerInfo && (
-          <div className="table-drawer">
+          <div className={`table-drawer ${tableMode}`}>
             <FeatureTablePanel
               key={tableLayerInfo.id}
               layerUrl={tableLayerInfo.url}
               layerTitle={tableLayerInfo.title}
               onClose={() => setTableLayerInfo(null)}
+              tableMode={tableMode}
+              onToggleMode={setTableMode}
             />
           </div>
         )}

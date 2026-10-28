@@ -48,3 +48,58 @@ A free, fast, and **100% client-side** GIS tool for discovering, previewing, and
    ```bash
    git clone https://github.com/mirzajunaid887-coder/geo-server-data-downloader.git
    cd geo-server-data-downloader
+
+#### Install dependencies
+
+  npm install
+
+#### Start the development server
+   
+   npm run dev
+      The application will be available at http://localhost:5173
+   
+
+##### 📦 Build & Deployment
+
+   npm run build
+    Note: This command does two things:
+        1. Bundles the React application using vite build.
+        2. Runs node scripts/prerender.mjs which launches a headless serverless Chromium browser to generate static HTML files for all pages (Home, Blog, Docs, etc.). This is critical for Google AdSense approval and SEO.
+
+###### 📁 Project Structure
+
+├── public/                 # Static assets (favicon, robots.txt, sitemap.xml, ads.txt)
+├── scripts/
+│   └── prerender.mjs       # Puppeteer script for SSG generation
+├── src/
+│   ├── app/                # App wrapper and routing
+│   ├── components/         # Reusable UI components (Map, Modals, Ads, SEO)
+│   ├── config/             # App and AdSense configuration
+│   ├── context/            # React Context (Theme)
+│   ├── data/               # Blog post data and glossary definitions
+│   ├── hooks/              # Custom React hooks (useMediaQuery)
+│   ├── pages/              # Page components (Home, Downloader, Blog, etc.)
+│   ├── services/           # ArcGIS REST and conversion logic
+│   └── styles/             # Global CSS and theme tokens
+├── vercel.json             # Vercel deployment configuration
+└── package.json
+
+##### 🤝 Contributing
+  
+   Contributions, issues, and feature requests are welcome!
+
+###### 📝 License
+   
+   Distributed under the MIT License. See LICENSE for more information.
+
+###### 👨‍💻 Author
+  
+  Muhammad Junaid Baig
+
+🌐 Website: [Geo Server Data Downloader](https://www.geo-server-data-downloader.com/)
+
+💼 LinkedIn: Muhammad Junaid Baig
+
+🐙 GitHub: @mirzajunaid887-coder
+
+💻 Fiverr: [Fiverr](https://www.fiverr.com/gisgynix)
