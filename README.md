@@ -98,8 +98,8 @@ A free, fast, and **100% client-side** GIS tool for discovering, previewing, and
 
 🌐 Website: [Geo Server Data Downloader](https://www.geo-server-data-downloader.com/)
 
-💼 LinkedIn: Muhammad Junaid Baig
+💼 LinkedIn: [Muhammad Junaid Baig](https://www.linkedin.com/in/muhammad-junaid-baig-38b102247/)
 
-🐙 GitHub: @mirzajunaid887-coder
+🐙 Upwork: [GIS_Gynix](https://www.upwork.com/freelancers/~014c5dfcb05a8b2acb?mp_source=share)
 
 💻 Fiverr: [Fiverr](https://www.fiverr.com/gisgynix)
