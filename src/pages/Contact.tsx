@@ -22,7 +22,7 @@ export const Contact: React.FC = () => {
       <article style={articleStyle}>
         <h1 style={h1Style}>Contact</h1>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
-          Have a question, spotted a bug, or want to hire me for a GIS
+          Have a question, spotted a bug, or want to hire me for a WebGIS
           project? Here's how to reach me.
         </p>
 
@@ -65,7 +65,7 @@ export const Contact: React.FC = () => {
                 style={{ ...linkStyle, display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
               >
                 <MessageCircle style={{ width: '1rem', height: '1rem' }} />
-                Fiverr — gisgynix
+                Fiverr
               </a>
             </li>
             <li>
@@ -76,7 +76,7 @@ export const Contact: React.FC = () => {
                 style={{ ...linkStyle, display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
               >
                 <Briefcase style={{ width: '1rem', height: '1rem' }} />
-                Upwork — Muhammad Junaid Baig
+                Upwork
               </a>
             </li>
             <li>

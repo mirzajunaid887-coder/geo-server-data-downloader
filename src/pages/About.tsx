@@ -12,8 +12,8 @@ export const About: React.FC = () => {
     <>
       <SEO
         title="About the Developer and the Project"
-        description={`Learn about ${siteName}, a free client-side GIS data export tool created by Muhammad Junaid Baig, and the mission behind it.`}
-        keywords="about GIS downloader, Muhammad Junaid Baig, client-side GIS tool, free geospatial data download"
+        description={`Learn about ${siteName}, a comprehensive client-side GIS platform for downloading, discovering, and converting spatial data, created by Muhammad Junaid Baig.`}
+        keywords="about GIS downloader, Muhammad Junaid Baig, client-side GIS tool, free geospatial data download, GIS converter"
         path="/about"
         structuredData={{
           '@context': 'https://schema.org',
@@ -38,31 +38,33 @@ export const About: React.FC = () => {
       <article style={articleStyle}>
         <h1 style={h1Style}>About {siteName}</h1>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
-          Built by a GIS developer, for GIS professionals, researchers, and
-          anyone who works with spatial data, ArcGIS REST API's, feature-server, map-server.
+          Geo Server Data Downloader is a project I built to make working with GIS data simpler and more accessible. 
+          As someone who works with geospatial data, I know how frustrating it can be to find a dataset, 
+          download it from a web service, and get it into the format you actually need.
         </p>
 
         <section style={sectionStyle}>
-          <h2 style={h2Style}>The Story</h2>
+          <h2 style={h2Style}>Why I Built It</h2>
           <p>
-            {siteName} was built out of a very practical frustration: getting
-            data out of ArcGIS REST services and other spatial web services
-            is unnecessarily painful. You often need desktop software (ArcGIS
-            Pro, QGIS), a working knowledge of GDAL command-line tools, or a
-            paid third-party service just to turn a FeatureServer URL into a
-            usable Shapefile or GeoJSON file.
+            Sometimes, a task as simple as downloading data from an ArcGIS REST service or converting GeoJSON to KML requires desktop software, 
+            command-line tools, or a separate online service. 
+            I wanted to make these everyday tasks easier, 
+            so I started building a tool that brings them together in one place.
+            My goal was to create a practical GIS tool that people could use without
+            installing additional software or creating an account.
           </p>
           <p>
-            I wanted a tool that:
+            I wanted to build a unified platform that:
           </p>
           <ul style={ulStyle}>
-            <li>Runs entirely in the browser — no installs, no signup, no server uploads.</li>
-            <li>Supports every common spatial format (Shapefile, GeoJSON, KML, GeoPackage, CSV, GPX).</li>
-            <li>Works equally well for ArcGIS REST, WFS, and ArcGIS Online layers.</li>
-            <li>Is genuinely free, with no arbitrary feature limits or paywalls.</li>
+            <li>Work directly in your browser, without uploading your files to a server I control.</li>
+            <li>Download spatial data from ArcGIS REST services and explore publicly available layers on ArcGIS Online.</li>
+            <li>Convert common GIS formats, including Shapefile, GeoJSON, KML, GeoPackage, CSV, and GPX.</li>
+            <li>Preview layers on an interactive map and inspect their attribute tables before exporting.</li>
+            <li>Make everyday GIS data tasks available for free, without artificial feature limits or paywalls.</li>
           </ul>
           <p>
-            That's exactly what {siteName} does. It's the tool I wished
+            That's exactly what {siteName} delivers. It's the comprehensive tool I wished
             existed when I first started working with GIS data.
           </p>
         </section>
@@ -70,14 +72,12 @@ export const About: React.FC = () => {
         <section style={sectionStyle}>
           <h2 style={h2Style}>About the Developer</h2>
           <p>
-            I'm <strong>Muhammad Junaid Baig</strong>, a geospatial developer
-            with hands-on experience building web mapping applications,
-            working with ArcGIS Enterprise and ArcGIS Online, and processing
-            vector spatial datasets at scale.
+            I'm <strong>Muhammad Junaid Baig</strong>, a geospatial developer with experience in 
+            web mapping, ArcGIS Enterprise, ArcGIS Online, and spatial data processing.
           </p>
           <p>
             Over the years I've worked with a wide range of spatial data
-            sources — municipal parcel data, zoning districts, utility
+            sources, municipal parcel data, zoning districts, utility
             networks, environmental layers, and open geospatial data
             portals. {siteName} is a distillation of the techniques I use
             daily.
@@ -116,60 +116,60 @@ export const About: React.FC = () => {
         </section>
 
         <section style={sectionStyle}>
-          <h2 style={h2Style}>What the Tool Does</h2>
-          <p>{siteName} provides two main workflows:</p>
+          <h2 style={h2Style}>What You Can Do With the Tool</h2>
+          <p>{siteName} provides three main workflows:</p>
           <ul style={ulStyle}>
             <li>
-              <strong>Direct URL loading:</strong> Paste any ArcGIS REST
-              FeatureServer, MapServer, or WFS endpoint. The tool reads the
-              service metadata, lists the sublayers, and lets you preview
-              them on an interactive map.
+              <strong>Load data directly from a URL :</strong> Paste any ArcGIS REST
+              Paste an ArcGIS REST FeatureServer, MapServer, or supported WFS endpoint to inspect the service, browse its available layers, and preview spatial data on an interactive map. You can then view the attribute table and export the data in a supported format.
             </li>
             <li>
-              <strong>ArcGIS Online discovery:</strong> Search thousands of
-              public feature services and open data layers hosted on ArcGIS
-              Online without needing a URL in advance.
+              <strong>Discover public ArcGIS Online layers :</strong> Search for publicly available feature services and open data layers on ArcGIS Online. This is useful when you know what data you're looking for but don't already have a service URL.
+            </li>
+            <li>
+              <strong>Convert your existing GIS files :</strong> Upload supported spatial files from your computer and convert them into another format directly in your browser. You can use this workflow to prepare data for different GIS applications without needing a separate conversion program.
             </li>
           </ul>
           <p>
-            Once a layer is loaded, you can view its attribute table, zoom
-            to the extent, and export the full dataset in one of several
-            spatial formats.
+            The original files remain on your computer during local file conversion, and the tool is designed to preserve spatial and attribute information wherever the target format supports it.
           </p>
         </section>
 
         <section style={sectionStyle}>
-          <h2 style={h2Style}>Supported Formats</h2>
+          <h2 style={h2Style}>Supported GIS Formats</h2>
+          <p style={{ marginBottom: '1rem' }}>
+            The tool supports the following formats for its applicable download and conversion workflows:
+          </p>
           <ul style={ulStyle}>
-            <li><strong>Shapefile (.zip)</strong> — the classic Esri vector format, packaged with all its sidecar files.</li>
-            <li><strong>GeoJSON (.geojson)</strong> — the modern open standard for web and GIS interchange.</li>
-            <li><strong>KML (.kml)</strong> — for viewing in Google Earth and other KML-compatible tools.</li>
-            <li><strong>GeoPackage (.gpkg)</strong> — the modern open SQLite-based container format.</li>
-            <li><strong>CSV (.csv)</strong> — attribute data with an optional WKT geometry column.</li>
-            <li><strong>GPX (.gpx)</strong> — for GPS devices and route/track data.</li>
+            <li><strong>Shapefile (.zip)</strong> A widely used vector format, packaged with its required supporting files.</li>
+            <li><strong>GeoJSON (.geojson)</strong> A convenient format for web mapping and exchanging spatial data.</li>
+            <li><strong>KML (.kml)</strong> Useful for Google Earth and other compatible mapping applications.</li>
+            <li><strong>GeoPackage (.gpkg)</strong> A versatile, SQLite-based format for storing geospatial data.</li>
+            <li><strong>CSV (.csv)</strong> Tabular data, with optional spatial information such as coordinates or WKT geometry.</li>
+            <li><strong>GPX (.gpx)</strong> Commonly used for GPS tracks, routes, and waypoints.</li>
           </ul>
         </section>
 
         <section style={sectionStyle}>
-          <h2 style={h2Style}>Privacy-First Design</h2>
+          <h2 style={h2Style}>Built With Privacy in Mind</h2>
           <p>
-            Every layer you load, every query, and every export runs
-            entirely inside your browser using WebAssembly and JavaScript.
-            Nothing — no URLs, no data, no exported files — is ever sent to
-            a server we control. The only network requests are the ones your
-            browser makes directly to the ArcGIS services you choose.
+            Built With Privacy in Mind
+
+One of the decisions I made early in development was to keep data processing on the client side.
+
+Local file conversion, processing, and export run in your browser using JavaScript and WebAssembly. Files you upload for local processing are not sent to a server I control. When you load data from an external GIS service, your browser communicates directly with that service to retrieve the requested information.
+
+This approach helps keep your files under your control while making the tool accessible through an ordinary web browser.
           </p>
         </section>
 
         <section style={sectionStyle}>
-          <h2 style={h2Style}>Technology</h2>
+          <h2 style={h2Style}>How It Works</h2>
           <p>
-            The site is built with <strong>React</strong>, <strong>Vite</strong>,{' '}
-            <strong>TypeScript</strong>, <strong>Tailwind CSS</strong>,{' '}
-            <strong>ArcGIS Maps SDK for JavaScript</strong>, and{' '}
-            <strong>gdal3.js</strong> (a WebAssembly port of GDAL). It's
-            hosted as a static site, which keeps it fast, cheap to run, and
-            easy to audit.
+            Geo Server Data Downloader <strong>React</strong>, <strong>Vite</strong>,{' '}
+            <strong>TypeScript</strong>, <strong>Tailwind CSS</strong>, and the{' '}
+            <strong>ArcGIS Maps SDK for JavaScript</strong>. For data processing and format conversion, it uses  <strong>gdal3.js</strong> (a WebAssembly 
+            port of the industry-standard GDAL library). The application is hosted as a static website, allowing users to access its tools without installing a desktop application.
           </p>
         </section>
 
@@ -185,7 +185,8 @@ export const About: React.FC = () => {
             <Link to="/contact" style={linkStyle}>
               Contact page
             </Link>
-            .
+            . 
+            Thanks for checking out Geo Server Data Downloader. I hope it makes your GIS work a little easier.
           </p>
         </section>
       </article>

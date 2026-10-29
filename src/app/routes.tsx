@@ -11,6 +11,7 @@ import { Contact } from '../pages/Contact';
 import { Blog } from '../pages/Blog';
 import { BlogPost } from '../pages/BlogPost';
 import { ExportProgress } from '../pages/ExportProgress';
+import { GISConverter } from '../pages/GISConverter';
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ export const AppRoutes: React.FC = () => {
       <Route path="/downloader" element={<Downloader />} />
       <Route path="/download" element={<Downloader />} />
       <Route path="/discover" element={<Discover />} />
+      <Route path="/converter" element={<GISConverter />} />
       <Route path="/documentation" element={<Documentation />} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />

@@ -10,6 +10,7 @@ const routes = [
   '/',
   '/download',
   '/discover',
+  '/converter',
   '/documentation',
   '/about',
   '/privacy',

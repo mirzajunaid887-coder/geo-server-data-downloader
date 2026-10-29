@@ -81,7 +81,7 @@ export const Home: React.FC = () => {
               <h2 style={{ fontSize: '1.25rem', fontWeight: '700', margin: 0 }}>Direct URL Downloader</h2>
             </div>
             <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.6' }}>
-              Paste an ArcGIS REST FeatureServer or WFS service endpoint directly. Query metadata, review layer attributes, batch-download object IDs, and render interactively on the map.
+              Paste any ArcGIS REST Feature/MapServer service endpoint directly. Preview Layer on map, review layer attributes, Download data, and identify feature.
             </p>
           </div>
           <Link to="/download" className="btn-primary" style={{ width: '100%', justifyContent: 'center', boxSizing: 'border-box' }}>
@@ -119,7 +119,7 @@ export const Home: React.FC = () => {
           <Database style={{ width: '2rem', height: '2rem', color: 'var(--accent-color)' }} />
           <h3 style={{ fontSize: '1.125rem', fontWeight: '700', margin: 0 }}>Direct URL Support</h3>
           <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5' }}>
-            Connect directly to any standard ArcGIS REST or WFS service endpoint to load, inspect, and export features instantly.
+            Connect directly to any standard ArcGIS REST Feature/Mapserver to load, inspect, and export features instantly.
           </p>
         </div>
         <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>

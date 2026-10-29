@@ -1,8 +1,5 @@
 /* ============================================================
    THEME TOKENS
-   - Light is the default
-   - Dark is triggered by [data-theme="dark"] on <html>
-   - The ThemeProvider sets that attribute automatically
    ============================================================ */
 
 :root,
@@ -517,7 +514,7 @@ h3 {
 }
 
 /* ============================================================
-   DOWNLOADER LAYOUT (iOS Optimized)
+   DOWNLOADER LAYOUT (Mobile-First iOS Fix)
    ============================================================ */
 
 .downloader-grid {
@@ -526,30 +523,27 @@ h3 {
   gap: 1rem;
   padding: 0.5rem 0;
   box-sizing: border-box;
-  /* Reliable height calculation for iOS */
-  height: calc(100dvh - 80px); 
-  overflow: hidden;
+  min-height: calc(100vh - 80px);
+  height: auto;
+  overflow: visible;
 }
 
 .downloader-sidebar {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  /* Take up remaining space but max out at 45% of screen */
-  flex: 0 1 auto;
-  max-height: 45%;
-  min-height: 0; 
+  /* Give the sidebar a max-height and scroll inside it */
+  max-height: 50vh; 
+  min-height: 0;
   overflow-y: auto;
-  overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  border-bottom: 1px solid var(--border-color);
   padding-bottom: 0.5rem;
 }
 
 .map-card {
-  /* Map takes at least 300px, and expands to fill the rest */
-  flex: 1 1 auto;
-  min-height: 300px; /* CRITICAL: Prevents map from disappearing */
+  /* Give the map a fixed height on mobile so iOS Safari renders it */
+  height: 60vh;
+  min-height: 400px;
   padding: 0.25rem;
   box-sizing: border-box;
   display: flex;
@@ -572,12 +566,12 @@ h3 {
     grid-template-columns: 320px 1fr;
     grid-template-rows: 1fr;
     height: calc(100dvh - 92px);
+    min-height: 0;
     gap: 0.9rem;
     overflow: hidden;
   }
 
   .downloader-sidebar {
-    flex: none;
     max-height: none;
     height: 100%;
     overflow-y: auto;
@@ -586,7 +580,6 @@ h3 {
   }
 
   .map-card {
-    flex: none;
     height: 100%;
     min-height: 0;
     padding: 0.4rem;
@@ -638,13 +631,13 @@ h3 {
   }
 }
 
-/* ★ NEW: Minimized State */
+/* Minimized State */
 .table-drawer.minimized {
   height: 52px !important;
   overflow: hidden;
 }
 
-/* ★ NEW: Maximized State */
+/* Maximized State */
 .table-drawer.maximized {
   height: calc(100vh - 80px) !important;
   height: calc(100dvh - 80px) !important;
@@ -658,6 +651,7 @@ h3 {
     height: calc(100dvh - 100px) !important;
   }
 }
+
 /* ============================================================
    MODALS (Export / Sublayer)
    ============================================================ */
@@ -667,7 +661,7 @@ h3 {
   inset: 0;
   background-color: rgba(0, 0, 0, 0.7);
   display: flex;
-  align-items: flex-end; /* Mobile: Push modal to bottom as a sheet */
+  align-items: flex-end;
   justify-content: center;
   z-index: 2000;
   padding: 0;
@@ -675,7 +669,7 @@ h3 {
 
 @media (min-width: 640px) {
   .modal-overlay {
-    align-items: center; /* Desktop: Center modal */
+    align-items: center;
     padding: 1rem;
     backdrop-filter: blur(3px);
   }

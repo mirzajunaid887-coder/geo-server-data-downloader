@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { MapView } from '../components/map/MapView';
+import { ErrorBoundary } from '../components/ErrorBoundary';
 import { fetchArcGISMetadata } from '../services/arcgis/service';
 import { fetchObjectIds } from '../services/arcgis/objectIds';
 import { fetchFeaturesBatch } from '../services/arcgis/query';
@@ -20,6 +20,11 @@ import {
 } from 'lucide-react';
 import JSZip from 'jszip';
 import { SEO } from '../components/SEO';
+
+// Lazy load the MapView to prevent iOS Safari memory crashes from taking down the whole page
+const MapView = React.lazy(() =>
+  import('../components/map/MapView').then((module) => ({ default: module.MapView }))
+);
 
 interface LoadedLayer {
   id: string;
@@ -308,7 +313,12 @@ export const Downloader: React.FC = () => {
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
       link.download = `${layer.name.replace(/\s+/g, '_')}.geojson`;
+      
+      // MOBILE FIX: Must append and remove from DOM for iOS to trigger download
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
+      
       setProgress('Export completed successfully!');
     } catch (err: any) {
       setError(err.message || 'Failed to export full dataset.');
@@ -414,7 +424,11 @@ export const Downloader: React.FC = () => {
       const link = document.createElement('a');
       link.href = URL.createObjectURL(content);
       link.download = `gis_bulk_export_${format}.zip`;
+      
+      // MOBILE FIX
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
 
       setProgress('Bulk export complete!');
     } catch (err: any) {
@@ -889,20 +903,20 @@ export const Downloader: React.FC = () => {
                               >
                                 🔗 View Endpoint
                               </button>
-                                                          <button
-                              onClick={() => {
-                                setActiveMenuLayerId(null);
-                                setTableMode('normal'); // ← Reset mode when opening
-                                setTableLayerInfo({
-                                  id: layer.id,
-                                  url: layer.url,
-                                  title: layer.name,
-                                });
-                              }}
-                              style={dropdownItemStyle}
-                            >
-                              📊 Attribute Table
-                            </button>
+                              <button
+                                onClick={() => {
+                                  setActiveMenuLayerId(null);
+                                  setTableMode('normal'); 
+                                  setTableLayerInfo({
+                                    id: layer.id,
+                                    url: layer.url,
+                                    title: layer.name,
+                                  });
+                                }}
+                                style={dropdownItemStyle}
+                              >
+                                📊 Attribute Table
+                              </button>
                               <div
                                 style={{
                                   height: '1px',
@@ -943,7 +957,7 @@ export const Downloader: React.FC = () => {
           </div>
         </div>
 
-                {/* Map Display Area */}
+        {/* Map Display Area */}
         <div className="card map-card">
           <div
             style={{
@@ -951,20 +965,74 @@ export const Downloader: React.FC = () => {
               position: 'relative',
               width: '100%',
               height: '100%',
-              minHeight: '250px', /* Add this safety net */
+              minHeight: '300px', // Safety net for iOS
             }}
           >
-            <MapView
-              layers={layers}
-              zoomTarget={zoomTarget}
-              onFeatureSelect={(attributes) => {
-                setSelectedFeature(attributes);
-              }}
-            />
+            <Suspense
+              fallback={
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '100%',
+                    color: 'var(--text-muted)',
+                    gap: '0.5rem',
+                  }}
+                >
+                  <Loader2
+                    style={{
+                      width: '2rem',
+                      height: '2rem',
+                      animation: 'spin 1s linear infinite',
+                    }}
+                  />
+                  <span style={{ fontSize: '0.8rem' }}>Loading Map.....</span>
+                </div>
+              }
+            >
+              <ErrorBoundary
+                fallback={
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: '100%',
+                      padding: '1rem',
+                      textAlign: 'center',
+                      color: 'var(--text-muted)',
+                    }}
+                  >
+                    <AlertCircle
+                      style={{
+                        width: '2rem',
+                        height: '2rem',
+                        color: 'var(--danger-color)',
+                        marginBottom: '0.5rem',
+                      }}
+                    />
+                    <p style={{ fontSize: '0.85rem' }}>
+                      The interactive map is not supported on this device or ran out of memory. You can still export the data using the sidebar.
+                    </p>
+                  </div>
+                }
+              >
+                <MapView
+                  layers={layers}
+                  zoomTarget={zoomTarget}
+                  onFeatureSelect={(attributes) => {
+                    setSelectedFeature(attributes);
+                  }}
+                />
+              </ErrorBoundary>
+            </Suspense>
           </div>
         </div>
 
-                {/* ArcGIS FeatureTable Drawer Panel */}
+        {/* ArcGIS FeatureTable Drawer Panel */}
         {tableLayerInfo && (
           <div className={`table-drawer ${tableMode}`}>
             <FeatureTablePanel
