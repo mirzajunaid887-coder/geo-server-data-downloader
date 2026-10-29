@@ -7,16 +7,19 @@ import { createServer } from 'node:http';
 const DIST = resolve('dist');
 
 const routes = [
+  // Core Pages
   '/',
   '/download',
-  '/discover',
   '/converter',
+  '/discover',
   '/documentation',
   '/about',
   '/privacy',
   '/terms',
   '/contact',
   '/blog',
+  
+  // Existing Blog Posts (12)
   '/blog/how-to-download-arcgis-rest-featureserver-data',
   '/blog/geojson-vs-shapefile-vs-geopackage',
   '/blog/how-to-find-free-parcel-data-us-counties',
@@ -29,6 +32,28 @@ const routes = [
   '/blog/how-to-use-arcgis-rest-api-query-parameters',
   '/blog/beginners-guide-spatial-data-formats',
   '/blog/how-to-download-census-data-for-gis-analysis',
+
+  // New Blog Posts (20)
+  '/blog/mastering-shapefile-to-geojson-conversion',
+  '/blog/how-to-download-data-from-arcgis-rest-services',
+  '/blog/wms-vs-wfs-choosing-the-right-web-service',
+  '/blog/converting-gis-data-to-kml-for-google-earth',
+  '/blog/what-is-a-gis-feature-service',
+  '/blog/downloading-openstreetmap-data-for-gis',
+  '/blog/free-gis-data-sources-for-environmental-analysis',
+  '/blog/how-to-extract-data-from-arcgis-online',
+  '/blog/vector-vs-raster-data-in-gis',
+  '/blog/how-to-use-the-arcgis-rest-api-query-endpoint',
+  '/blog/converting-kml-to-shapefile-step-by-step',
+  '/blog/beginners-guide-to-geocoding-and-reverse-geocoding',
+  '/blog/how-to-download-municipal-zoning-data',
+  '/blog/using-wfs-to-download-spatial-data',
+  '/blog/geopackage-vs-shapefile-the-modern-standard',
+  '/blog/how-to-filter-arcgis-data-before-downloading',
+  '/blog/top-5-tools-for-gis-data-conversion',
+  '/blog/how-to-export-data-from-arcgis-pro-to-csv',
+  '/blog/understanding-coordinate-reference-systems-in-depth',
+  '/blog/how-to-access-public-parcel-data-via-gis',
 ];
 
 const MIME_TYPES = {

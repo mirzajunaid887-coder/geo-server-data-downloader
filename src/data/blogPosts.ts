@@ -2,23 +2,20 @@ import { BlogPost } from '../types/blog';
 
 export const BLOG_POSTS: BlogPost[] = [
   // ==================================================================
-  // POST 1
+  // POST 1 (Existing)
   // ==================================================================
   {
     slug: 'how-to-download-arcgis-rest-featureserver-data',
     title: 'How to Download Data from an ArcGIS REST FeatureServer',
-    description:
-      'A complete step-by-step guide to downloading vector data from any ArcGIS REST FeatureServer. Learn how to get Shapefiles, GeoJSON, KML, and GeoPackage files for free using just your browser.',
-    keywords:
-      'download ArcGIS REST FeatureServer, ArcGIS FeatureServer to Shapefile, how to download ArcGIS data, ArcGIS REST service downloader, free GIS data downloader',
+    description: 'A complete step-by-step guide to downloading vector data from any ArcGIS REST FeatureServer. Learn how to get Shapefiles, GeoJSON, KML, and GeoPackage files for free using just your browser.',
+    keywords: 'download ArcGIS REST FeatureServer, ArcGIS FeatureServer to Shapefile, how to download ArcGIS data, ArcGIS REST service downloader, free GIS data downloader',
     author: 'Muhammad Junaid Baig',
-    datePublished: '2026-10-05',
-    dateModified: '2026-10-05',
+    datePublished: '2025-10-05',
+    dateModified: '2025-10-05',
     readingTimeMinutes: 9,
     category: 'Tutorial',
     tags: ['ArcGIS', 'FeatureServer', 'Download', 'Tutorial'],
-    excerpt:
-      'Learn how to turn any ArcGIS REST FeatureServer URL into a downloadable Shapefile, GeoJSON, KML, or GeoPackage file — without installing desktop GIS software.',
+    excerpt: 'Learn how to turn any ArcGIS REST FeatureServer URL into a downloadable Shapefile, GeoJSON, KML, or GeoPackage file — without installing desktop GIS software.',
     content: [
       { type: 'paragraph', text: 'If you work with GIS, you have almost certainly run into an ArcGIS REST FeatureServer URL. These services power thousands of municipal open data portals, government agency datasets, and enterprise mapping applications across the world. But getting the actual data out of them — as a usable Shapefile, GeoJSON, or GeoPackage — is not always obvious.' },
       { type: 'paragraph', text: 'This guide walks you through everything: what a FeatureServer actually is, how its URL structure works, and three practical ways to download the data — including a completely free browser-based method that requires no software installation.' },
@@ -64,23 +61,20 @@ export const BLOG_POSTS: BlogPost[] = [
   },
 
   // ==================================================================
-  // POST 2
+  // POST 2 (Existing)
   // ==================================================================
   {
     slug: 'geojson-vs-shapefile-vs-geopackage',
     title: 'GeoJSON vs Shapefile vs GeoPackage: Which Format Should You Use?',
-    description:
-      'A practical comparison of the three most common vector GIS formats. Learn when to use GeoJSON, when to use Shapefile, and when GeoPackage is the right choice for your project.',
-    keywords:
-      'GeoJSON vs Shapefile, Shapefile vs GeoPackage, best GIS format, GeoJSON vs GeoPackage, GIS data format comparison, which GIS format to use',
+    description: 'A practical comparison of the three most common vector GIS formats. Learn when to use GeoJSON, when to use Shapefile, and when GeoPackage is the right choice for your project.',
+    keywords: 'GeoJSON vs Shapefile, Shapefile vs GeoPackage, best GIS format, GeoJSON vs GeoPackage, GIS data format comparison, which GIS format to use',
     author: 'Muhammad Junaid Baig',
-    datePublished: '2026-10-05',
-    dateModified: '2026-10-05',
+    datePublished: '2025-10-05',
+    dateModified: '2025-10-05',
     readingTimeMinutes: 10,
     category: 'Guide',
     tags: ['GeoJSON', 'Shapefile', 'GeoPackage', 'Comparison'],
-    excerpt:
-      'Confused about which spatial data format to use? This guide compares GeoJSON, Shapefile, and GeoPackage across 12 practical criteria — with clear recommendations for every scenario.',
+    excerpt: 'Confused about which spatial data format to use? This guide compares GeoJSON, Shapefile, and GeoPackage across 12 practical criteria — with clear recommendations for every scenario.',
     content: [
       { type: 'paragraph', text: 'If you work with spatial data, you eventually have to pick a format. Three names come up more than any others: Shapefile, GeoJSON, and GeoPackage. They all store vector features — points, lines, and polygons with attributes — but they are surprisingly different once you look closer.' },
       { type: 'paragraph', text: 'Choosing the wrong format wastes time, breaks tools, and sometimes loses data silently. This guide breaks down each format\'s strengths and weaknesses so you can pick confidently.' },
@@ -124,23 +118,20 @@ export const BLOG_POSTS: BlogPost[] = [
   },
 
   // ==================================================================
-  // POST 3
+  // POST 3 (Existing)
   // ==================================================================
   {
     slug: 'how-to-find-free-parcel-data-us-counties',
     title: 'How to Find Free Parcel Data for Any US County',
-    description:
-      'A practical guide to finding and downloading free parcel boundary data for US counties. Learn which agencies publish parcel GIS data, the common formats, and how to download it without a paid data subscription.',
-    keywords:
-      'free parcel data, parcel shapefile download, county parcel GIS data, how to find parcel data, parcel boundaries free, cadastral data download',
+    description: 'A practical guide to finding and downloading free parcel boundary data for US counties. Learn which agencies publish parcel GIS data, the common formats, and how to download it without a paid data subscription.',
+    keywords: 'free parcel data, parcel shapefile download, county parcel GIS data, how to find parcel data, parcel boundaries free, cadastral data download',
     author: 'Muhammad Junaid Baig',
-    datePublished: '2026-10-06',
-    dateModified: '2026-10-06',
+    datePublished: '2025-10-06',
+    dateModified: '2025-10-06',
     readingTimeMinutes: 8,
     category: 'Guide',
     tags: ['Parcel Data', 'Cadastral', 'Open Data', 'United States'],
-    excerpt:
-      'Need parcel boundaries for a GIS project? Learn how to find free county parcel data across the United States, what formats to expect, and how to download it legally.',
+    excerpt: 'Need parcel boundaries for a GIS project? Learn how to find free county parcel data across the United States, what formats to expect, and how to download it legally.',
     content: [
       { type: 'paragraph', text: 'Parcel data — the legal boundaries of land ownership — is one of the most requested GIS datasets in the world. It powers property tax systems, urban planning, real estate analysis, environmental research, and much more.' },
       { type: 'paragraph', text: 'The good news: in the United States, parcel data is almost always public. The bad news: it is scattered across thousands of county and municipal GIS portals, each with its own format, licensing terms, and download process. This guide shows you how to find it efficiently.' },
@@ -189,23 +180,20 @@ export const BLOG_POSTS: BlogPost[] = [
   },
 
   // ==================================================================
-  // POST 4
+  // POST 4 (Existing)
   // ==================================================================
   {
     slug: 'complete-guide-wfs-web-feature-service',
     title: 'The Complete Guide to WFS (Web Feature Service)',
-    description:
-      'Understand what a WFS is, how it differs from WMS, how to query it, and how to download features from any Web Feature Service endpoint using free browser tools.',
-    keywords:
-      'WFS Web Feature Service, WFS download, OGC WFS tutorial, WFS vs WMS, download WFS data, Geoserver WFS',
+    description: 'Understand what a WFS is, how it differs from WMS, how to query it, and how to download features from any Web Feature Service endpoint using free browser tools.',
+    keywords: 'WFS Web Feature Service, WFS download, OGC WFS tutorial, WFS vs WMS, download WFS data, Geoserver WFS',
     author: 'Muhammad Junaid Baig',
-    datePublished: '2026-10-06',
-    dateModified: '2026-10-06',
+    datePublished: '2025-10-06',
+    dateModified: '2025-10-06',
     readingTimeMinutes: 9,
     category: 'Guide',
     tags: ['WFS', 'OGC', 'Standards', 'Web Services'],
-    excerpt:
-      'What is a WFS, how does it differ from a WMS, and how do you actually download data from one? This guide explains everything in plain English.',
+    excerpt: 'What is a WFS, how does it differ from a WMS, and how do you actually download data from one? This guide explains everything in plain English.',
     content: [
       { type: 'paragraph', text: 'If you have ever worked with geospatial web services, you have probably heard the acronym "WFS" alongside "WMS." Both are OGC standards, both serve geospatial data over the web, and both start with "Web." But they do fundamentally different things, and confusing them can waste hours.' },
       { type: 'paragraph', text: 'This guide explains what a WFS is, when to use it, how to query it, and how to pull data out of it in a usable format.' },
@@ -254,23 +242,20 @@ export const BLOG_POSTS: BlogPost[] = [
   },
 
   // ==================================================================
-  // POST 5
+  // POST 5 (Existing)
   // ==================================================================
   {
     slug: 'how-to-convert-arcgis-online-layers-to-excel',
     title: 'How to Convert ArcGIS Online Layers to Excel (CSV with Geometry)',
-    description:
-      'Learn how to export any ArcGIS Online feature layer to Excel or CSV — including the spatial geometry as a WKT column — using a free browser tool. No ArcGIS license required.',
-    keywords:
-      'ArcGIS to Excel, ArcGIS Online to CSV, export ArcGIS layer to Excel, ArcGIS feature layer CSV, ArcGIS REST to spreadsheet',
+    description: 'Learn how to export any ArcGIS Online feature layer to Excel or CSV — including the spatial geometry as a WKT column — using a free browser tool. No ArcGIS license required.',
+    keywords: 'ArcGIS to Excel, ArcGIS Online to CSV, export ArcGIS layer to Excel, ArcGIS feature layer CSV, ArcGIS REST to spreadsheet',
     author: 'Muhammad Junaid Baig',
-    datePublished: '2026-10-06',
-    dateModified: '2026-10-06',
+    datePublished: '2025-10-06',
+    dateModified: '2025-10-06',
     readingTimeMinutes: 7,
     category: 'Tutorial',
     tags: ['ArcGIS Online', 'Excel', 'CSV', 'Tutorial'],
-    excerpt:
-      'Need to get ArcGIS Online data into Excel? This guide shows you how to export any feature layer to CSV with proper handling of dates, geometry, and attributes.',
+    excerpt: 'Need to get ArcGIS Online data into Excel? This guide shows you how to export any feature layer to CSV with proper handling of dates, geometry, and attributes.',
     content: [
       { type: 'paragraph', text: 'ArcGIS Online is home to millions of authoritative geospatial datasets — parcels, boundaries, infrastructure, environmental data, and much more. But if you need that data in Excel for analysis, reporting, or sharing with non-GIS colleagues, the process is not obvious.' },
       { type: 'paragraph', text: 'This guide shows you the fastest way to convert any ArcGIS Online layer into a spreadsheet-friendly format, including how to keep the spatial geometry as a WKT column.' },
@@ -291,7 +276,7 @@ export const BLOG_POSTS: BlogPost[] = [
       { type: 'heading', level: 2, text: 'Handling dates properly' },
       { type: 'paragraph', text: 'This is one of the most common problems when exporting ArcGIS data to CSV. ArcGIS stores dates internally as epoch milliseconds — a very large number like 1727740800000. If your export tool does not convert them, Excel will show garbage.' },
       { type: 'paragraph', text: 'Geo Server Data Downloader detects esriFieldTypeDate fields and converts them to ISO 8601 strings before export. You get clean values like:' },
-      { type: 'code', language: 'text', code: '2026-10-01T00:00:00.000Z' },
+      { type: 'code', language: 'text', code: '2025-10-01T00:00:00.000Z' },
       { type: 'paragraph', text: 'Excel will recognize this as a date automatically.' },
       { type: 'heading', level: 2, text: 'Excel character limits to watch out for' },
       { type: 'paragraph', text: 'Excel has a hard limit of 32,767 characters per cell. Most attribute values fit easily, but complex polygon WKT strings can exceed this for detailed geometries.' },
@@ -314,23 +299,20 @@ export const BLOG_POSTS: BlogPost[] = [
   },
 
   // ==================================================================
-  // POST 6
+  // POST 6 (Existing)
   // ==================================================================
   {
     slug: 'ten-free-gis-data-sources-every-analyst-should-know',
     title: '10 Free GIS Data Sources Every Analyst Should Know',
-    description:
-      'A curated list of the 10 best free GIS data sources for analysts, researchers, and developers — covering boundaries, demographics, elevation, imagery, and more.',
-    keywords:
-      'free GIS data sources, open geospatial data, where to find GIS data, free shapefile sources, free spatial data 2026',
+    description: 'A curated list of the 10 best free GIS data sources for analysts, researchers, and developers — covering boundaries, demographics, elevation, imagery, and more.',
+    keywords: 'free GIS data sources, open geospatial data, where to find GIS data, free shapefile sources, free spatial data 2025',
     author: 'Muhammad Junaid Baig',
-    datePublished: '2026-10-06',
-    dateModified: '2026-10-06',
+    datePublished: '2025-10-06',
+    dateModified: '2025-10-06',
     readingTimeMinutes: 8,
     category: 'Guide',
     tags: ['Open Data', 'Data Sources', 'Resources', 'Roundup'],
-    excerpt:
-      'The 10 free GIS data sources I reach for most often — from boundaries and demographics to elevation and satellite imagery.',
+    excerpt: 'The 10 free GIS data sources I reach for most often — from boundaries and demographics to elevation and satellite imagery.',
     content: [
       { type: 'paragraph', text: 'One of the most common questions from new GIS analysts is: "Where do I find data?" The answer is that there are hundreds of free sources — but knowing which ones are authoritative, well-maintained, and actually free is the hard part.' },
       { type: 'paragraph', text: 'Here are the 10 sources I reach for most often.' },
@@ -375,23 +357,20 @@ export const BLOG_POSTS: BlogPost[] = [
   },
 
   // ==================================================================
-  // POST 7
+  // POST 7 (Existing)
   // ==================================================================
   {
     slug: 'understanding-coordinate-systems-and-projections',
     title: 'Understanding Coordinate Systems and Projections in GIS',
-    description:
-      'A beginner-friendly explanation of coordinate systems, map projections, and why they matter. Learn the difference between geographic and projected CRS, and how to avoid common mistakes.',
-    keywords:
-      'coordinate systems GIS, map projections explained, geographic vs projected CRS, EPSG codes, WGS84, Web Mercator, GIS projections',
+    description: 'A beginner-friendly explanation of coordinate systems, map projections, and why they matter. Learn the difference between geographic and projected CRS, and how to avoid common mistakes.',
+    keywords: 'coordinate systems GIS, map projections explained, geographic vs projected CRS, EPSG codes, WGS84, Web Mercator, GIS projections',
     author: 'Muhammad Junaid Baig',
-    datePublished: '2026-10-06',
-    dateModified: '2026-10-06',
+    datePublished: '2025-10-06',
+    dateModified: '2025-10-06',
     readingTimeMinutes: 10,
     category: 'Guide',
     tags: ['Coordinate Systems', 'Projections', 'Fundamentals', 'GIS'],
-    excerpt:
-      'Confused about coordinate systems and projections? This guide explains the difference between geographic and projected CRS, what EPSG codes mean, and how to avoid the most common mistakes.',
+    excerpt: 'Confused about coordinate systems and projections? This guide explains the difference between geographic and projected CRS, what EPSG codes mean, and how to avoid the most common mistakes.',
     content: [
       { type: 'paragraph', text: 'Coordinate systems are one of the first things that trip up new GIS users. The concept is genuinely confusing — it involves spherical geometry, map projections, and a vocabulary that mixes math, geography, and acronyms.' },
       { type: 'paragraph', text: 'But you cannot avoid it. Choosing the wrong coordinate system silently breaks calculations, produces distorted maps, and can waste hours of debugging. This guide explains everything in plain language.' },
@@ -440,23 +419,20 @@ export const BLOG_POSTS: BlogPost[] = [
   },
 
   // ==================================================================
-  // POST 8
+  // POST 8 (Existing)
   // ==================================================================
   {
     slug: 'how-to-load-gis-data-in-qgis-beginner-guide',
     title: 'How to Load GIS Data in QGIS: Complete Beginner Guide',
-    description:
-      'New to QGIS? This step-by-step guide walks you through installing QGIS, loading Shapefiles and GeoJSON, and getting your first map on screen — no prior GIS experience required.',
-    keywords:
-      'QGIS tutorial, QGIS beginner guide, how to load shapefile in QGIS, QGIS install, QGIS for beginners, open shapefile in QGIS',
+    description: 'New to QGIS? This step-by-step guide walks you through installing QGIS, loading Shapefiles and GeoJSON, and getting your first map on screen — no prior GIS experience required.',
+    keywords: 'QGIS tutorial, QGIS beginner guide, how to load shapefile in QGIS, QGIS install, QGIS for beginners, open shapefile in QGIS',
     author: 'Muhammad Junaid Baig',
-    datePublished: '2026-10-06',
-    dateModified: '2026-10-06',
+    datePublished: '2025-10-06',
+    dateModified: '2025-10-06',
     readingTimeMinutes: 8,
     category: 'Tutorial',
     tags: ['QGIS', 'Tutorial', 'Beginners', 'Open Source'],
-    excerpt:
-      'A friendly, step-by-step introduction to QGIS — how to install it, load your first spatial data, and view it on a map. Perfect for absolute beginners.',
+    excerpt: 'A friendly, step-by-step introduction to QGIS — how to install it, load your first spatial data, and view it on a map. Perfect for absolute beginners.',
     content: [
       { type: 'paragraph', text: 'QGIS is the leading free and open-source GIS software. It is powerful, cross-platform, and used by professionals in dozens of industries — from urban planning to environmental science to defense. If you are new to GIS, QGIS is the best place to start.' },
       { type: 'paragraph', text: 'This guide walks you through the very first steps: installing QGIS and loading your first datasets.' },
@@ -496,23 +472,20 @@ export const BLOG_POSTS: BlogPost[] = [
   },
 
   // ==================================================================
-  // POST 9
+  // POST 9 (Existing)
   // ==================================================================
   {
     slug: 'what-is-arcgis-online-complete-introduction',
     title: 'What is ArcGIS Online? A Complete Introduction',
-    description:
-      'ArcGIS Online is Esri\'s cloud platform for mapping and spatial analysis. This guide explains what it is, how it works, and how to use it — even without an ArcGIS license.',
-    keywords:
-      'ArcGIS Online, what is ArcGIS Online, ArcGIS Online for beginners, Esri cloud, AGOL tutorial',
+    description: 'ArcGIS Online is Esri\'s cloud platform for mapping and spatial analysis. This guide explains what it is, how it works, and how to use it — even without an ArcGIS license.',
+    keywords: 'ArcGIS Online, what is ArcGIS Online, ArcGIS Online for beginners, Esri cloud, AGOL tutorial',
     author: 'Muhammad Junaid Baig',
-    datePublished: '2026-10-06',
-    dateModified: '2026-10-06',
+    datePublished: '2025-10-06',
+    dateModified: '2025-10-06',
     readingTimeMinutes: 8,
     category: 'Guide',
     tags: ['ArcGIS Online', 'Esri', 'Cloud GIS', 'Introduction'],
-    excerpt:
-      'ArcGIS Online powers thousands of government, business, and nonprofit GIS workflows. Learn what it is, what you can do with it, and how to access it.',
+    excerpt: 'ArcGIS Online powers thousands of government, business, and nonprofit GIS workflows. Learn what it is, what you can do with it, and how to access it.',
     content: [
       { type: 'paragraph', text: 'If you have spent any time around GIS, you have heard of ArcGIS Online. It is Esri\'s cloud-based mapping and analysis platform, and it is used by tens of thousands of organizations worldwide — from city governments to Fortune 500 companies to research universities.' },
       { type: 'paragraph', text: 'But what actually is it? And do you need it to work with Esri data? This article explains everything.' },
@@ -553,23 +526,20 @@ export const BLOG_POSTS: BlogPost[] = [
   },
 
   // ==================================================================
-  // POST 10
+  // POST 10 (Existing)
   // ==================================================================
   {
     slug: 'how-to-use-arcgis-rest-api-query-parameters',
     title: 'How to Use ArcGIS REST API Query Parameters',
-    description:
-      'Learn the ArcGIS REST API query parameters that matter most — where, outFields, returnGeometry, f, and more. A practical reference with real examples.',
-    keywords:
-      'ArcGIS REST API, ArcGIS query parameters, where clause ArcGIS, outFields ArcGIS, ArcGIS REST query tutorial',
+    description: 'Learn the ArcGIS REST API query parameters that matter most — where, outFields, returnGeometry, f, and more. A practical reference with real examples.',
+    keywords: 'ArcGIS REST API, ArcGIS query parameters, where clause ArcGIS, outFields ArcGIS, ArcGIS REST query tutorial',
     author: 'Muhammad Junaid Baig',
-    datePublished: '2026-10-06',
-    dateModified: '2026-10-06',
+    datePublished: '2025-10-06',
+    dateModified: '2025-10-06',
     readingTimeMinutes: 9,
     category: 'Tutorial',
     tags: ['ArcGIS', 'REST API', 'Query', 'Developer'],
-    excerpt:
-      'A practical reference to the ArcGIS REST API query parameters you will use most often, with real-world examples and common pitfalls.',
+    excerpt: 'A practical reference to the ArcGIS REST API query parameters you will use most often, with real-world examples and common pitfalls.',
     content: [
       { type: 'paragraph', text: 'Every ArcGIS REST FeatureServer exposes a /query endpoint. This is what almost every GIS tool — including ours — uses to fetch features from a service. Understanding how to construct a query is essential if you want to pull exactly the data you need.' },
       { type: 'paragraph', text: 'This article is a practical reference to the query parameters that matter most.' },
@@ -639,23 +609,20 @@ export const BLOG_POSTS: BlogPost[] = [
   },
 
   // ==================================================================
-  // POST 11
+  // POST 11 (Existing)
   // ==================================================================
   {
     slug: 'beginners-guide-spatial-data-formats',
     title: 'The Beginner\'s Guide to Spatial Data Formats',
-    description:
-      'A friendly introduction to the many spatial data formats you will encounter in GIS — from Shapefile and GeoJSON to GeoTIFF and LAS. Learn what each format is for.',
-    keywords:
-      'spatial data formats, GIS file formats, vector vs raster, shapefile geojson geotiff, list of GIS formats',
+    description: 'A friendly introduction to the many spatial data formats you will encounter in GIS — from Shapefile and GeoJSON to GeoTIFF and LAS. Learn what each format is for.',
+    keywords: 'spatial data formats, GIS file formats, vector vs raster, shapefile geojson geotiff, list of GIS formats',
     author: 'Muhammad Junaid Baig',
-    datePublished: '2026-10-06',
-    dateModified: '2026-10-06',
+    datePublished: '2025-10-06',
+    dateModified: '2025-10-06',
     readingTimeMinutes: 9,
     category: 'Guide',
     tags: ['File Formats', 'Fundamentals', 'Raster', 'Vector'],
-    excerpt:
-      'Overwhelmed by all the GIS file extensions you keep seeing? This guide explains the major spatial data formats in plain English — what each is for and when to use it.',
+    excerpt: 'Overwhelmed by all the GIS file extensions you keep seeing? This guide explains the major spatial data formats in plain English — what each is for and when to use it.',
     content: [
       { type: 'paragraph', text: 'If you are new to GIS, one of the first things that overwhelms you is the sheer number of file formats. Shapefiles, GeoJSON, KML, GeoPackage, GeoTIFF, LAS, NetCDF, GML... the list seems endless.' },
       { type: 'paragraph', text: 'The good news is that all these formats fall into just a few categories. Once you understand the categories, the specific formats make much more sense.' },
@@ -719,23 +686,20 @@ export const BLOG_POSTS: BlogPost[] = [
   },
 
   // ==================================================================
-  // POST 12
+  // POST 12 (Existing)
   // ==================================================================
   {
     slug: 'how-to-download-census-data-for-gis-analysis',
     title: 'How to Download Census Data for GIS Analysis',
-    description:
-      'A practical guide to downloading US Census Bureau boundary data and joining it with demographic attributes for GIS analysis. Learn which tables to use and how to merge them.',
-    keywords:
-      'Census data GIS, TIGER shapefiles, download census data, census tract shapefile, join census data GIS, ACS data GIS',
+    description: 'A practical guide to downloading US Census Bureau boundary data and joining it with demographic attributes for GIS analysis. Learn which tables to use and how to merge them.',
+    keywords: 'Census data GIS, TIGER shapefiles, download census data, census tract shapefile, join census data GIS, ACS data GIS',
     author: 'Muhammad Junaid Baig',
-    datePublished: '2026-10-06',
-    dateModified: '2026-10-06',
+    datePublished: '2025-10-06',
+    dateModified: '2025-10-06',
     readingTimeMinutes: 9,
     category: 'Tutorial',
     tags: ['Census', 'Demographics', 'United States', 'Tutorial'],
-    excerpt:
-      'Learn how to download US Census Bureau boundary data and join demographic tables in QGIS or ArcGIS for spatial analysis. Covers TIGER, ACS, and the GEOID join key.',
+    excerpt: 'Learn how to download US Census Bureau boundary data and join demographic tables in QGIS or ArcGIS for spatial analysis. Covers TIGER, ACS, and the GEOID join key.',
     content: [
       { type: 'paragraph', text: 'The US Census Bureau publishes some of the most valuable free demographic data in the world. Population counts, income, age, race, housing — all available down to the neighborhood block level, all free, and all in the public domain.' },
       { type: 'paragraph', text: 'The challenge is that Census data comes in two pieces that must be joined: geographic boundaries (from TIGER) and demographic tables (from the decennial Census and the American Community Survey). This guide walks you through the whole workflow.' },
@@ -775,6 +739,731 @@ export const BLOG_POSTS: BlogPost[] = [
       { type: 'paragraph', text: 'US Census data is one of the richest free demographic sources in the world. The trick is understanding the split between boundaries (TIGER) and attributes (Decennial/ACS), and joining them via GEOID. Once you have that workflow down, you can analyze any demographic pattern at nearly any scale.' },
     ],
   },
+
+  // ==================================================================
+  // POST 13 (NEW)
+  // ==================================================================
+  {
+    slug: 'mastering-shapefile-to-geojson-conversion',
+    title: 'Mastering Shapefile to GeoJSON Conversion',
+    description: 'Learn how to convert ESRI Shapefiles to GeoJSON efficiently. Understand the limitations of Shapefiles, the benefits of GeoJSON for web development, and how to perform the conversion seamlessly.',
+    keywords: 'Shapefile to GeoJSON, convert shapefile to geojson, GIS format conversion, web mapping data, GeoJSON conversion',
+    author: 'Muhammad Junaid Baig',
+    datePublished: '2026-11-01',
+    dateModified: '2026-11-01',
+    readingTimeMinutes: 7,
+    category: 'Tutorial',
+    tags: ['Shapefile', 'GeoJSON', 'Conversion', 'Web Mapping'],
+    excerpt: 'A comprehensive guide on converting legacy Shapefiles into modern GeoJSON for web applications. Learn the best practices and avoid common conversion pitfalls.',
+    content: [
+      { type: 'paragraph', text: 'If you are transitioning from traditional desktop GIS to web mapping, converting Shapefiles to GeoJSON is one of the first skills you need to master. While the Shapefile is the undisputed king of legacy spatial data, GeoJSON is the native language of the modern web.' },
+      { type: 'heading', level: 2, text: 'Why Convert Shapefile to GeoJSON?' },
+      { type: 'paragraph', text: 'Shapefiles are excellent for archival and desktop analysis, but they are fundamentally incompatible with standard web technologies like JavaScript and REST APIs. GeoJSON, being a subset of the JSON format, can be parsed directly by browsers without the need for heavy backend processing or proprietary SDKs.' },
+      { type: 'list', items: ['Native support in web mapping libraries (Leaflet, Mapbox, OpenLayers)', 'Human-readable and easily editable in any text editor', 'Single file format (no .shx, .dbf, or .prj sidecars to lose)', 'Easier to version control in Git'] },
+      { type: 'heading', level: 2, text: 'The Challenges of the Shapefile Format' },
+      { type: 'paragraph', text: 'Before converting, it is important to understand what you might lose. The Shapefile format has notorious limitations that force data truncation during conversion.' },
+      { type: 'table', headers: ['Feature', 'Shapefile Limitation', 'GeoJSON Behavior'], rows: [['Field Names', 'Max 10 characters (e.g., "Population" becomes "POP_10")', 'Unlimited length'], ['Date Fields', 'No native date type', 'Stored as ISO 8601 strings'], ['Null Values', 'Not supported (uses zeros or blanks)', 'Supported natively as "null"'], ['File Structure', 'Multiple files required', 'Single file']] },
+      { type: 'callout', variant: 'warning', title: 'Check your field names', text: 'When converting from GeoJSON to Shapefile, be aware that GDAL will automatically truncate field names longer than 10 characters to make them Shapefile-compliant.' },
+      { type: 'heading', level: 2, text: 'How to Convert Using Client-Side Tools' },
+      { type: 'paragraph', text: 'Historically, converting required installing GDAL or QGIS. Today, you can perform the conversion entirely in your browser using WebAssembly, ensuring your data remains private.' },
+      { type: 'list', ordered: true, items: ['Zip your Shapefile components (.shp, .shx, .dbf, .prj) together.', 'Navigate to our free GIS Converter tool.', 'Upload the zipped Shapefile.', 'Select "GeoJSON" as your output format.', 'Click Convert and download the resulting .geojson file.'] },
+      { type: 'heading', level: 2, text: 'Optimizing GeoJSON for the Web' },
+      { type: 'paragraph', text: 'Once you have your GeoJSON, keep in mind that it is a verbose format. A 50MB Shapefile might become a 200MB GeoJSON file. To optimize it for production web applications:' },
+      { type: 'list', items: ['Minify the JSON to remove whitespace.', 'Use a library like TopoJSON to reduce file size by storing topology.', 'Simplify the geometries (reduce the number of vertices) using tools like Mapshaper.', 'Enable Gzip or Brotli compression on your web server.'] },
+      { type: 'heading', level: 2, text: 'Summary' },
+      { type: 'paragraph', text: 'Converting Shapefiles to GeoJSON is a fundamental step in modern GIS workflows. By using browser-based tools, you can perform this conversion securely and efficiently, unlocking your spatial data for web mapping applications.' },
+    ],
+  },
+
+  // ==================================================================
+  // POST 14 (NEW)
+  // ==================================================================
+  {
+    slug: 'how-to-download-data-from-arcgis-rest-services',
+    title: 'How to Download Data from ArcGIS REST Services',
+    description: 'A comprehensive guide to extracting data from ArcGIS REST APIs. Learn how to query endpoints, handle pagination, and download complete datasets in various formats.',
+    keywords: 'ArcGIS REST API download, download ArcGIS data, query ArcGIS service, ArcGIS REST pagination, export GIS data',
+    author: 'Muhammad Junaid Baig',
+    datePublished: '2026-11-01',
+    dateModified: '2026-11-01',
+    readingTimeMinutes: 8,
+    category: 'Tutorial',
+    tags: ['ArcGIS', 'REST API', 'Data Extraction', 'Tutorial'],
+    excerpt: 'Learn the technical process of querying and downloading data from ArcGIS REST endpoints, including how to bypass the 1,000-feature limit.',
+    content: [
+      { type: 'paragraph', text: 'ArcGIS REST services are the backbone of the Esri geospatial ecosystem. They power everything from city zoning maps to global environmental datasets. However, downloading raw data from these services requires interacting with a REST API, which can be daunting for non-developers.' },
+      { type: 'paragraph', text: 'This tutorial breaks down the process of querying an ArcGIS REST service and downloading the data.' },
+      { type: 'heading', level: 2, text: 'Understanding the Endpoint Structure' },
+      { type: 'paragraph', text: 'An ArcGIS REST FeatureServer or MapServer endpoint typically looks like this:' },
+      { type: 'code', language: 'text', code: 'https://services.arcgis.com/[orgId]/arcgis/rest/services/[serviceName]/FeatureServer/[layerId]' },
+      { type: 'paragraph', text: 'To download data, you must append the `/query` operation to the layer URL.' },
+      { type: 'heading', level: 2, text: 'The Core Query Parameters' },
+      { type: 'paragraph', text: 'To extract data, you need three basic parameters:' },
+      { type: 'list', items: ['where=1=1 — This SQL clause asks for all records.', 'outFields=* — This returns all attribute columns.', 'f=geojson — This requests the output in GeoJSON format.'] },
+      { type: 'paragraph', text: 'A basic query URL looks like this:' },
+      { type: 'code', language: 'text', code: 'https://services.arcgis.com/.../FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson' },
+      { type: 'heading', level: 2, text: 'The Pagination Problem' },
+      { type: 'paragraph', text: 'If you paste that URL into your browser, you will likely receive data — but probably not all of it. By default, ArcGIS servers limit the number of features returned in a single request (usually to 1,000 or 2,000).' },
+      { type: 'paragraph', text: 'To download a dataset with 50,000 features, you have to fetch it in batches.' },
+      { type: 'callout', variant: 'info', title: 'How developers solve this', text: 'Developers first query the service with `returnIdsOnly=true` to get a list of all Object IDs. Then, they split those IDs into chunks of 1,000 and make multiple requests to download the data.' },
+      { type: 'heading', level: 2, text: 'The Automated Solution' },
+      { type: 'paragraph', text: 'Because managing pagination manually is tedious and prone to errors, the most efficient way to download data is using a specialized tool.' },
+      { type: 'list', ordered: true, items: ['Open Geo Server Data Downloader.', 'Paste the FeatureServer URL.', 'The tool automatically handles the ID chunking and pagination behind the scenes.', 'Preview the layer on the map.', 'Use the Bulk Export feature to save the complete dataset as a Shapefile, GeoPackage, or GeoJSON.'] },
+      { type: 'heading', level: 2, text: 'Handling Spatial Filters' },
+      { type: 'paragraph', text: 'Sometimes you do not want the entire dataset. You can filter the data spatially by passing a geometry or a bounding box (bbox) to the query.' },
+      { type: 'code', language: 'text', code: '&geometry=-95.99,36.15,-95.98,36.16&geometryType=esriGeometryEnvelope&spatialRel=esriSpatialRelIntersects' },
+      { type: 'paragraph', text: 'This returns only the features that fall within that specific bounding box in Texas.' },
+      { type: 'heading', level: 2, text: 'Summary' },
+      { type: 'paragraph', text: 'Downloading data from ArcGIS REST services requires understanding the query syntax and pagination limits. While manual queries are great for small datasets, using a dedicated extraction tool ensures you get the complete dataset reliably.' },
+    ],
+  },
+
+  // ==================================================================
+  // POST 15 (NEW)
+  // ==================================================================
+  {
+    slug: 'wms-vs-wfs-choosing-the-right-web-service',
+    title: 'WMS vs WFS: Choosing the Right Web Service',
+    description: 'Understand the fundamental differences between Web Map Service (WMS) and Web Feature Service (WFS). Learn which OGC standard to use for display versus analysis.',
+    keywords: 'WMS vs WFS, Web Map Service, Web Feature Service, OGC standards, GIS web services',
+    author: 'Muhammad Junaid Baig',
+    datePublished: '2026-11-01',
+    dateModified: '2026-11-01',
+    readingTimeMinutes: 6,
+    category: 'Guide',
+    tags: ['WMS', 'WFS', 'OGC', 'Web Mapping'],
+    excerpt: 'A clear comparison of WMS and WFS. Learn why one returns images and the other returns raw data, and when to use each in your GIS projects.',
+    content: [
+      { type: 'paragraph', text: 'When building or consuming web mapping applications, you will inevitably encounter two acronyms: WMS and WFS. Both are Open Geospatial Consortium (OGC) standards, but they serve completely different purposes.' },
+      { type: 'heading', level: 2, text: 'Web Map Service (WMS)' },
+      { type: 'paragraph', text: 'WMS is designed for visualization. When a client requests a WMS layer, the server renders the data (applying colors, labels, and symbols) and returns a static image (like a PNG or JPEG).' },
+      { type: 'list', items: ['Returns: Rendered map images', 'Use case: Background layers, visual context', 'Pros: Very fast rendering, complex cartography handled by the server', 'Cons: You cannot download or analyze the underlying data'] },
+      { type: 'heading', level: 2, text: 'Web Feature Service (WFS)' },
+      { type: 'paragraph', text: 'WFS is designed for data retrieval. When a client requests a WFS layer, the server returns the raw vector features (geometry and attributes) in formats like GML or GeoJSON.' },
+      { type: 'list', items: ['Returns: Raw vector data (geometry and attributes)', 'Use case: Spatial analysis, data editing, downloading datasets', 'Pros: Full access to the data, styling can be changed on the client side', 'Cons: Slower than WMS, can consume significant bandwidth'] },
+      { type: 'heading', level: 2, text: 'The Core Difference' },
+      { type: 'table', headers: ['Feature', 'WMS', 'WFS'], rows: [['Output Format', 'Image (PNG, JPEG)', 'Vector Data (GML, GeoJSON)'], ['Styling', 'Defined by the server', 'Defined by the client'], ['Data Access', 'No (attributes may be partially accessible via GetFeatureInfo)', 'Yes, full access'], ['Primary Purpose', 'Display', 'Analysis and Extraction']] },
+      { type: 'callout', variant: 'tip', title: 'A simple analogy', text: 'WMS is like looking at a map on a screen. WFS is like asking for the Excel spreadsheet behind the map so you can do your own calculations.' },
+      { type: 'heading', level: 2, text: 'When to Use Which?' },
+      { type: 'paragraph', text: 'Use WMS when you need to display complex spatial data quickly without overloading the client, such as showing a basemap or a highly detailed topographic layer.' },
+      { type: 'paragraph', text: 'Use WFS when you need to download the data for offline analysis, import it into a desktop GIS, or process it programmatically.' },
+      { type: 'heading', level: 2, text: 'Downloading WFS Data' },
+      { type: 'paragraph', text: 'While many tools can display WMS, downloading WFS data requires specific software or browser-based tools. Our free GIS Converter and Downloader supports extracting data from web services and converting them into usable formats.' },
+      { type: 'heading', level: 2, text: 'Summary' },
+      { type: 'paragraph', text: 'Understanding the difference between WMS and WFS is crucial for efficient GIS development. Always choose the service that matches your goal — visual display or data analysis.' },
+    ],
+  },
+
+  // ==================================================================
+  // POST 16 (NEW)
+  // ==================================================================
+  {
+    slug: 'converting-gis-data-to-kml-for-google-earth',
+    title: 'Converting GIS Data to KML for Google Earth',
+    description: 'Learn how to convert Shapefiles and GeoJSON into KML for visualization in Google Earth. Understand the projection requirements and best practices.',
+    keywords: 'GIS to KML, convert shapefile to KML, Google Earth GIS data, KML projection, export KML',
+    author: 'Muhammad Junaid Baig',
+    datePublished: '2026-11-01',
+    dateModified: '2026-11-01',
+    readingTimeMinutes: 7,
+    category: 'Tutorial',
+    tags: ['KML', 'Google Earth', 'Conversion', 'Tutorial'],
+    excerpt: 'A step-by-step guide to transforming your spatial datasets into KML files for seamless viewing in Google Earth and Google Maps.',
+    content: [
+      { type: 'paragraph', text: 'Google Earth is one of the most accessible and visually impressive tools for viewing spatial data. To view your GIS data in Google Earth, you must convert it into KML (Keyhole Markup Language) or KMZ (a zipped KML).' },
+      { type: 'heading', level: 2, text: 'The KML Projection Requirement' },
+      { type: 'paragraph', text: 'Before converting any data to KML, you must understand a critical rule: Google Earth only supports the WGS84 coordinate system (EPSG:4326).' },
+      { type: 'paragraph', text: 'If your source data is in a local projected coordinate system (like State Plane or UTM), your conversion tool must automatically reproject the data to WGS84. If it does not, your data will appear in the wrong location or not at all.' },
+      { type: 'callout', variant: 'warning', title: 'Automatic Reprojection', text: 'Always use a conversion tool that explicitly handles reprojection to WGS84. Our built-in GIS Converter automatically applies the necessary transformation when exporting to KML.' },
+      { type: 'heading', level: 2, text: 'Limitations of KML' },
+      { type: 'paragraph', text: 'While KML is excellent for visualization, it has limitations for data analysis:' },
+      { type: 'list', items: ['Limited attribute support — complex field types are often dropped.', 'Styling is embedded in the file, making it hard to change.', 'Not suitable for large datasets (files become massive).', 'No spatial indexing.'] },
+      { type: 'heading', level: 2, text: 'How to Convert GIS Data to KML' },
+      { type: 'paragraph', text: 'You can convert your data using our free, client-side converter:' },
+      { type: 'list', ordered: true, items: ['Go to the Converter tool.', 'Upload your source file (Shapefile ZIP, GeoJSON, or GeoPackage).', 'Select "Google Earth KML (.kml)" from the output format dropdown.', 'Click Convert. The tool will automatically reproject your data to WGS84.', 'Download the resulting KML file.'] },
+      { type: 'list', ordered: true, items: ['Open Google Earth Pro.', 'Go to File → Open and select your KML file.', 'Your data will appear in the "Temporary Places" folder.'] },
+      { type: 'heading', level: 2, text: 'Best Practices for KML' },
+      { type: 'list', items: ['Simplify complex polygons before converting. Google Earth struggles with geometries containing hundreds of thousands of vertices.', 'Use KMZ instead of KML if your file exceeds 10MB to enable compression.', 'Ensure your attribute data is clean, as Google Earth renders the data as HTML pop-ups.'] },
+      { type: 'heading', level: 2, text: 'Summary' },
+      { type: 'paragraph', text: 'Converting GIS data to KML is the gateway to sharing your spatial analysis with a broader audience. By understanding the WGS84 requirement and the limitations of the format, you can create visually stunning maps in Google Earth.' },
+    ],
+  },
+
+  // ==================================================================
+  // POST 17 (NEW)
+  // ==================================================================
+  {
+    slug: 'what-is-a-gis-feature-service',
+    title: 'What is a GIS Feature Service?',
+    description: 'An in-depth explanation of GIS Feature Services. Learn how they differ from Map Services and why they are essential for modern, interactive web mapping applications.',
+    keywords: 'GIS feature service, ArcGIS FeatureServer, what is a feature service, vector data web service, interactive GIS',
+    author: 'Muhammad Junaid Baig',
+    datePublished: '2026-11-01',
+    dateModified: '2026-11-01',
+    readingTimeMinutes: 6,
+    category: 'Guide',
+    tags: ['Feature Service', 'ArcGIS', 'Web Services', 'Fundamentals'],
+    excerpt: 'Discover the power of GIS Feature Services. Learn how they enable interactive, editable, and queryable vector data over the web.',
+    content: [
+      { type: 'paragraph', text: 'In the world of modern GIS, the "Feature Service" is the most important building block for interactive web applications. But what exactly is it, and how does it differ from traditional map services?' },
+      { type: 'heading', level: 2, text: 'The Definition' },
+      { type: 'paragraph', text: 'A Feature Service is a web API that provides access to a collection of geographic features. Unlike a Map Service (which returns pre-rendered images), a Feature Service returns the raw vector geometry and attributes of the data.' },
+      { type: 'paragraph', text: 'In the ArcGIS ecosystem, this is often referred to as a FeatureServer.' },
+      { type: 'heading', level: 2, text: 'Map Service vs. Feature Service' },
+      { type: 'table', headers: ['Feature', 'Map Service (MapServer)', 'Feature Service (FeatureServer)'], rows: [['Returns', 'Images (PNG/JPEG)', 'Vector Data (JSON/GeoJSON)'], ['Client Interaction', 'Limited to viewing and basic identify', 'Full querying, editing, and analysis'], ['Styling', 'Server-controlled', 'Client-controlled'], ['Use Case', 'Basemaps, fast display', 'Data entry, analysis, custom apps']] },
+      { type: 'heading', level: 2, text: 'What Can You Do with a Feature Service?' },
+      { type: 'list', items: ['Query: Request specific features based on attributes or spatial boundaries.', 'Edit: Add, update, or delete features (if the service allows it).', 'Analyze: Perform spatial calculations directly on the server.', 'Download: Extract the raw data into formats like Shapefile or GeoJSON.'] },
+      { type: 'heading', level: 2, text: 'The REST Architecture' },
+      { type: 'paragraph', text: 'Feature Services are built on REST (Representational State Transfer) architecture. This means you interact with them using standard HTTP requests. You simply construct a URL with specific parameters to tell the server exactly what data you want.' },
+      { type: 'code', language: 'text', code: 'https://services.arcgis.com/.../FeatureServer/0/query?where=1=1&outFields=*' },
+      { type: 'heading', level: 2, text: 'Extracting Data from Feature Services' },
+      { type: 'paragraph', text: 'Because Feature Services contain the actual data, they are the preferred source for downloading datasets. Our Geo Server Data Downloader is designed specifically to connect to Feature Services, handle the pagination, and export the data into standard GIS formats.' },
+      { type: 'heading', level: 2, text: 'Summary' },
+      { type: 'paragraph', text: 'Feature Services are the foundation of interactive web GIS. They provide the raw data necessary for complex analysis, custom symbology, and data extraction, making them vastly superior to traditional Map Services for analytical workflows.' },
+    ],
+  },
+
+  // ==================================================================
+  // POST 18 (NEW)
+  // ==================================================================
+  {
+    slug: 'downloading-openstreetmap-data-for-gis',
+    title: 'Downloading OpenStreetMap (OSM) Data for GIS',
+    description: 'Learn how to download and extract OpenStreetMap data for use in GIS software. Understand the OSM data model, file formats, and the best tools for extraction.',
+    keywords: 'OpenStreetMap download, OSM to GIS, extract OSM data, OSM shapefile, Geofabrik download',
+    author: 'Muhammad Junaid Baig',
+    datePublished: '2026-11-01',
+    dateModified: '2026-11-01',
+    readingTimeMinutes: 8,
+    category: 'Tutorial',
+    tags: ['OpenStreetMap', 'OSM', 'Open Data', 'Tutorial'],
+    excerpt: 'A complete guide to acquiring OpenStreetMap data. Learn how to use Overpass Turbo and Geofabrik to get OSM data into your GIS software.',
+    content: [
+      { type: 'paragraph', text: 'OpenStreetMap (OSM) is the Wikipedia of maps. It is a massive, open-source database of global spatial data maintained by millions of volunteers. It contains incredibly detailed information on roads, buildings, land use, and points of interest.' },
+      { type: 'paragraph', text: 'However, downloading data from OSM is different from downloading a standard Shapefile. This guide explains how to extract OSM data for your GIS projects.' },
+      { type: 'heading', level: 2, text: 'The OSM Data Model' },
+      { type: 'paragraph', text: 'OSM uses a topological data structure consisting of three primitive types:' },
+      { type: 'list', items: ['Nodes: A single point with a latitude and longitude.', 'Ways: An ordered list of nodes (used for roads, rivers, or polygon outlines).', 'Relations: A group of nodes, ways, or other relations (used for complex features like bus routes or multipolygons).'] },
+      { type: 'paragraph', text: 'Because of this model, you cannot simply download a single file and load it into ArcGIS or QGIS without some processing.' },
+      { type: 'heading', level: 2, text: 'Method 1: Geofabrik (Large Extracts)' },
+      { type: 'paragraph', text: 'If you need data for an entire country, state, or continent, Geofabrik is the best source.' },
+      { type: 'list', ordered: true, items: ['Go to download.geofabrik.de.', 'Navigate to your region of interest.', 'Download the .shp.zip file (which contains pre-converted Shapefiles for common layers like roads and buildings).', 'Extract the ZIP and load the Shapefiles into your GIS software.'] },
+      { type: 'heading', level: 2, text: 'Method 2: Overpass Turbo (Custom Extracts)' },
+      { type: 'paragraph', text: 'If you only need a specific feature (e.g., all cafes in a city), use Overpass Turbo.' },
+      { type: 'list', ordered: true, items: ['Go to overpass-turbo.eu.', 'Pan and zoom the map to your area of interest.', 'Click "Wizard" and type what you are looking for (e.g., "cafes in London").', 'Click "Build and Run Query".', 'Once the data appears, click "Export" and choose "Download as GeoJSON".'] },
+      { type: 'heading', level: 2, text: 'Method 3: QGIS OSM Tools' },
+      { type: 'paragraph', text: 'If you use QGIS, you can download OSM data directly.' },
+      { type: 'list', ordered: true, items: ['Install the "QuickOSM" plugin.', 'Open QuickOSM from the Vector menu.', 'Enter your query (e.g., Key: amenity, Value: restaurant) and your location (e.g., a city name).', 'Click Run Query. QuickOSM will download the data and add it directly to your QGIS project.'] },
+      { type: 'heading', level: 2, text: 'The OSM License (ODbL)' },
+      { type: 'paragraph', text: 'OSM data is licensed under the Open Database License (ODbL). This means you can use it for free, but if you publicly distribute a modified version of the database, you must also share it under the ODbL. You must also provide attribution to "© OpenStreetMap contributors".' },
+      { type: 'heading', level: 2, text: 'Summary' },
+      { type: 'paragraph', text: 'OpenStreetMap is an invaluable source of free geospatial data. By using Geofabrik for bulk data or Overpass Turbo for specific features, you can easily integrate OSM data into your GIS workflows.' },
+    ],
+  },
+
+  // ==================================================================
+  // POST 19 (NEW)
+  // ==================================================================
+  {
+    slug: 'free-gis-data-sources-for-environmental-analysis',
+    title: '5 Free GIS Data Sources for Environmental Analysis',
+    description: 'Discover the best free GIS data sources for environmental science, conservation, and climate analysis. Covers land cover, hydrology, and protected areas.',
+    keywords: 'environmental GIS data, free GIS data sources, conservation GIS, land cover data, hydrology GIS',
+    author: 'Muhammad Junaid Baig',
+    datePublished: '2026-11-01',
+    dateModified: '2026-11-01',
+    readingTimeMinutes: 6,
+    category: 'Guide',
+    tags: ['Environmental', 'Data Sources', 'Conservation'],
+    excerpt: 'A curated list of 5 essential free GIS data sources for environmental professionals, covering land cover, elevation, and biodiversity.',
+    content: [
+      { type: 'paragraph', text: 'Environmental analysis relies heavily on high-quality spatial data. Fortunately, there are numerous authoritative sources that provide free, global datasets for conservation, climate, and land-use planning.' },
+      { type: 'heading', level: 2, text: '1. USGS Earth Explorer (Elevation & Land Cover)' },
+      { type: 'paragraph', text: 'The USGS provides the National Land Cover Database (NLCD) and Shuttle Radar Topography Mission (SRTM) elevation data. It is the go-to source for US-based environmental studies.' },
+      { type: 'list', items: ['Best for: US land cover, high-resolution DEMs', 'Format: GeoTIFF'] },
+      { type: 'heading', level: 2, text: '2. Global Forest Watch (Forest Change)' },
+      { type: 'paragraph', text: 'Provided by the World Resources Institute, this platform offers near real-time data on deforestation, forest fires, and land use change globally.' },
+      { type: 'list', items: ['Best for: Deforestation tracking, tree cover loss', 'Format: GeoTIFF, Shapefile, GeoJSON'] },
+      { type: 'heading', level: 2, text: '3. Protected Planet (Conservation Boundaries)' },
+      { type: 'paragraph', text: 'The World Database on Protected Areas (WDPA) provides the most comprehensive dataset on terrestrial and marine protected areas.' },
+      { type: 'list', items: ['Best for: Conservation planning, biodiversity analysis', 'Format: Shapefile, GeoPackage'] },
+      { type: 'heading', level: 2, text: '4. HydroSHEDS (Hydrology)' },
+      { type: 'paragraph', text: 'Developed by WWF, HydroSHEDS provides hydrographic data, including river networks and watershed boundaries, at a global scale.' },
+      { type: 'list', items: ['Best for: Watershed analysis, flood modeling', 'Format: Shapefile, GeoTIFF'] },
+      { type: 'heading', level: 2, text: '5. Copernicus Open Access Hub (Climate & Atmosphere)' },
+      { type: 'paragraph', text: 'The European Space Agency provides Sentinel satellite data, including Sentinel-5P for air quality and Sentinel-3 for sea and land surface temperatures.' },
+      { type: 'list', items: ['Best for: Climate change, air quality, oceanography', 'Format: NetCDF, GeoTIFF'] },
+      { type: 'heading', level: 2, text: 'Summary' },
+      { type: 'paragraph', text: 'These five platforms cover the vast majority of environmental data needs. By integrating these datasets into your GIS, you can build robust models for conservation, climate resilience, and land management.' },
+    ],
+  },
+
+  // ==================================================================
+  // POST 20 (NEW)
+  // ==================================================================
+  {
+    slug: 'how-to-extract-data-from-arcgis-online',
+    title: 'How to Extract Data from ArcGIS Online',
+    description: 'Learn how to extract and download data from ArcGIS Online (AGOL). Understand the difference between hosted feature layers and map services.',
+    keywords: 'extract ArcGIS Online data, download AGOL data, ArcGIS Online export, hosted feature layer download',
+    author: 'Muhammad Junaid Baig',
+    datePublished: '2026-11-01',
+    dateModified: '2026-11-01',
+    readingTimeMinutes: 7,
+    category: 'Tutorial',
+    tags: ['ArcGIS Online', 'Data Extraction', 'AGOL', 'Tutorial'],
+    excerpt: 'A practical guide to extracting data from ArcGIS Online. Learn how to find the service URL and download the underlying data.',
+    content: [
+      { type: 'paragraph', text: 'ArcGIS Online (AGOL) is home to millions of public datasets. While it provides a built-in "Export Data" button, it is often limited to 1,000 features and requires you to be signed in. This guide shows you how to extract the full dataset using the underlying REST endpoints.' },
+      { type: 'heading', level: 2, text: 'Finding the Service URL' },
+      { type: 'paragraph', text: 'To extract data, you first need to find the URL of the underlying Feature Service.' },
+      { type: 'list', ordered: true, items: ['Open the ArcGIS Online item page.', 'Scroll down to the "URL" section.', 'If the URL ends in `FeatureServer` or `MapServer`, you are in luck — you can copy that URL directly.', 'If the URL ends in `MapServer` and you need vector data, check the layers within the service to see if any are Feature Layers.'] },
+      { type: 'heading', level: 2, text: 'The Limitations of the AGOL Export Button' },
+      { type: 'paragraph', text: 'ArcGIS Online has a built-in export function (found in the Map Viewer or item details page). However, it comes with limitations:' },
+      { type: 'list', items: ['Limited to 1,000 features by default.', 'Only exports as a Shapefile or CSV.', 'Requires an AGOL account and sign-in.'] },
+      { type: 'heading', level: 2, text: 'The Better Way: Using a Browser-Based Downloader' },
+      { type: 'paragraph', text: 'To download the complete dataset, use a browser-based tool that interacts directly with the REST API.' },
+      { type: 'list', ordered: true, items: ['Copy the URL from the AGOL item page.', 'Open Geo Server Data Downloader.', 'Paste the URL into the input field and click Add Layer.', 'The tool fetches the metadata and loads the layer on the map.', 'Click the green Export button or use Bulk Export to download the complete dataset as Shapefile, GeoJSON, KML, or GeoPackage.'] },
+      { type: 'callout', variant: 'info', title: 'No Limits', text: 'Using the REST API directly bypasses the 1,000-feature limit. The tool handles the pagination automatically, allowing you to download datasets with hundreds of thousands of features.' },
+      { type: 'heading', level: 2, text: 'Extracting Data from Web Maps' },
+      { type: 'paragraph', text: 'If you found the data inside an AGOL Web Map, you cannot download the whole map directly. You must extract the individual layers.' },
+      { type: 'list', ordered: true, items: ['Click "Open in Map Viewer" on the Web Map.', 'Click the "Layers" pane.', 'Click on the layer you want to extract.', 'Look for the "URL" or "Data Source" link in the layer properties to find the FeatureServer URL.', 'Paste that URL into your downloader tool.'] },
+      { type: 'heading', level: 2, text: 'Summary' },
+      { type: 'paragraph', text: 'Extracting the full dataset from ArcGIS Online requires using the REST API instead of the default export button. By using a specialized downloader, you can bypass feature limits, avoid sign-in requirements, and export data into any format you need.' },
+    ],
+  },
+
+  // ==================================================================
+  // POST 21 (NEW)
+  // ==================================================================
+  {
+    slug: 'vector-vs-raster-data-in-gis',
+    title: 'Vector vs Raster Data in GIS: A Deep Dive',
+    description: 'Understand the fundamental difference between vector and raster data in GIS. Learn the pros and cons of each and how to choose the right one for your project.',
+    keywords: 'vector vs raster, GIS data types, raster data examples, vector data examples, spatial data models',
+    author: 'Muhammad Junaid Baig',
+    datePublished: '2026-11-01',
+    dateModified: '2026-11-01',
+    readingTimeMinutes: 8,
+    category: 'Guide',
+    tags: ['Vector', 'Raster', 'Fundamentals', 'Data Models'],
+    excerpt: 'A comprehensive guide to the two primary spatial data models. Learn when to use vector and when to use raster data for your GIS analysis.',
+    content: [
+      { type: 'paragraph', text: 'Every dataset in GIS is either vector or raster. Understanding the difference between these two data models is essential for choosing the right tools and methods for your analysis.' },
+      { type: 'heading', level: 2, text: 'What is Vector Data?' },
+      { type: 'paragraph', text: 'Vector data represents the world using points, lines, and polygons. It is based on coordinate geometry.' },
+      { type: 'list', items: ['Points: Single locations (e.g., trees, fire hydrants).', 'Lines: Connected points (e.g., roads, rivers).', 'Polygons: Enclosed areas (e.g., building footprints, countries).'] },
+      { type: 'paragraph', text: 'Vector data is excellent for representing discrete objects with precise boundaries. It allows for complex attribute data to be attached to each feature.' },
+      { type: 'heading', level: 2, text: 'What is Raster Data?' },
+      { type: 'paragraph', text: 'Raster data represents the world as a grid of cells (pixels). Each cell contains a value representing information such as elevation, temperature, or color.' },
+      { type: 'list', items: ['Continuous data: Elevation models, temperature maps.', 'Imagery: Satellite photos, aerial photography.'] },
+      { type: 'paragraph', text: 'Raster data is ideal for representing continuous surfaces and performing complex mathematical calculations (e.g., slope analysis).' },
+      { type: 'heading', level: 2, text: 'The Pros and Cons' },
+      { type: 'table', headers: ['Feature', 'Vector', 'Raster'], rows: [['Data Structure', 'Mathematical (coordinates)', 'Grid (pixels)'], ['File Size', 'Small (unless very complex)', 'Large (depends on resolution)'], ['Precision', 'High (exact coordinates)', 'Depends on cell size'], ['Analysis', 'Network analysis, buffering, overlay', 'Surface analysis, map algebra'], ['Visual Quality', 'Crisp lines, scalable', 'Pixelated when zoomed in']] },
+      { type: 'heading', level: 2, text: 'When to Use Vector' },
+      { type: 'paragraph', text: 'Use vector data for:' },
+      { type: 'list', items: ['Asset management (pipes, poles, parcels)', 'Administrative boundaries', 'Network routing (roads, utilities)', 'Any analysis requiring precise geometry'] },
+      { type: 'heading', level: 2, text: 'When to Use Raster' },
+      { type: 'paragraph', text: 'Use raster data for:' },
+      { type: 'list', items: ['Satellite and aerial imagery', 'Digital Elevation Models (DEMs)', 'Land cover classification', 'Continuous environmental variables'] },
+      { type: 'heading', level: 2, text: 'Hybrid Approaches' },
+      { type: 'paragraph', text: 'In many projects, you will use both. For example, you might use a raster DEM to calculate slope, and then use vector data to identify which parcels fall within the steep areas.' },
+      { type: 'heading', level: 2, text: 'Summary' },
+      { type: 'paragraph', text: 'Vector data is precise and analytical, while raster data is continuous and visual. Choosing the right data model is the first step in any successful GIS analysis.' },
+    ],
+  },
+
+  // ==================================================================
+  // POST 22 (NEW)
+  // ==================================================================
+  {
+    slug: 'how-to-use-the-arcgis-rest-api-query-endpoint',
+    title: 'How to Use the ArcGIS REST API Query Endpoint',
+    description: 'A developer-focused guide to the ArcGIS REST API Query Endpoint. Learn how to construct complex spatial and attribute queries using URL parameters.',
+    keywords: 'ArcGIS REST API query, ArcGIS API parameters, spatial query ArcGIS, attribute query ArcGIS, REST endpoint',
+    author: 'Muhammad Junaid Baig',
+    datePublished: '2026-11-01',
+    dateModified: '2026-11-01',
+    readingTimeMinutes: 9,
+    category: 'Tutorial',
+    tags: ['ArcGIS', 'REST API', 'Developer', 'Query'],
+    excerpt: 'A technical deep dive into the ArcGIS REST Query Endpoint. Learn how to filter data by attributes and geometry to extract exactly what you need.',
+    content: [
+      { type: 'paragraph', text: 'The `/query` endpoint is the most powerful part of the ArcGIS REST API. It allows you to filter, sort, and extract data from a Feature Service. This guide covers the essential parameters for building complex queries.' },
+      { type: 'heading', level: 2, text: 'The Anatomy of a Query URL' },
+      { type: 'paragraph', text: 'A query URL consists of a base URL and a set of key-value pairs.' },
+      { type: 'code', language: 'text', code: 'https://services.arcgis.com/.../FeatureServer/0/query?where=1=1&outFields=*&f=json' },
+      { type: 'heading', level: 2, text: 'Attribute Queries (The `where` clause)' },
+      { type: 'paragraph', text: 'The `where` parameter allows you to filter features using SQL syntax.' },
+      { type: 'list', items: ['Return all: where=1=1', 'Text match: where=STATUS = \'Active\'', 'Numeric match: where=POPULATION > 50000', 'Multiple conditions: where=TYPE = \'Residential\' AND VALUE > 200000'] },
+      { type: 'heading', level: 2, text: 'Spatial Queries (Geometry and SpatialRel)' },
+      { type: 'paragraph', text: 'You can filter features based on their spatial relationship to a geometry. This is useful for extracting data within a specific bounding box or polygon.' },
+      { type: 'code', language: 'text', code: '&geometry=-95.99,36.15,-95.98,36.16&geometryType=esriGeometryEnvelope&spatialRel=esriSpatialRelIntersects&inSR=4326' },
+      { type: 'paragraph', text: 'This returns only the features that intersect the specified bounding box.' },
+      { type: 'heading', level: 2, text: 'Output Control (outFields and returnGeometry)' },
+      { type: 'paragraph', text: 'To optimize performance, only request the fields you need.' },
+      { type: 'list', items: ['outFields=*: Returns all columns.', 'outFields=NAME,POPULATION: Returns specific columns.', 'returnGeometry=false: Drops the spatial data, returning only a table.'] },
+      { type: 'heading', level: 2, text: 'Pagination (resultOffset and resultRecordCount)' },
+      { type: 'paragraph', text: 'ArcGIS servers limit the number of features returned in a single request (usually 1,000 or 2,000). To get all data, you must paginate.' },
+      { type: 'list', ordered: true, items: ['Set resultRecordCount=1000.', 'Set resultOffset=0 for the first request.', 'Increment the offset by 1000 for subsequent requests (e.g., resultOffset=1000, 2000).', 'Stop when the number of returned features is less than the requested count.'] },
+      { type: 'heading', level: 2, text: 'Format (`f` parameter)' },
+      { type: 'list', items: ['f=json: Returns ArcGIS JSON format.', 'f=geojson: Returns standard GeoJSON (not always supported).', 'f=pjson: Pretty-printed JSON (useful for debugging).'] },
+      { type: 'heading', level: 2, text: 'Common Errors' },
+      { type: 'list', items: ['Invalid URL: Check for unencoded spaces or quotes.', 'Field not found: Ensure the field name is correct and case-sensitive.', 'Token required: The service is secured.'] },
+      { type: 'heading', level: 2, text: 'Summary' },
+      { type: 'paragraph', text: 'Mastering the query endpoint is essential for any GIS developer working with ArcGIS REST services. By combining attribute and spatial filters, you can extract exactly the data you need with precision.' },
+    ],
+  },
+
+  // ==================================================================
+  // POST 23 (NEW)
+  // ==================================================================
+  {
+    slug: 'converting-kml-to-shapefile-step-by-step',
+    title: 'Converting KML to Shapefile: A Step-by-Step Guide',
+    description: 'Learn how to convert KML files into ESRI Shapefiles. Understand the limitations of the conversion and how to preserve your data.',
+    keywords: 'KML to Shapefile, convert KML, KML to SHP, Google Earth to GIS, GIS conversion',
+    author: 'Muhammad Junaid Baig',
+    datePublished: '2026-11-01',
+    dateModified: '2026-11-01',
+    readingTimeMinutes: 6,
+    category: 'Tutorial',
+    tags: ['KML', 'Shapefile', 'Conversion', 'Tutorial'],
+    excerpt: 'A practical guide on how to convert Google Earth KML files into ESRI Shapefiles for use in professional desktop GIS software.',
+    content: [
+      { type: 'paragraph', text: 'KML is the standard format for Google Earth. However, if you want to perform spatial analysis or use the data in professional GIS software like QGIS or ArcGIS Pro, you need to convert it to a Shapefile.' },
+      { type: 'heading', level: 2, text: 'The Challenges of KML to Shapefile' },
+      { type: 'paragraph', text: 'Converting between these formats is usually straightforward, but there are a few things to watch out for:' },
+      { type: 'list', items: ['Geometry Types: KML often stores mixed geometry types (points and polygons) in a single file. A Shapefile can only store one geometry type. You may need to separate them.', 'Attribute Truncation: Shapefiles limit field names to 10 characters. KML attributes with longer names will be truncated.', 'Styling: Shapefiles do not support the complex styling (icons, colors) found in KML.'] },
+      { type: 'heading', level: 2, text: 'How to Convert KML to Shapefile' },
+      { type: 'paragraph', text: 'You can perform this conversion using free, browser-based tools without installing any software.' },
+      { type: 'list', ordered: true, items: ['Navigate to the GIS Converter tool.', 'Upload your .kml or .kmz file.', 'Select "ESRI Shapefile (.zip)" as the output format.', 'Click Convert. The tool will automatically extract the geometry and attributes.', 'Download the resulting ZIP file, which contains the .shp, .shx, .dbf, and .prj files.'] },
+      { type: 'callout', variant: 'info', title: 'Projection Handling', text: 'KML is always in WGS84 (EPSG:4326). The conversion tool will ensure your output Shapefile retains this coordinate system.' },
+      { type: 'heading', level: 2, text: 'Best Practices' },
+      { type: 'list', items: ['If your KML contains multiple folders or layers, the converter may create multiple Shapefiles. Check the resulting ZIP file.', 'Clean up attribute names before converting if you are concerned about the 10-character limit.'] },
+      { type: 'heading', level: 2, text: 'Summary' },
+      { type: 'paragraph', text: 'Converting KML to Shapefile is a common workflow for moving data from the web to the desktop. By using a browser-based tool, you can quickly perform the conversion while maintaining the integrity of your spatial data.' },
+    ],
+  },
+
+  // ==================================================================
+  // POST 24 (NEW)
+  // ==================================================================
+  {
+    slug: 'beginners-guide-to-geocoding-and-reverse-geocoding',
+    title: 'A Beginner\'s Guide to Geocoding and Reverse Geocoding',
+    description: 'Understand what geocoding is, how it works, and the difference between geocoding and reverse geocoding. Learn how to use geocoding in GIS.',
+    keywords: 'geocoding guide, reverse geocoding, what is geocoding, address to coordinates, coordinates to address',
+    author: 'Muhammad Junaid Baig',
+    datePublished: '2026-11-01',
+    dateModified: '2026-11-01',
+    readingTimeMinutes: 7,
+    category: 'Guide',
+    tags: ['Geocoding', 'Fundamentals', 'Data Entry'],
+    excerpt: 'A comprehensive introduction to geocoding and reverse geocoding. Learn how to convert addresses into spatial coordinates and vice versa.',
+    content: [
+      { type: 'paragraph', text: 'Geocoding is the process of taking a text-based description of a location (like a street address or a place name) and converting it into spatial coordinates (latitude and longitude). It is one of the most common operations in GIS.' },
+      { type: 'heading', level: 2, text: 'What is Geocoding?' },
+      { type: 'paragraph', text: 'If you have a spreadsheet with 1,000 customer addresses, you cannot map them until you know where they are. Geocoding translates those addresses into X/Y coordinates so they can be plotted on a map.' },
+      { type: 'heading', level: 2, text: 'What is Reverse Geocoding?' },
+      { type: 'paragraph', text: 'Reverse geocoding is the opposite. You start with a set of coordinates and ask, "What is the address of this location?"' },
+      { type: 'paragraph', text: 'This is useful for applications like tracking a vehicle or analyzing a GPS point collected in the field.' },
+      { type: 'heading', level: 2, text: 'How Geocoding Works' },
+      { type: 'paragraph', text: 'Geocoding relies on a "Locator" (or Geocoder) service. These services, like the Esri World Geocoder or Google Maps API, contain massive databases of road networks and address ranges.' },
+      { type: 'list', ordered: true, items: ['You submit an address string (e.g., "1600 Pennsylvania Ave NW, Washington, DC").', 'The locator parses the string into components (street number, street name, city, state).', 'It matches the components to its database and interpolates the position along the street segment.', 'It returns a coordinate and a "score" indicating the confidence of the match.'] },
+      { type: 'heading', level: 2, text: 'Geocoding in GIS' },
+      { type: 'paragraph', text: 'Most GIS software has built-in geocoding tools:' },
+      { type: 'list', items: ['QGIS: Uses the "Geocoding" plugin or the batch geocoding tools in the processing toolbox.', 'ArcGIS Pro: Uses the "Geocode Addresses" tool, which connects to the Esri World Geocoder or a local address locator.', 'Online Tools: Many free web tools allow you to paste a list of addresses and download a GeoJSON file.'] },
+      { type: 'heading', level: 2, text: 'The Importance of Match Scores' },
+      { type: 'paragraph', text: 'Geocoding is not always perfect. The locator will return a score from 0 to 100. A score of 100 means an exact match. A score of 80 might mean it found the street but interpolated the house number.' },
+      { type: 'callout', variant: 'warning', title: 'Always review low scores', text: 'If you are geocoding critical data, always review the matches with scores below 90 to ensure they are placed in the correct location.' },
+      { type: 'heading', level: 2, text: 'Summary' },
+      { type: 'paragraph', text: 'Geocoding converts text into maps, and reverse geocoding converts maps into text. Understanding these processes is essential for any GIS professional working with address data.' },
+    ],
+  },
+
+  // ==================================================================
+  // POST 25 (NEW)
+  // ==================================================================
+  {
+    slug: 'how-to-download-municipal-zoning-data',
+    title: 'How to Download Municipal Zoning Data',
+    description: 'A guide for urban planners and analysts on how to find and download municipal zoning GIS data from city and county open data portals.',
+    keywords: 'download zoning data, municipal GIS data, zoning shapefile, city zoning GIS, urban planning data',
+    author: 'Muhammad Junaid Baig',
+    datePublished: '2026-11-01',
+    dateModified: '2026-11-01',
+    readingTimeMinutes: 6,
+    category: 'Guide',
+    tags: ['Zoning', 'Urban Planning', 'Municipal Data', 'Guide'],
+    excerpt: 'Learn where to find free municipal zoning data and how to download it in GIS formats like Shapefile or GeoJSON for urban planning analysis.',
+    content: [
+      { type: 'paragraph', text: 'Zoning data is the foundation of urban planning and real estate analysis. It dictates what can be built where, making it essential for site selection, development feasibility, and community advocacy.' },
+      { type: 'paragraph', text: 'Fortunately, most municipalities publish their zoning maps publicly. This guide explains how to find and download that data.' },
+      { type: 'heading', level: 2, text: 'Where to Find Zoning Data' },
+      { type: 'paragraph', text: 'Zoning is almost always managed at the municipal or county level. Here are the most common places to look:' },
+      { type: 'list', items: ['City/County GIS Portal: Search for "[City Name] GIS open data".', 'City Planning Department Website: Look for a "Maps and Data" section.', 'ArcGIS Online: Many cities host their public zoning data on AGOL. Search for "[City Name] zoning" in the ArcGIS Hub or use our Discover tool.', 'State Geospatial Portals: Some states aggregate municipal zoning data at the state level.'] },
+      { type: 'heading', level: 2, text: 'The Best Format: ArcGIS REST FeatureServer' },
+      { type: 'paragraph', text: 'The easiest way to download zoning data is if the city hosts it on an ArcGIS REST service. You will know you have found this if the URL contains `/FeatureServer` or `/MapServer`.' },
+      { type: 'callout', variant: 'tip', title: 'How to spot a FeatureServer', text: 'If you use the city\'s web map viewer and the URL looks like a standard web page, press F12 to open developer tools and check the Network tab. If you see requests to `services.arcgis.com`, you can grab the underlying service URL.' },
+      { type: 'heading', level: 2, text: 'How to Download the Zoning Data' },
+      { type: 'list', ordered: true, items: ['Copy the FeatureServer URL for the zoning layer.', 'Open Geo Server Data Downloader.', 'Paste the URL and click Add Layer.', 'Preview the zoning polygons on the map.', 'Use the Export button to download the data as a Shapefile, GeoPackage, or GeoJSON.'] },
+      { type: 'heading', level: 2, text: 'Understanding Zoning Attributes' },
+      { type: 'paragraph', text: 'When you open the attribute table, you will typically see these fields:' },
+      { type: 'table', headers: ['Field', 'Description'], rows: [['ZONE_CODE', 'The legal code (e.g., R-1, C-2, M-1).'], ['ZONE_DESC', 'The full name of the zone (e.g., "Residential Single Family").'], ['ORDINANCE', 'The local law that established the zone.'], ['ACRES', 'The size of the zone.']] },
+      { type: 'heading', level: 2, text: 'Summary' },
+      { type: 'paragraph', text: 'Downloading municipal zoning data is straightforward if you know where to look. By identifying the underlying ArcGIS REST service, you can bypass clunky download portals and extract the data directly into your GIS software.' },
+    ],
+  },
+
+  // ==================================================================
+  // POST 26 (NEW)
+  // ==================================================================
+  {
+    slug: 'using-wfs-to-download-spatial-data',
+    title: 'Using WFS to Download Spatial Data',
+    description: 'Learn how to query and download spatial data from a Web Feature Service (WFS). Understand GetFeature requests and output formats.',
+    keywords: 'WFS download, Web Feature Service data, GetFeature request, OGC WFS, spatial data download',
+    author: 'Muhammad Junaid Baig',
+    datePublished: '2026-11-01',
+    dateModified: '2026-11-01',
+    readingTimeMinutes: 7,
+    category: 'Tutorial',
+    tags: ['WFS', 'OGC', 'Download', 'Tutorial'],
+    excerpt: 'A practical guide to extracting data from OGC Web Feature Services. Learn how to construct GetFeature requests and handle the resulting data.',
+    content: [
+      { type: 'paragraph', text: 'The Web Feature Service (WFS) is the OGC standard for downloading vector data from the web. Unlike WMS (which returns images), WFS returns the actual geometry and attributes of the features.' },
+      { type: 'heading', level: 2, text: 'The GetFeature Request' },
+      { type: 'paragraph', text: 'To download data from a WFS, you construct a `GetFeature` request. This is a URL that tells the server exactly what data to return.' },
+      { type: 'code', language: 'text', code: 'https://example.com/geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=my:layer&outputFormat=application/json' },
+      { type: 'heading', level: 2, text: 'Key Parameters' },
+      { type: 'list', items: ['service=WFS: Identifies the service type.', 'version=2.0.0: The version of the WFS protocol.', 'request=GetFeature: The operation you are performing.', 'typeName=my:layer: The specific layer you want to download. This is usually a namespace and layer name.', 'outputFormat=application/json: Tells the server to return the data as GeoJSON. Other options include GML and Shapefile.', 'count=1000: Limits the number of returned features.', 'bbox=minx,miny,maxx,maxy: A spatial filter to download only features within a specific bounding box.'] },
+      { type: 'heading', level: 2, text: 'Handling the Output' },
+      { type: 'paragraph', text: 'When you hit the URL, the server will return a file or a JSON response. If you use `outputFormat=application/json`, the browser will display the GeoJSON text. You can save this as a `.geojson` file.' },
+      { type: 'paragraph', text: 'If you use `outputFormat=shapefile`, the server will return a ZIP file containing the shapefile components.' },
+      { type: 'heading', level: 2, text: 'The Limitation of WFS' },
+      { type: 'paragraph', text: 'Many WFS servers have a feature count limit (often 1,000 or 10,000 features). If you try to download a large dataset, the server will truncate the results. Unlike ArcGIS REST services, WFS does not have a standardized pagination mechanism (though some servers support `startIndex`).' },
+      { type: 'callout', variant: 'warning', title: 'Check for truncation', text: 'Always verify the feature count in the resulting file. If you expect 10,000 features but only get 1,000, the server likely truncated the response.' },
+      { type: 'heading', level: 2, text: 'Using a Browser-Based Tool' },
+      { type: 'paragraph', text: 'Because constructing WFS requests manually is error-prone, many users prefer a GUI. Geo Server Data Downloader handles WFS parsing by fetching the `GetCapabilities` document and allowing you to select layers from a list, then managing the download process.' },
+      { type: 'heading', level: 2, text: 'Summary' },
+      { type: 'paragraph', text: 'WFS is the standard for downloading vector data from OGC servers. While the URL syntax can be complex, understanding the core parameters allows you to extract data from government and research servers worldwide.' },
+    ],
+  },
+
+  // ==================================================================
+  // POST 27 (NEW)
+  // ==================================================================
+  {
+    slug: 'geopackage-vs-shapefile-the-modern-standard',
+    title: 'GeoPackage vs Shapefile: The Modern GIS Standard',
+    description: 'Why GeoPackage is replacing the Shapefile. A comparison of SQLite-based GeoPackage against the legacy Shapefile format.',
+    keywords: 'GeoPackage vs Shapefile, modern GIS format, GPKG vs SHP, SQLite GIS, GIS file formats',
+    author: 'Muhammad Junaid Baig',
+    datePublished: '2026-11-01',
+    dateModified: '2026-11-01',
+    readingTimeMinutes: 6,
+    category: 'Guide',
+    tags: ['GeoPackage', 'Shapefile', 'Comparison', 'Formats'],
+    excerpt: 'The Shapefile has been the king of GIS for decades, but GeoPackage is the modern replacement. Learn why you should switch.',
+    content: [
+      { type: 'paragraph', text: 'The ESRI Shapefile was introduced in the 1990s and has been the lingua franca of GIS ever since. However, it is a legacy format built on outdated technology. The GeoPackage (GPKG) is the modern, open-standard replacement.' },
+      { type: 'heading', level: 2, text: 'The Problems with Shapefiles' },
+      { type: 'paragraph', text: 'The Shapefile is not a single file; it is a collection of at least three files (.shp, .shx, .dbf). This causes endless problems:' },
+      { type: 'list', items: ['File Management: It is easy to lose or forget a component (.prj, .cpg).', 'Data Loss: Field names are limited to 10 characters, forcing abbreviations.', 'No Nulls: The dbf format cannot store null values.', 'Size Limit: 2GB limit.'] },
+      { type: 'heading', level: 2, text: 'The GeoPackage Advantage' },
+      { type: 'paragraph', text: 'GeoPackage is built on SQLite, the most widely deployed database engine in the world.' },
+      { type: 'list', items: ['Single File: Everything is contained in one .gpkg file.', 'No Limits: Field names up to 255 characters, no size limits.', 'Multi-Layer: You can store multiple vector and raster layers in a single file.', 'Full Unicode: Supports all languages and characters.', 'Spatial Indexing: Built-in RTree indexing for fast queries.'] },
+      { type: 'heading', level: 2, text: 'Comparison Table' },
+      { type: 'table', headers: ['Feature', 'Shapefile', 'GeoPackage'], rows: [['File Structure', 'Multiple files', 'Single file'], ['Field Names', '10 chars', '255 chars'], ['Null Values', 'No', 'Yes'], ['Multi-Layer', 'No', 'Yes'], ['Raster Support', 'No', 'Yes'], ['Unicode', 'Partial', 'Full']] },
+      { type: 'heading', level: 2, text: 'When to Use Shapefile' },
+      { type: 'paragraph', text: 'The only reason to use a Shapefile today is if you are sending data to someone using very old software that does not support GeoPackage. For any modern workflow (QGIS, ArcGIS Pro, web apps), use GeoPackage.' },
+      { type: 'heading', level: 2, text: 'How to Convert' },
+      { type: 'paragraph', text: 'You can easily convert your Shapefiles to GeoPackage using our GIS Converter. It handles all the complex SQLite creation behind the scenes.' },
+      { type: 'heading', level: 2, text: 'Summary' },
+      { type: 'paragraph', text: 'GeoPackage is the clear winner for modern GIS. It solves the technical debt of the Shapefile format and provides a robust, single-file container for all your spatial data.' },
+    ],
+  },
+
+  // ==================================================================
+  // POST 28 (NEW)
+  // ==================================================================
+  {
+    slug: 'how-to-filter-arcgis-data-before-downloading',
+    title: 'How to Filter ArcGIS Data Before Downloading',
+    description: 'Learn how to filter large ArcGIS datasets before downloading them. Save time and bandwidth by extracting only the features you need.',
+    keywords: 'filter ArcGIS data, ArcGIS query download, download specific features ArcGIS, GIS data filtering',
+    author: 'Muhammad Junaid Baig',
+    datePublished: '2026-11-01',
+    dateModified: '2026-11-01',
+    readingTimeMinutes: 5,
+    category: 'Tutorial',
+    tags: ['ArcGIS', 'Filtering', 'Data Extraction', 'Tutorial'],
+    excerpt: 'Stop downloading datasets you do not need. Learn how to apply attribute and spatial filters to ArcGIS REST services before downloading the data.',
+    content: [
+      { type: 'paragraph', text: 'Downloading a 2GB dataset just to get 50 specific records is a waste of time and bandwidth. ArcGIS REST services allow you to filter the data on the server side, so you only download what you need.' },
+      { type: 'heading', level: 2, text: 'Attribute Filtering (The `where` clause)' },
+      { type: 'paragraph', text: 'The most common way to filter data is by attribute. For example, if you are only interested in commercial properties, you can filter the dataset to return only features where `ZONING = \'Commercial\'`.' },
+      { type: 'code', language: 'text', code: 'https://services.arcgis.com/.../FeatureServer/0/query?where=ZONING%3D%27Commercial%27&outFields=*&f=geojson' },
+      { type: 'paragraph', text: 'This tells the server to only send back the features that match the criteria.' },
+      { type: 'heading', level: 2, text: 'Spatial Filtering (Geometry)' },
+      { type: 'paragraph', text: 'If you only need data for a specific area, you can pass a bounding box or a polygon to the query.' },
+      { type: 'code', language: 'text', code: '&geometry=-95.99,36.15,-95.98,36.16&geometryType=esriGeometryEnvelope&spatialRel=esriSpatialRelIntersects' },
+      { type: 'paragraph', text: 'This returns only the features that intersect that specific bounding box in Texas.' },
+      { type: 'heading', level: 2, text: 'Combining Filters' },
+      { type: 'paragraph', text: 'You can combine attribute and spatial filters to extract highly specific datasets.' },
+      { type: 'code', language: 'text', code: '&where=POPULATION > 50000&geometry=...&spatialRel=...' },
+      { type: 'heading', level: 2, text: 'The Drawback of Manual Filtering' },
+      { type: 'paragraph', text: 'While URL parameters are powerful, constructing them manually can be tricky. If you are using a browser-based tool like Geo Server Data Downloader, you can filter the data visually by zooming to an extent or clicking a feature on the map, and the tool will apply the spatial filter automatically.' },
+      { type: 'heading', level: 2, text: 'Summary' },
+      { type: 'paragraph', text: 'Filtering data before downloading is a best practice for efficient GIS workflows. By using attribute and spatial filters, you avoid downloading unnecessary features and reduce processing time in your desktop software.' },
+    ],
+  },
+
+  // ==================================================================
+  // POST 29 (NEW)
+  // ==================================================================
+  {
+    slug: 'top-5-tools-for-gis-data-conversion',
+    title: 'Top 5 Tools for GIS Data Conversion',
+    description: 'A comparison of the top 5 tools for converting GIS data formats. Includes GDAL, QGIS, and browser-based solutions.',
+    keywords: 'GIS data conversion tools, best GIS converter, GDAL conversion, QGIS convert format, online GIS converter',
+    author: 'Muhammad Junaid Baig',
+    datePublished: '2026-11-01',
+    dateModified: '2026-11-01',
+    readingTimeMinutes: 7,
+    category: 'Guide',
+    tags: ['Tools', 'Conversion', 'GDAL', 'QGIS'],
+    excerpt: 'Compare the top 5 tools for converting GIS data. Find the right solution for your skill level and workflow.',
+    content: [
+      { type: 'paragraph', text: 'Converting spatial data between formats (e.g., Shapefile to GeoJSON, KML to GeoPackage) is a daily task in GIS. Here are the five best tools to do it, ranked by use case.' },
+      { type: 'heading', level: 2, text: '1. GDAL (The Gold Standard)' },
+      { type: 'paragraph', text: 'GDAL (Geospatial Data Abstraction Library) is the open-source engine that powers almost every GIS software in the world. It is a command-line tool.' },
+      { type: 'list', items: ['Pros: Extremely powerful, handles every format, highly scriptable.', 'Cons: Requires command-line knowledge (e.g., `ogr2ogr output.shp input.geojson`).', 'Best for: Developers and power users automating workflows.'] },
+      { type: 'heading', level: 2, text: '2. QGIS (The Best Desktop GUI)' },
+      { type: 'paragraph', text: 'QGIS is a free, open-source desktop GIS. It includes GDAL under the hood but provides a user interface.' },
+      { type: 'list', items: ['Pros: Free, visual interface, batch processing tools.', 'Cons: Large download, overkill if you just want a quick conversion.', 'Best for: Analysts who need to inspect and convert data simultaneously.'] },
+      { type: 'heading', level: 2, text: '3. Geo Server Data Downloader / GIS Converter (The Best Browser Tool)' },
+      { type: 'paragraph', text: 'Our built-in converter uses WebAssembly to run GDAL entirely in your browser.' },
+      { type: 'list', items: ['Pros: No installation, 100% private (data never leaves your browser), handles large files.', 'Cons: Limited to the formats supported by the tool.', 'Best for: Quick, secure conversions without installing software.'] },
+      { type: 'heading', level: 2, text: '4. ArcGIS Pro (The Enterprise Standard)' },
+      { type: 'paragraph', text: 'ArcGIS Pro is Esri\'s flagship desktop software. It offers robust conversion tools through its "Project" and "Conversion Tools" toolboxes.' },
+      { type: 'list', items: ['Pros: Tight integration with Esri ecosystem, excellent UI.', 'Cons: Requires a paid license.', 'Best for: Organizations already invested in the Esri platform.'] },
+      { type: 'heading', level: 2, text: '5. Mapshaper (The Web Optimizer)' },
+      { type: 'paragraph', text: 'Mapshaper is a free web-based tool designed for converting and simplifying data for web maps.' },
+      { type: 'list', items: ['Pros: Extremely fast, great for simplifying complex polygons, handles TopoJSON.', 'Cons: Focused on web formats, not ideal for complex desktop workflows.', 'Best for: Web developers preparing data for Leaflet or Mapbox.'] },
+      { type: 'heading', level: 2, text: 'Summary' },
+      { type: 'paragraph', text: 'For most users looking for a quick, secure conversion, our browser-based GIS Converter is the best choice. For power users, GDAL provides the ultimate flexibility.' },
+    ],
+  },
+
+  // ==================================================================
+  // POST 30 (NEW)
+  // ==================================================================
+  {
+    slug: 'how-to-export-data-from-arcgis-pro-to-csv',
+    title: 'How to Export Data from ArcGIS Pro to CSV',
+    description: 'A quick tutorial on exporting attribute tables from ArcGIS Pro to CSV. Learn how to include geometry as a WKT column.',
+    keywords: 'ArcGIS Pro CSV export, export table ArcGIS Pro, ArcGIS Pro to Excel, WKT export ArcGIS',
+    author: 'Muhammad Junaid Baig',
+    datePublished: '2026-11-01',
+    dateModified: '2026-11-01',
+    readingTimeMinutes: 5,
+    category: 'Tutorial',
+    tags: ['ArcGIS Pro', 'CSV', 'Export', 'Tutorial'],
+    excerpt: 'Learn how to export attribute tables from ArcGIS Pro to CSV format, including how to preserve the spatial geometry.',
+    content: [
+      { type: 'paragraph', text: 'Exporting data from ArcGIS Pro to CSV is a common task when you need to share data with non-GIS colleagues or perform statistical analysis in Excel.' },
+      { type: 'heading', level: 2, text: 'The Standard Export (Attributes Only)' },
+      { type: 'paragraph', text: 'If you only need the tabular data, the process is simple:' },
+      { type: 'list', ordered: true, items: ['Right-click the layer in the Contents pane and select "Attribute Table".', 'In the table view, click the "Export Table" button.', 'Choose "All records" and select "CSV" as the output format.', 'Click OK. The CSV will only contain attribute data, not the geometry.'] },
+      { type: 'heading', level: 2, text: 'Exporting with Geometry (WKT)' },
+      { type: 'paragraph', text: 'If you need to preserve the spatial data, you must use the "Export Features" tool.' },
+      { type: 'list', ordered: true, items: ['Open the Geoprocessing pane (Analysis > Tools).', 'Search for "Export Features".', 'Select your input layer.', 'For Output Location, choose a folder and name the output.', 'Critically, check the box for "Add geometry attributes". This will create a text column containing the WKT (Well-Known Text) geometry.', 'Run the tool.', 'Once complete, open the new feature class and export it to CSV as described above. The CSV will now include a WKT column.'] },
+      { type: 'heading', level: 2, text: 'Why use WKT instead of Lat/Long?' },
+      { type: 'paragraph', text: 'Latitude and Longitude only work for points. If you have lines or polygons, you need a format like WKT to represent the shape in a single CSV cell.' },
+      { type: 'heading', level: 2, text: 'The Alternative: Browser-Based Converter' },
+      { type: 'paragraph', text: 'If you do not have ArcGIS Pro, you can achieve the same result by downloading your data as a Shapefile from an ArcGIS REST service, then using our GIS Converter tool to convert it directly to a CSV with a WKT column.' },
+      { type: 'heading', level: 2, text: 'Summary' },
+      { type: 'paragraph', text: 'Exporting to CSV from ArcGIS Pro is straightforward, but remembering to include geometry requires using the Export Features tool. For quick, browser-based conversion, use our dedicated converter tool.' },
+    ],
+  },
+
+  // ==================================================================
+  // POST 31 (NEW)
+  // ==================================================================
+  {
+    slug: 'understanding-coordinate-reference-systems-in-depth',
+    title: 'Understanding Coordinate Reference Systems (CRS) in Depth',
+    description: 'A deep dive into Coordinate Reference Systems. Learn about datums, projections, and how to avoid common CRS errors in GIS.',
+    keywords: 'Coordinate Reference System, CRS GIS, map projections explained, datum GIS, EPSG codes',
+    author: 'Muhammad Junaid Baig',
+    datePublished: '2026-11-01',
+    dateModified: '2026-11-01',
+    readingTimeMinutes: 10,
+    category: 'Guide',
+    tags: ['CRS', 'Projections', 'Fundamentals', 'GIS'],
+    excerpt: 'A comprehensive guide to Coordinate Reference Systems. Understand the math behind datums and projections to prevent spatial misalignment.',
+    content: [
+      { type: 'paragraph', text: 'If you have ever loaded a dataset into a map and watched it disappear into the ocean, you have experienced a Coordinate Reference System (CRS) error. Understanding CRS is the most important technical skill in GIS.' },
+      { type: 'heading', level: 2, text: 'The Three Components of a CRS' },
+      { type: 'paragraph', text: 'A CRS is not just a set of coordinates. It is a complex system consisting of three parts:' },
+      { type: 'list', items: ['Datum: A model of the shape of the Earth (e.g., WGS84, NAD83).', 'Projection: The mathematical method of flattening the Earth (e.g., Mercator, UTM, State Plane).', 'Coordinate System: The units and axes (e.g., degrees, meters, feet).'] },
+      { type: 'heading', level: 2, text: 'Geographic vs. Projected CRS' },
+      { type: 'paragraph', text: 'There are two main types of CRS:' },
+      { type: 'heading', level: 3, text: 'Geographic CRS (GCS)' },
+      { type: 'paragraph', text: 'Uses latitude and longitude (degrees) on a 3D sphere. It is excellent for storing data, but terrible for measuring distance or area because a degree is not a consistent length.' },
+      { type: 'heading', level: 3, text: 'Projected CRS (PCS)' },
+      { type: 'paragraph', text: 'Uses a mathematical projection to flatten the sphere into a 2D plane. It uses linear units (meters, feet), making it ideal for measuring distance, area, and performing spatial analysis.' },
+      { type: 'heading', level: 2, text: 'The EPSG Registry' },
+      { type: 'paragraph', text: 'To avoid confusion, every CRS has a unique EPSG code. For example:' },
+      { type: 'list', items: ['EPSG:4326: WGS84 (Geographic)', 'EPSG:3857: Web Mercator (Projected)', 'EPSG:26915: NAD83 / UTM zone 15N (Projected)'] },
+      { type: 'heading', level: 2, text: 'The Most Common CRS Mistakes' },
+      { type: 'heading', level: 3, text: '1. Measuring Distance in Degrees' },
+      { type: 'paragraph', text: 'Because degrees vary in length depending on your latitude, you cannot accurately calculate distance using a Geographic CRS. Always reproject to a Projected CRS first.' },
+      { type: 'heading', level: 3, text: '2. Using Web Mercator for Analysis' },
+      { type: 'paragraph', text: 'Web Mercator (EPSG:3857) is designed for web display, not analysis. It drastically distorts area, making regions near the poles appear massive. Never use it for area calculations.' },
+      { type: 'heading', level: 3, text: '3. Ignoring the Datum Shift' },
+      { type: 'paragraph', text: 'If you mix data from different datums (e.g., NAD27 and WGS84) without applying a datum transformation, your data can be off by hundreds of meters.' },
+      { type: 'heading', level: 2, text: 'Summary' },
+      { type: 'paragraph', text: 'Coordinate Reference Systems are the invisible foundation of GIS. By choosing the right CRS for the job — geographic for storage, projected for analysis — you ensure your maps and calculations are accurate.' },
+    ],
+  },
+
+  // ==================================================================
+  // POST 32 (NEW)
+  // ==================================================================
+  {
+    slug: 'how-to-access-public-parcel-data-via-gis',
+    title: 'How to Access Public Parcel Data via GIS',
+    description: 'A guide to accessing and downloading public parcel data using GIS tools. Learn how to find the data and extract it for property analysis.',
+    keywords: 'public parcel data, parcel GIS data, download cadastral data, property boundary data, assessor data',
+    author: 'Muhammad Junaid Baig',
+    datePublished: '2026-11-01',
+    dateModified: '2026-11-01',
+    readingTimeMinutes: 8,
+    category: 'Guide',
+    tags: ['Parcel Data', 'Cadastral', 'Open Data', 'Guide'],
+    excerpt: 'Learn how to locate, access, and download public parcel data from county assessors and GIS portals for property analysis.',
+    content: [
+      { type: 'paragraph', text: 'Parcel data — the legal boundaries of property ownership — is one of the most valuable datasets in GIS. It is used for real estate analysis, urban planning, environmental regulation, and tax assessment.' },
+      { type: 'heading', level: 2, text: 'Where Does Parcel Data Come From?' },
+      { type: 'paragraph', text: 'In the United States, parcel data is almost always maintained at the county level by the Assessor\'s Office or the County GIS Department.' },
+      { type: 'list', items: ['Assessor: Maintains ownership and tax records.', 'GIS Department: Maintains the spatial polygons representing the parcel boundaries.'] },
+      { type: 'heading', level: 2, text: 'How to Find Parcel Data' },
+      { type: 'paragraph', text: 'Search for your county\'s GIS portal using search queries like "County Name GIS" or "County Name Assessor Parcel Map".' },
+      { type: 'paragraph', text: 'Look for a "Download" or "Open Data" link on the county website. Many counties now publish their data on ArcGIS Online.' },
+      { type: 'heading', level: 2, text: 'Downloading Parcel Data from ArcGIS REST Services' },
+      { type: 'paragraph', text: 'If the county publishes its parcel data as an ArcGIS REST FeatureServer, downloading it is easy and free.' },
+      { type: 'list', ordered: true, items: ['Locate the Parcels layer in the county\'s ArcGIS portal or open data site.', 'Copy the FeatureServer URL for that layer.', 'Open Geo Server Data Downloader.', 'Paste the URL and click Add Layer.', 'Export the data as a Shapefile, GeoPackage, or CSV.'] },
+      { type: 'heading', level: 2, text: 'Understanding the Attributes' },
+      { type: 'paragraph', text: 'Parcel data usually includes an Assessor Parcel Number (APN) and various ownership details. You can use the APN to join the spatial data with other tax or ownership databases.' },
+      { type: 'heading', level: 2, text: 'Data Limitations' },
+      { type: 'paragraph', text: 'Be aware that parcel data is often updated on a lag. Some counties update daily; others update annually. Always check the "last updated" date on the data portal before relying on it for critical decisions.' },
+      { type: 'heading', level: 2, text: 'Summary' },
+      { type: 'paragraph', text: 'Public parcel data is an invaluable resource. By leveraging ArcGIS REST services and browser-based downloaders, you can easily access and analyze property boundaries for any county in the US.' },
+    ],
+  },
 ];
 
 /** Look up a single post by its slug. Returns undefined if not found. */
@@ -795,8 +1484,7 @@ export function getRelatedPosts(slug: string, limit = 3): BlogPost[] {
   const current = getPostBySlug(slug);
   if (!current) return [];
 
-  const scored = BLOG_POSTS
-    .filter((p) => p.slug !== slug)
+  const scored = BLOG_POSTS.filter((p) => p.slug !== slug)
     .map((p) => ({
       post: p,
       score: p.tags.filter((t) => current.tags.includes(t)).length,
