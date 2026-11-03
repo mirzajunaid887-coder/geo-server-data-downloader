@@ -3,6 +3,8 @@ import { Link, useParams, Navigate } from 'react-router-dom';
 import { Clock, Calendar, ArrowLeft, User } from 'lucide-react';
 import { SEO } from '../components/SEO';
 import { ContentRenderer } from '../components/blog/ContentRenderer';
+import { AdSlot } from '../components/ads/AdSlot';
+import { ADSENSE_SLOT_ARTICLE } from '../config/ads';
 import { getPostBySlug } from '../data/blogPosts';
 
 export const BlogPost: React.FC = () => {
@@ -160,6 +162,9 @@ export const BlogPost: React.FC = () => {
           </div>
         </header>
 
+        {/* In-article ad, above the fold on most articles */}
+        <AdSlot slotId={ADSENSE_SLOT_ARTICLE} format="fluid" minHeight={110} />
+
         <ContentRenderer blocks={post.content} />
 
         {/* Tags */}
@@ -192,6 +197,9 @@ export const BlogPost: React.FC = () => {
             ))}
           </div>
         )}
+
+        {/* Second ad unit, after the article body */}
+        <AdSlot slotId={ADSENSE_SLOT_ARTICLE} minHeight={250} />
 
         {/* CTA */}
         <div

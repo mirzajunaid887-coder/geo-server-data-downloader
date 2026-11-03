@@ -445,6 +445,17 @@ export const Downloader: React.FC = () => {
         path="/download"
       />
 
+<h1
+        style={{
+          fontSize: '1rem',
+          fontWeight: 800,
+          margin: '0.45rem 1rem 0',
+          color: 'var(--text-main)',
+        }}
+      >
+        ArcGIS REST &amp; WFS Data Downloader
+      </h1>
+
       {/* Main Tool UI (Locked to viewport height) */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <div className="downloader-grid">
@@ -996,6 +1007,45 @@ export const Downloader: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Explanatory content — helps search engines and reviewers understand the page */}
+      <section style={{ maxWidth: '46rem', margin: '3rem auto 2rem', padding: '0 0.5rem', lineHeight: 1.75, color: 'var(--text-main)' }}>
+        <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '0.75rem' }}>
+          How this downloader works
+        </h2>
+        <p style={{ fontSize: '0.95rem', marginTop: 0 }}>
+          Paste an ArcGIS REST FeatureServer or MapServer layer URL. The tool first
+          asks the server for every object ID in the layer, then pages through those
+          IDs in batches of 200 and appends each batch to the output file. That is
+          why it is not limited by the server&apos;s <code>maxRecordCount</code> — the cap
+          that silently truncates ordinary REST queries around 1,000 to 2,000
+          features.
+        </p>
+        <p style={{ fontSize: '0.95rem' }}>
+          Conversion to Shapefile, GeoPackage, KML, GeoJSON, CSV, or GPX happens in
+          your browser through GDAL compiled to WebAssembly. No file is uploaded to
+          a server, and nothing is stored between sessions.
+        </p>
+        <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '0.75rem', marginTop: '2rem' }}>
+          Supported inputs
+        </h2>
+        <ul style={{ fontSize: '0.95rem', paddingLeft: '1.25rem' }}>
+          <li>ArcGIS REST FeatureServer and MapServer layers (numeric layer id required)</li>
+          <li>OGC Web Feature Service (WFS) endpoints, versions 1.0.0 through 2.0.0</li>
+          <li>ArcGIS Online public feature layers, using the Discover tool</li>
+        </ul>
+        <p style={{ fontSize: '0.95rem', marginTop: '1.5rem' }}>
+          New to ArcGIS REST endpoints? Start with the{' '}
+          <Link to="/blog/how-to-download-arcgis-rest-featureserver-data" style={{ color: 'var(--accent-color)' }}>
+            step-by-step FeatureServer guide
+          </Link>
+          , or read{' '}
+          <Link to="/documentation" style={{ color: 'var(--accent-color)' }}>
+            the documentation
+          </Link>
+          .
+        </p>
+      </section>
 
       {/* SEO Content Section (Below the tool, above the footer) */}
       <div style={{ maxWidth: '800px', margin: '3rem auto 2rem auto', padding: '0 1rem' }}>

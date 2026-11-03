@@ -17,22 +17,27 @@ const SITE_URL = (() => {
 
 const DEFAULT_IMAGE = `${SITE_URL}/android-chrome-512x512.png`;
 
-/** Fallback title for the home page (keyword-rich, ~60 chars) */
+/** Fallback title for the home page (keyword-rich, under 60 chars) */
 const DEFAULT_HOME_TITLE =
-  'Geo Server Data Downloader';
+  'Geo Server Data Downloader | Free GIS Data Export Tool';
 
 const DEFAULT_DESCRIPTION =
-  'Free online GIS data downloader. Connect to ArcGIS REST, WFS, and spatial web services to export layers as Shapefile, GeoJSON, KML, and GeoPackage — entirely in your browser.';
+  'Free online GIS data downloader. Export ArcGIS REST, WFS and other spatial services as Shapefile, GeoJSON, KML or GeoPackage — in your browser.';
 
 const DEFAULT_KEYWORDS =
   'GIS data downloader, ArcGIS REST feature service, WFS downloader, GeoJSON to Shapefile, GIS layer exporter, spatial data tool, Download GIS Data, Free GIS Data, Esri Data Downloader';
+
+/** Appended to page titles only when the result still fits in a SERP snippet. */
+const TITLE_SUFFIX = ` | ${SITE_NAME}`;
+const MAX_TITLE = 60;
+const MAX_DESCRIPTION = 165;
 
 /* ============================================================
    COMPONENT
    ============================================================ */
 
 interface SEOProps {
-  /** Page-specific title. Suffixed with "| Site Name" automatically. Omit on Home. */
+  /** Page-specific title. Suffixed with "| Site Name" when it fits. */
   title?: string;
   /** Meta description — 150–160 chars is ideal. */
   description?: string;
@@ -63,7 +68,22 @@ export const SEO: React.FC<SEOProps> = ({
   structuredData,
   children,
 }) => {
-  const fullTitle = title ? `${title} | ${SITE_NAME}` : DEFAULT_HOME_TITLE;
+  // Only append the brand suffix when the whole title stays snippet-sized.
+  const fullTitle = title
+    ? title.length + TITLE_SUFFIX.length > MAX_TITLE
+      ? title
+      : `${title}${TITLE_SUFFIX}`
+    : DEFAULT_HOME_TITLE;
+
+    // Truncate on a word boundary so descriptions never end mid-word.
+  const clampDescription = (text: string): string => {
+    if (text.length <= MAX_DESCRIPTION) return text;
+    const cut = text.slice(0, MAX_DESCRIPTION);
+    const lastSpace = cut.lastIndexOf(' ');
+    return `${cut.slice(0, lastSpace > 0 ? lastSpace : MAX_DESCRIPTION - 1).trimEnd()}…`;
+  };
+
+  const metaDescription = clampDescription(description);
 
   const normalisedPath =
     path === '' || path.startsWith('/') ? path : `/${path}`;
@@ -81,7 +101,7 @@ export const SEO: React.FC<SEOProps> = ({
     <Helmet>
       {/* Primary */}
       <title>{fullTitle}</title>
-      <meta name="description" content={description} />
+      <meta name="description" content={metaDescription} />
       {keywords && <meta name="keywords" content={keywords} />}
       <link rel="canonical" href={canonicalUrl} />
 
@@ -95,7 +115,7 @@ export const SEO: React.FC<SEOProps> = ({
       <meta property="og:type" content={type} />
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:title" content={fullTitle} />
-      <meta property="og:description" content={description} />
+      <meta property="og:description" content={metaDescription} />
       <meta property="og:image" content={imageUrl} />
       <meta property="og:image:alt" content={`${SITE_NAME} preview`} />
       <meta property="og:site_name" content={SITE_NAME} />
@@ -103,7 +123,7 @@ export const SEO: React.FC<SEOProps> = ({
       {/* Twitter / X */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
-      <meta name="twitter:description" content={description} />
+      <meta name="twitter:description" content={metaDescription} />
       <meta name="twitter:image" content={imageUrl} />
       <meta name="twitter:image:alt" content={`${SITE_NAME} preview`} />
 

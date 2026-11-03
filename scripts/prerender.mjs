@@ -1,10 +1,12 @@
 import puppeteer from 'puppeteer-core';
 import chromium from '@sparticuz/chromium';
 import { readFile, writeFile, mkdir, stat } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { resolve, dirname, extname } from 'node:path';
 import { createServer } from 'node:http';
 
 const DIST = resolve('dist');
+const IS_LINUX = process.platform === 'linux';
 
 const routes = [
   // Core Pages
@@ -18,7 +20,7 @@ const routes = [
   '/terms',
   '/contact',
   '/blog',
-  
+
   // Existing Blog Posts (12)
   '/blog/how-to-download-arcgis-rest-featureserver-data',
   '/blog/geojson-vs-shapefile-vs-geopackage',
@@ -67,6 +69,44 @@ const MIME_TYPES = {
   '.ico': 'image/x-icon',
   '.webmanifest': 'application/manifest+json',
 };
+
+/** Local Chrome/Edge paths used when not running on Linux. */
+const LOCAL_BROWSERS = [
+  process.env.CHROME_PATH,
+  'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+  'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+  'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
+  'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+].filter(Boolean);
+
+async function launchBrowser() {
+  // Vercel / CI runs on Linux, where the bundled @sparticuz Chromium works.
+  if (IS_LINUX) {
+    return puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless,
+    });
+  }
+
+  // Windows / macOS: use an already-installed browser.
+  const executablePath = LOCAL_BROWSERS.find((p) => existsSync(p));
+  if (!executablePath) {
+    throw new Error(
+      'No local Chrome or Edge found for prerendering. Install Chrome, or set ' +
+        'CHROME_PATH to a browser executable and re-run.'
+    );
+  }
+
+  console.log(`Using local browser: ${executablePath}`);
+  return puppeteer.launch({
+    executablePath,
+    headless: true,
+    args: ['--no-sandbox', '--disable-dev-shm-usage'],
+  });
+}
 
 async function startStaticServer(fallbackHtml) {
   const server = createServer(async (req, res) => {
@@ -137,12 +177,7 @@ async function main() {
   const fallbackHtml = await readFile(resolve(DIST, 'index.html'), 'utf8');
   const { server, port } = await startStaticServer(fallbackHtml);
 
-  const browser = await puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath: await chromium.executablePath(),
-    headless: chromium.headless,
-  });
+  const browser = await launchBrowser();
 
   for (const route of routes) {
     try {
