@@ -4,6 +4,14 @@ import { ErrorBoundary } from '../components/ErrorBoundary';
 import { fetchArcGISMetadata } from '../services/arcgis/service';
 import { fetchObjectIds } from '../services/arcgis/objectIds';
 import { fetchFeaturesBatch } from '../services/arcgis/query';
+import {
+  isWfsUrl,
+  normalizeWfsBaseUrl,
+  fetchWfsCapabilities,
+  fetchWfsFeatureCollection,
+  type WfsFeatureType,
+} from '../services/wfs/wfs';
+import { WfsFeatureTypeModal } from '../components/WfsFeatureTypeModal';
 import { SublayerSelectionModal } from '../components/SublayerSelectionModal';
 import { ExportModal } from '../components/ExportModal';
 import { FeatureTablePanel } from '../components/FeatureTablePanel';
@@ -33,6 +41,9 @@ interface LoadedLayer {
   geometryType: string;
   visible: boolean;
   extent?: any;
+  serviceType?: 'arcgis' | 'wfs';
+  wfsTypeName?: string;
+  wfsVersion?: string;
 }
 
 export const Downloader: React.FC = () => {
@@ -60,6 +71,12 @@ export const Downloader: React.FC = () => {
     serviceUrl: string;
     sublayers: any[];
   } | null>(null);
+  const [pendingWfs, setPendingWfs] = useState<{
+    baseUrl: string;
+    version: string;
+    serviceTitle?: string;
+    featureTypes: WfsFeatureType[];
+  } | null>(null);
   const [showExportModal, setShowExportModal] = useState(false);
 
   const [activeMenuLayerId, setActiveMenuLayerId] = useState<string | null>(null);
@@ -71,6 +88,8 @@ export const Downloader: React.FC = () => {
     id: string;
     url: string;
     title: string;
+    serviceType?: 'arcgis' | 'wfs';
+    wfsTypeName?: string;
   } | null>(null);
 
   const [selectedFeature, setSelectedFeature] = useState<any | null>(null);
@@ -86,6 +105,33 @@ export const Downloader: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const addWfsLayers = (
+    baseUrl: string,
+    version: string,
+    featureTypes: WfsFeatureType[]
+  ) => {
+    const newLayers: LoadedLayer[] = featureTypes.map((ft) => ({
+      id: Math.random().toString(36).substring(2, 9),
+      name: ft.title || ft.name,
+      url: baseUrl,
+      geometryType: `WFS · ${ft.name}`,
+      visible: true,
+      serviceType: 'wfs',
+      wfsTypeName: ft.name,
+      wfsVersion: version,
+    }));
+    setLayers((prev) => [...newLayers, ...prev]);
+    setUrl('');
+    setProgress(
+      newLayers.length === 1
+        ? 'WFS layer successfully added to map!'
+        : `${newLayers.length} WFS layers successfully added to map!`
+    );
+    if (newLayers[0]) {
+      setZoomTarget({ layerId: newLayers[0].id, time: Date.now() });
+    }
+  };
+
   const executeLoadService = async (rawUrl: string) => {
     let cleanUrl = rawUrl.trim();
     if (!cleanUrl) return;
@@ -94,6 +140,24 @@ export const Downloader: React.FC = () => {
     setError(null);
 
     try {
+      if (isWfsUrl(cleanUrl)) {
+        setProgress('Reading WFS capabilities...');
+        const baseUrl = normalizeWfsBaseUrl(cleanUrl);
+        const caps = await fetchWfsCapabilities(baseUrl);
+        if (caps.featureTypes.length === 1) {
+          addWfsLayers(baseUrl, caps.version, caps.featureTypes);
+        } else {
+          setPendingWfs({
+            baseUrl,
+            version: caps.version,
+            serviceTitle: caps.serviceTitle,
+            featureTypes: caps.featureTypes,
+          });
+          setProgress('');
+        }
+        return;
+      }
+
       if (
         cleanUrl.includes('/home/item.html?id=') ||
         cleanUrl.includes('/sharing/rest/content/items/')
@@ -297,18 +361,33 @@ export const Downloader: React.FC = () => {
     setExporting(true);
     setError(null);
     try {
-      setProgress(`Fetching all object IDs for ${layer.name}...`);
-      const ids = await fetchObjectIds(layer.url);
+      let fullGeoJson: any;
 
-      setProgress(`Downloading all ${ids.length} features in batches...`);
-      const features = await fetchFeaturesBatch(layer.url, ids, (done, total) => {
-        setProgress(`Downloading ${layer.name}: batch ${done} / ${total}...`);
-      });
+      if (layer.serviceType === 'wfs') {
+        setProgress(`Downloading ${layer.name} from WFS...`);
+        fullGeoJson = await fetchWfsFeatureCollection(
+          layer.url,
+          layer.wfsTypeName ?? '',
+          layer.wfsVersion ?? '2.0.0',
+          (done, total) => {
+            setProgress(
+              `Downloading ${layer.name}: ${done.toLocaleString()}${
+                total ? ` / ${total.toLocaleString()}` : ''
+              } features...`
+            );
+          }
+        );
+      } else {
+        setProgress(`Fetching all object IDs for ${layer.name}...`);
+        const ids = await fetchObjectIds(layer.url);
 
-      const fullGeoJson: GeoJSON.FeatureCollection = {
-        type: 'FeatureCollection',
-        features,
-      };
+        setProgress(`Downloading all ${ids.length} features in batches...`);
+        const features = await fetchFeaturesBatch(layer.url, ids, (done, total) => {
+          setProgress(`Downloading ${layer.name}: batch ${done} / ${total}...`);
+        });
+        fullGeoJson = { type: 'FeatureCollection', features };
+      }
+
       const blob = new Blob([JSON.stringify(fullGeoJson)], {
         type: 'application/json',
       });
@@ -401,10 +480,29 @@ export const Downloader: React.FC = () => {
           `Processing layer ${i + 1} of ${targetLayers.length}: ${layer.name}...`
         );
 
-        const ids = await fetchObjectIds(layer.url);
-        const features = await fetchFeaturesBatch(layer.url, ids, (done, total) => {
-          setProgress(`Layer ${i + 1} of ${targetLayers.length}: ${layer.name} - batch ${done} / ${total}...`);
-        });
+        let features: any[];
+        let crs: unknown;
+        if (layer.serviceType === 'wfs') {
+          const wfsFc = await fetchWfsFeatureCollection(
+            layer.url,
+            layer.wfsTypeName ?? '',
+            layer.wfsVersion ?? '2.0.0',
+            (done, total) => {
+              setProgress(
+                `Layer ${i + 1} of ${targetLayers.length}: ${layer.name} - ${done.toLocaleString()}${
+                  total ? ` / ${total.toLocaleString()}` : ''
+                } features...`
+              );
+            }
+          );
+          features = wfsFc.features;
+          crs = wfsFc.crs;
+        } else {
+          const ids = await fetchObjectIds(layer.url);
+          features = await fetchFeaturesBatch(layer.url, ids, (done, total) => {
+            setProgress(`Layer ${i + 1} of ${targetLayers.length}: ${layer.name} - batch ${done} / ${total}...`);
+          });
+        }
         const safeName = layer.name.replace(/[^a-zA-Z0-9_-]/g, '_');
 
         if (format === 'csv') {
@@ -414,8 +512,9 @@ export const Downloader: React.FC = () => {
           const kmlData = convertToKML(layer.name, features);
           zip.file(`${safeName}.kml`, kmlData);
         } else {
-          const fc: GeoJSON.FeatureCollection = {
+          const fc: any = {
             type: 'FeatureCollection',
+            ...(crs ? { crs } : {}),
             features,
           };
           zip.file(`${safeName}.geojson`, JSON.stringify(fc));
@@ -547,13 +646,13 @@ export const Downloader: React.FC = () => {
                       textTransform: 'uppercase',
                     }}
                   >
-                    ArcGIS REST URL (FeatureServer / MapServer)
+                    ArcGIS REST URL (FeatureServer / MapServer) or WFS
                   </label>
                   <input
                     type="url"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
-                    placeholder="https://services.arcgis.com/.../FeatureServer"
+                    placeholder="https://services.arcgis.com/.../FeatureServer or .../wfs"
                     required
                     className="form-input"
                   />
@@ -926,6 +1025,8 @@ export const Downloader: React.FC = () => {
                                       id: layer.id,
                                       url: layer.url,
                                       title: layer.name,
+                                      serviceType: layer.serviceType,
+                                      wfsTypeName: layer.wfsTypeName,
                                     });
                                   }}
                                   style={dropdownItemStyle}
@@ -1091,6 +1192,8 @@ export const Downloader: React.FC = () => {
             key={tableLayerInfo.id}
             layerUrl={tableLayerInfo.url}
             layerTitle={tableLayerInfo.title}
+            serviceType={tableLayerInfo.serviceType}
+            wfsTypeName={tableLayerInfo.wfsTypeName}
             onClose={() => setTableLayerInfo(null)}
             tableMode={tableMode}
             onToggleMode={setTableMode}
@@ -1104,6 +1207,20 @@ export const Downloader: React.FC = () => {
           sublayers={pendingSublayers.sublayers}
           onAddLayers={handleConfirmSublayers}
           onClose={() => setPendingSublayers(null)}
+        />
+      )}
+
+      {pendingWfs && (
+        <WfsFeatureTypeModal
+          baseUrl={pendingWfs.baseUrl}
+          version={pendingWfs.version}
+          serviceTitle={pendingWfs.serviceTitle}
+          featureTypes={pendingWfs.featureTypes}
+          onAdd={(selected) => {
+            addWfsLayers(pendingWfs.baseUrl, pendingWfs.version, selected);
+            setPendingWfs(null);
+          }}
+          onClose={() => setPendingWfs(null)}
         />
       )}
 
