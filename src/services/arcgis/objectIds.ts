@@ -1,14 +1,16 @@
-export async function fetchObjectIds(serviceUrl: string, whereClause: string = '1=1'): Promise<number[]> {
-  const cleanUrl = serviceUrl.split('?')[0];
-  const queryUrl = `${cleanUrl}/query?where=${encodeURIComponent(whereClause)}&returnIdsOnly=true&f=pjson`;
+// src/services/arcgis/objectIds.ts
+import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 
-  const response = await fetch(queryUrl);
-  if (!response.ok) {
-    throw new Error('Failed to retrieve Object IDs from ArcGIS service.');
+export async function fetchObjectIds(url: string): Promise<number[]> {
+  try {
+    const layer = new FeatureLayer({ url });
+    await layer.load();
+    
+    // GDD uses queryObjectIds with where: "1=1"
+    const ids = await layer.queryObjectIds({ where: '1=1' });
+    return ids || [];
+  } catch (error) {
+    console.error('Failed to fetch Object IDs:', error);
+    throw error;
   }
-  const data = await response.json();
-  if (data.error) {
-    throw new Error(`Object ID fetch error: ${data.error.message}`);
-  }
-  return data.objectIds || [];
 }

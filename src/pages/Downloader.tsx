@@ -301,13 +301,15 @@ export const Downloader: React.FC = () => {
       const ids = await fetchObjectIds(layer.url);
 
       setProgress(`Downloading all ${ids.length} features in batches...`);
-      const features = await fetchFeaturesBatch(layer.url, ids);
+      const features = await fetchFeaturesBatch(layer.url, ids, (done, total) => {
+        setProgress(`Downloading ${layer.name}: batch ${done} / ${total}...`);
+      });
 
       const fullGeoJson: GeoJSON.FeatureCollection = {
         type: 'FeatureCollection',
         features,
       };
-      const blob = new Blob([JSON.stringify(fullGeoJson, null, 2)], {
+      const blob = new Blob([JSON.stringify(fullGeoJson)], {
         type: 'application/json',
       });
       const link = document.createElement('a');
@@ -400,7 +402,9 @@ export const Downloader: React.FC = () => {
         );
 
         const ids = await fetchObjectIds(layer.url);
-        const features = await fetchFeaturesBatch(layer.url, ids);
+        const features = await fetchFeaturesBatch(layer.url, ids, (done, total) => {
+          setProgress(`Layer ${i + 1} of ${targetLayers.length}: ${layer.name} - batch ${done} / ${total}...`);
+        });
         const safeName = layer.name.replace(/[^a-zA-Z0-9_-]/g, '_');
 
         if (format === 'csv') {
@@ -414,7 +418,7 @@ export const Downloader: React.FC = () => {
             type: 'FeatureCollection',
             features,
           };
-          zip.file(`${safeName}.geojson`, JSON.stringify(fc, null, 2));
+          zip.file(`${safeName}.geojson`, JSON.stringify(fc));
         }
       }
 
