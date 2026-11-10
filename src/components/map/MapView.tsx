@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Map from '@arcgis/core/Map';
 import MapView from '@arcgis/core/views/MapView';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
+import WFSLayer from '@arcgis/core/layers/WFSLayer';
 import MapImageLayer from '@arcgis/core/layers/MapImageLayer';
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
 import Graphic from '@arcgis/core/Graphic';
@@ -15,6 +16,8 @@ interface LayerItem {
   url: string;
   visible: boolean;
   extent?: any;
+  serviceType?: 'arcgis' | 'wfs';
+  wfsTypeName?: string;
 }
 
 interface EsriMapViewProps {
@@ -40,6 +43,8 @@ export const EsriMapView: React.FC<EsriMapViewProps> = ({
   const selectionLayerRef = useRef<GraphicsLayer | null>(null);
   const isInitializedRef = useRef<boolean>(false);
   const pendingTimeoutsRef = useRef<number[]>([]);
+  // WFS layers have no extent until loaded; remember which one to zoom to once it is
+  const pendingZoomLayerIdRef = useRef<string | null>(null);
 
   const [searchText, setSearchText] = useState<string>('');
   const [suggestions, setSuggestions] = useState<
@@ -88,7 +93,7 @@ export const EsriMapView: React.FC<EsriMapViewProps> = ({
 
         for (const layerId of Object.keys(layerInstancesRef.current)) {
           const layerInstance = layerInstancesRef.current[layerId];
-          if (layerInstance instanceof FeatureLayer && layerInstance.visible) {
+          if ((layerInstance instanceof FeatureLayer || layerInstance instanceof WFSLayer) && layerInstance.visible) {
             const query = layerInstance.createQuery();
             query.geometry = mapPoint;
             query.spatialRelationship = 'intersects';
@@ -304,7 +309,22 @@ export const EsriMapView: React.FC<EsriMapViewProps> = ({
 
       let layerInstance: any;
       try {
-        if (layerItem.url.includes('MapServer') && !layerItem.url.match(/\/\d+$/)) {
+        if (layerItem.serviceType === 'wfs') {
+          layerInstance = new WFSLayer({
+            url: layerItem.url,
+            name: layerItem.wfsTypeName,
+            popupEnabled: false,
+          });
+          layerInstance
+            .load()
+            .then(() => {
+              if (pendingZoomLayerIdRef.current === layerItem.id && layerInstance.fullExtent) {
+                pendingZoomLayerIdRef.current = null;
+                viewRef.current?.goTo(layerInstance.fullExtent, { duration: 1000 }).catch(() => {});
+              }
+            })
+            .catch((err: any) => console.warn('[MapView] WFS layer failed to load:', err));
+        } else if (layerItem.url.includes('MapServer') && !layerItem.url.match(/\/\d+$/)) {
           layerInstance = new MapImageLayer({ url: layerItem.url });
         } else {
           layerInstance = new FeatureLayer({
@@ -368,6 +388,9 @@ export const EsriMapView: React.FC<EsriMapViewProps> = ({
       view.goTo(zoomTarget.extent, { duration: 1000 }).catch((err: any) => {
         if (err.name !== 'AbortError') console.error(err);
       });
+    } else {
+      // e.g. a WFS layer that is still loading: zoom as soon as its extent is known
+      pendingZoomLayerIdRef.current = zoomTarget.layerId;
     }
   }, [zoomTarget]);
 

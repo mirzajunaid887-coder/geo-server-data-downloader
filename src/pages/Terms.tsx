@@ -13,7 +13,7 @@ export const Terms: React.FC = () => {
     <>
       <SEO
         title="Terms of Service"
-        description={`Terms of Service for${siteName}. Read the rules for using our free browser-based GIS data downloader.`}
+        description={`Terms of Service for ${siteName}. Read the rules for using our free browser-based GIS data downloader.`}
         path="/terms"
       />
 

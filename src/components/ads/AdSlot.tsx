@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { ADSENSE_CLIENT_ID, IS_ADSENSE_CONFIGURED } from '../../config/ads';
+import { ensureAdSenseScript } from './AdSenseLoader';
 
 type AdSlotProps = {
   /** Ad unit id from the AdSense dashboard. */
@@ -22,8 +23,9 @@ export const AdSlot: React.FC<AdSlotProps> = ({
 
   useEffect(() => {
     if (!IS_ADSENSE_CONFIGURED || !slotId || pushed.current || !ref.current) return;
+    ensureAdSenseScript();
     try {
-      // @ts-ignore - adsbygoogle is injected by AdSenseLoader
+      // @ts-ignore - adsbygoogle is injected by ensureAdSenseScript
       (window.adsbygoogle = window.adsbygoogle || []).push({});
       pushed.current = true;
     } catch {

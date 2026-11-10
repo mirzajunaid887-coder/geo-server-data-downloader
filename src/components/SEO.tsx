@@ -15,7 +15,8 @@ const SITE_URL = (() => {
   return clean.startsWith('http') ? clean : `https://${clean}`;
 })();
 
-const DEFAULT_IMAGE = `${SITE_URL}/android-chrome-512x512.png`;
+const DEFAULT_IMAGE = `${SITE_URL}/og-image.png`; // 1200x630 social preview
+const LOGO_URL = `${SITE_URL}/android-chrome-512x512.png`; // square logo for schema.org
 
 /** Fallback title for the home page (keyword-rich, under 60 chars) */
 const DEFAULT_HOME_TITLE =
@@ -30,7 +31,7 @@ const DEFAULT_KEYWORDS =
 /** Appended to page titles only when the result still fits in a SERP snippet. */
 const TITLE_SUFFIX = ` | ${SITE_NAME}`;
 const MAX_TITLE = 60;
-const MAX_DESCRIPTION = 165;
+const MAX_DESCRIPTION = 160;
 
 /* ============================================================
    COMPONENT
@@ -51,6 +52,9 @@ interface SEOProps {
   type?: 'website' | 'article' | 'product';
   /** Set to true to tell search engines not to index this page. */
   noindex?: boolean;
+  /** ISO dates for article pages (og article:* tags). */
+  publishedTime?: string;
+  modifiedTime?: string;
   /** JSON-LD structured data (object or array of objects). */
   structuredData?: object | object[];
   /** Optional extra <meta> / <link> tags. */
@@ -65,6 +69,8 @@ export const SEO: React.FC<SEOProps> = ({
   image = DEFAULT_IMAGE,
   type = 'website',
   noindex = false,
+  publishedTime,
+  modifiedTime,
   structuredData,
   children,
 }) => {
@@ -75,12 +81,19 @@ export const SEO: React.FC<SEOProps> = ({
       : `${title}${TITLE_SUFFIX}`
     : DEFAULT_HOME_TITLE;
 
-    // Truncate on a word boundary so descriptions never end mid-word.
-  const clampDescription = (text: string): string => {
+  // Cut at a sentence end when possible, otherwise at a word boundary - never mid-word,
+  // never with a dangling "..." or connector word.
+  const clampDescription = (raw: string): string => {
+    const text = raw.replace(/\s+/g, ' ').trim();
     if (text.length <= MAX_DESCRIPTION) return text;
     const cut = text.slice(0, MAX_DESCRIPTION);
+    const sentenceEnd = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('! '), cut.lastIndexOf('? '));
+    if (sentenceEnd >= 90) return cut.slice(0, sentenceEnd + 1);
     const lastSpace = cut.lastIndexOf(' ');
-    return `${cut.slice(0, lastSpace > 0 ? lastSpace : MAX_DESCRIPTION - 1).trimEnd()}…`;
+    let out = cut.slice(0, lastSpace > 0 ? lastSpace : MAX_DESCRIPTION);
+    out = out.replace(/[\s,;:\u2014\u2013-]+$/, '');
+    out = out.replace(/\s+(a|an|the|and|or|for|to|of|in|on|with|as|by|from|into)$/i, '');
+    return out;
   };
 
   const metaDescription = clampDescription(description);
@@ -102,7 +115,7 @@ export const SEO: React.FC<SEOProps> = ({
       {/* Primary */}
       <title>{fullTitle}</title>
       <meta name="description" content={metaDescription} />
-      {keywords && <meta name="keywords" content={keywords} />}
+      {/* meta keywords intentionally omitted: ignored by Google and Bing */}
       <link rel="canonical" href={canonicalUrl} />
 
       {/* Robots */}
@@ -118,6 +131,10 @@ export const SEO: React.FC<SEOProps> = ({
       <meta property="og:description" content={metaDescription} />
       <meta property="og:image" content={imageUrl} />
       <meta property="og:image:alt" content={`${SITE_NAME} preview`} />
+      {imageUrl === DEFAULT_IMAGE && <meta property="og:image:width" content="1200" />}
+      {imageUrl === DEFAULT_IMAGE && <meta property="og:image:height" content="630" />}
+      {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+      {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
       <meta property="og:site_name" content={SITE_NAME} />
 
       {/* Twitter / X */}
@@ -170,7 +187,7 @@ export const buildWebApplicationSchema = () => ({
     url: SITE_URL,
     logo: {
       '@type': 'ImageObject',
-      url: DEFAULT_IMAGE,
+      url: LOGO_URL,
     },
   },
 });

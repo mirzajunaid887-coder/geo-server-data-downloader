@@ -5,15 +5,23 @@ import { SEO } from '../components/SEO';
 import { ContentRenderer } from '../components/blog/ContentRenderer';
 import { AdSlot } from '../components/ads/AdSlot';
 import { ADSENSE_SLOT_ARTICLE } from '../config/ads';
-import { getPostBySlug } from '../data/blogPosts';
+import { getPostBySlug, getRelatedPosts } from '../data/blogPosts';
+import { REDIRECTED_SLUGS, isIndexable, countWords } from '../data/blogSeo';
 
 export const BlogPost: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const post = slug ? getPostBySlug(slug) : undefined;
 
   if (!post) {
-    return <Navigate to="/blog" replace />;
+    // Posts merged into a stronger guide redirect to it (the server sends a 301 too).
+    const mergedInto = slug ? REDIRECTED_SLUGS[slug] : undefined;
+    return <Navigate to={mergedInto ? `/blog/${mergedInto}` : '/blog'} replace />;
   }
+
+  // Thin posts: noindex and ad-free until they reach the quality threshold.
+  const indexable = isIndexable(post);
+  const related = getRelatedPosts(post.slug, 3);
+  const wasUpdated = post.dateModified && post.dateModified !== post.datePublished;
 
   const siteUrl = 'https://www.geo-server-data-downloader.com';
   const postUrl = `${siteUrl}/blog/${post.slug}`;
@@ -23,7 +31,9 @@ export const BlogPost: React.FC = () => {
     '@type': 'BlogPosting',
     headline: post.title,
     description: post.description,
-    image: `${siteUrl}/android-chrome-512x512.png`,
+    image: `${siteUrl}/og-image.png`,
+    wordCount: countWords(post),
+    inLanguage: 'en',
     datePublished: post.datePublished,
     dateModified: post.dateModified,
     author: {
@@ -64,6 +74,9 @@ export const BlogPost: React.FC = () => {
         keywords={post.keywords}
         path={`/blog/${post.slug}`}
         type="article"
+        noindex={!indexable}
+        publishedTime={post.datePublished}
+        modifiedTime={post.dateModified}
         structuredData={[articleSchema, breadcrumbSchema]}
       />
 
@@ -159,13 +172,20 @@ export const BlogPost: React.FC = () => {
               <Clock style={{ width: '0.85rem', height: '0.85rem' }} />
               {post.readingTimeMinutes} min read
             </span>
+            {wasUpdated && (
+              <span>
+                Updated{' '}
+                {new Date(post.dateModified).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </span>
+            )}
           </div>
         </header>
 
-        {/* In-article ad, above the fold on most articles */}
-        <AdSlot slotId={ADSENSE_SLOT_ARTICLE} format="fluid" minHeight={110} />
-
-        <ContentRenderer blocks={post.content} />
+        <ContentRenderer blocks={post.content} currentSlug={post.slug} />
 
         {/* Tags */}
         {post.tags.length > 0 && (
@@ -198,8 +218,43 @@ export const BlogPost: React.FC = () => {
           </div>
         )}
 
-        {/* Second ad unit, after the article body */}
-        <AdSlot slotId={ADSENSE_SLOT_ARTICLE} minHeight={250} />
+        {/* One ad unit, after the article body, and only on substantial articles */}
+        {indexable && <AdSlot slotId={ADSENSE_SLOT_ARTICLE} minHeight={250} />}
+
+        {/* Author */}
+        <section
+          aria-label="About the author"
+          style={{
+            margin: '2rem 0 1.5rem',
+            padding: '1rem 1.1rem',
+            border: '1px solid var(--border-color)',
+            borderRadius: '0.5rem',
+            backgroundColor: 'var(--bg-hover)',
+            fontSize: '0.85rem',
+            lineHeight: 1.6,
+            color: 'var(--text-muted)',
+          }}
+        >
+          <strong style={{ color: 'var(--text-main)' }}>Written by {post.author}</strong>, a geospatial developer who builds and maintains Geo Server Data Downloader.{' '}
+          <Link to="/about" style={{ color: 'var(--accent-color)' }}>About the author</Link>. Spotted a mistake or an outdated step?{' '}
+          <Link to="/contact" style={{ color: 'var(--accent-color)' }}>Tell us</Link> and we will fix it.
+        </section>
+
+        {/* Related guides */}
+        {related.length > 0 && (
+          <section aria-label="Related guides" style={{ margin: '0 0 1.5rem' }}>
+            <h2 style={{ fontSize: '1.15rem', fontWeight: 700, margin: '0 0 0.6rem', color: 'var(--text-main)' }}>
+              Related guides
+            </h2>
+            <ul style={{ margin: 0, paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.9rem' }}>
+              {related.map((r) => (
+                <li key={r.slug}>
+                  <Link to={`/blog/${r.slug}`} style={{ color: 'var(--accent-color)' }}>{r.title}</Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {/* CTA */}
         <div

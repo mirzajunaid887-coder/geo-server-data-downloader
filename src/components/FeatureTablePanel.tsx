@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
+import WFSLayer from '@arcgis/core/layers/WFSLayer';
 import FeatureTable from '@arcgis/core/widgets/FeatureTable';
 import { Minimize2, Maximize2, ChevronUp } from 'lucide-react';
 
 interface FeatureTablePanelProps {
   layerUrl: string;
   layerTitle: string;
+  serviceType?: 'arcgis' | 'wfs';
+  wfsTypeName?: string;
   onClose: () => void;
   tableMode: 'normal' | 'minimized' | 'maximized';
   onToggleMode: (mode: 'normal' | 'minimized' | 'maximized') => void;
@@ -14,6 +17,8 @@ interface FeatureTablePanelProps {
 export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
   layerUrl,
   layerTitle,
+  serviceType,
+  wfsTypeName,
   onClose,
   tableMode,
   onToggleMode,
@@ -26,16 +31,19 @@ export const FeatureTablePanel: React.FC<FeatureTablePanelProps> = ({
     if (!containerRef.current) return;
 
     let featureTable: FeatureTable | null = null;
-    let featureLayer: FeatureLayer | null = null;
+    let featureLayer: FeatureLayer | WFSLayer | null = null;
     let isDestroyed = false;
 
     const init = async () => {
       try {
-        featureLayer = new FeatureLayer({
-          url: layerUrl,
-          outFields: ['*'],
-          title: layerTitle,
-        });
+        featureLayer =
+          serviceType === 'wfs'
+            ? new WFSLayer({ url: layerUrl, name: wfsTypeName, title: layerTitle })
+            : new FeatureLayer({
+                url: layerUrl,
+                outFields: ['*'],
+                title: layerTitle,
+              });
 
         setStatus('Loading layer metadata...');
         await featureLayer.load();

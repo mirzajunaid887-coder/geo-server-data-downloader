@@ -5,12 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node ./node_modules/vite/bin/vite.js build && node scripts/prerender.mjs",
+    "build": "node scripts/generate-sitemap.mjs && node ./node_modules/vite/bin/vite.js build && node scripts/prerender.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
     "@arcgis/core": "^5.1.26",
     "@arcgis/map-components": "^5.1.27",
+    "@terraformer/arcgis": "^2.2.2",
     "@types/esri-leaflet": "^3.0.4",
     "clsx": "^2.1.1",
     "esri-leaflet": "^3.0.19",

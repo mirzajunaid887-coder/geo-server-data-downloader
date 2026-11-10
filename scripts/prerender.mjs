@@ -4,59 +4,15 @@ import { readFile, writeFile, mkdir, stat } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { resolve, dirname, extname } from 'node:path';
 import { createServer } from 'node:http';
+import { loadBlog, CORE_ROUTES } from './seo-data.mjs';
 
 const DIST = resolve('dist');
 const IS_LINUX = process.platform === 'linux';
 
-const routes = [
-  // Core Pages
-  '/',
-  '/download',
-  '/converter',
-  '/discover',
-  '/documentation',
-  '/about',
-  '/privacy',
-  '/terms',
-  '/contact',
-  '/blog',
-
-  // Existing Blog Posts (12)
-  '/blog/how-to-download-arcgis-rest-featureserver-data',
-  '/blog/geojson-vs-shapefile-vs-geopackage',
-  '/blog/how-to-find-free-parcel-data-us-counties',
-  '/blog/complete-guide-wfs-web-feature-service',
-  '/blog/how-to-convert-arcgis-online-layers-to-excel',
-  '/blog/ten-free-gis-data-sources-every-analyst-should-know',
-  '/blog/understanding-coordinate-systems-and-projections',
-  '/blog/how-to-load-gis-data-in-qgis-beginner-guide',
-  '/blog/what-is-arcgis-online-complete-introduction',
-  '/blog/how-to-use-arcgis-rest-api-query-parameters',
-  '/blog/beginners-guide-spatial-data-formats',
-  '/blog/how-to-download-census-data-for-gis-analysis',
-
-  // New Blog Posts (20)
-  '/blog/mastering-shapefile-to-geojson-conversion',
-  '/blog/how-to-download-data-from-arcgis-rest-services',
-  '/blog/wms-vs-wfs-choosing-the-right-web-service',
-  '/blog/converting-gis-data-to-kml-for-google-earth',
-  '/blog/what-is-a-gis-feature-service',
-  '/blog/downloading-openstreetmap-data-for-gis',
-  '/blog/free-gis-data-sources-for-environmental-analysis',
-  '/blog/how-to-extract-data-from-arcgis-online',
-  '/blog/vector-vs-raster-data-in-gis',
-  '/blog/how-to-use-the-arcgis-rest-api-query-endpoint',
-  '/blog/converting-kml-to-shapefile-step-by-step',
-  '/blog/beginners-guide-to-geocoding-and-reverse-geocoding',
-  '/blog/how-to-download-municipal-zoning-data',
-  '/blog/using-wfs-to-download-spatial-data',
-  '/blog/geopackage-vs-shapefile-the-modern-standard',
-  '/blog/how-to-filter-arcgis-data-before-downloading',
-  '/blog/top-5-tools-for-gis-data-conversion',
-  '/blog/how-to-export-data-from-arcgis-pro-to-csv',
-  '/blog/understanding-coordinate-reference-systems-in-depth',
-  '/blog/how-to-access-public-parcel-data-via-gis',
-];
+// Routes come from the blog data: every post that still has a page (merged posts are
+// 301-redirected by vercel.json). Thin posts ARE prerendered so their noindex tag is in the
+// static HTML and old links keep working. '/__not-found' becomes dist/404.html.
+const NOT_FOUND_ROUTE = '/__not-found';
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -162,7 +118,8 @@ async function renderRoute(browser, route, port) {
 
   const html = await page.content();
 
-  const routePath = route === '/' ? '/index.html' : `${route}/index.html`;
+  const routePath =
+    route === '/' ? '/index.html' : route === NOT_FOUND_ROUTE ? '/404.html' : `${route}/index.html`;
   const outputPath = resolve(DIST, routePath.replace(/^\//, ''));
 
   await mkdir(dirname(outputPath), { recursive: true });
@@ -179,17 +136,34 @@ async function main() {
 
   const browser = await launchBrowser();
 
+  const { BLOG_POSTS, REDIRECTED_SLUGS } = await loadBlog();
+  const routes = [
+    ...CORE_ROUTES,
+    ...BLOG_POSTS.filter((p) => !REDIRECTED_SLUGS[p.slug]).map((p) => `/blog/${p.slug}`),
+    NOT_FOUND_ROUTE,
+  ];
+
+  const failed = [];
   for (const route of routes) {
-    try {
-      await renderRoute(browser, route, port);
-    } catch (err) {
-      console.error(`Failed to render ${route}:`, err.message);
+    let done = false;
+    for (let attempt = 1; attempt <= 2 && !done; attempt++) {
+      try {
+        await renderRoute(browser, route, port);
+        done = true;
+      } catch (err) {
+        console.error(`Failed to render ${route} (attempt ${attempt}):`, err.message);
+      }
     }
+    if (!done) failed.push(route);
   }
 
   await browser.close();
   server.close();
-  console.log('Prerender complete! Static HTML generated in dist/');
+  if (failed.length) {
+    console.error(`Prerender failed for ${failed.length} route(s): ${failed.join(', ')}`);
+    process.exit(1);
+  }
+  console.log(`Prerender complete! ${routes.length} pages generated in dist/`);
 }
 
 main().catch((err) => {

@@ -32,7 +32,7 @@ export const Documentation: React.FC = () => {
           {
             question: 'Does the tool work with WFS services?',
             answer:
-              'The tool supports ArcGIS REST FeatureServer, MapServer, and ArcGIS Online services. WFS support is planned; for now the primary integration is with ArcGIS REST endpoints.',
+              'Yes. Paste a WFS endpoint (a URL containing SERVICE=WFS or ending in /wfs, /ows or /WFSServer) into the loader, pick the feature types you want, and export them like any other layer. The server must be able to output GeoJSON and allow browser (CORS) requests. WMS is not supported because it serves map images rather than feature data.',
           },
           {
             question: 'Is my data uploaded to a server?',

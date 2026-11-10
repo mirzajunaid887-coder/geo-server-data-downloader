@@ -542,8 +542,8 @@ export const Downloader: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <SEO
-        title="Free GIS Data Downloader — ArcGIS REST & WFS Export"
-        description="Load ArcGIS REST, spatial web services and export them as GeoJSON, Shapefile, KML, GeoPackage, or CSV. Free, browser-based, no signup required."
+        title="Download ArcGIS FeatureServer & WFS Layers Free"
+        description="Paste an ArcGIS FeatureServer, MapServer or WFS URL, preview the layer, and export every feature as Shapefile, GeoJSON, KML, GeoPackage or CSV. Free, no signup."
         keywords="ArcGIS downloader, FeatureServer export, GIS layer exporter, download GIS data"
         path="/download"
       />

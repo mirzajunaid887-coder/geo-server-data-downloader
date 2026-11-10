@@ -1,4 +1,5 @@
 import { BlogPost } from '../types/blog';
+import { REDIRECTED_SLUGS, isIndexable } from './blogSeo';
 
 export const BLOG_POSTS: BlogPost[] = [
   // ==================================================================
@@ -41,7 +42,7 @@ export const BLOG_POSTS: BlogPost[] = [
       { type: 'paragraph', text: 'This is where a dedicated tool saves hours of work. A proper GIS data downloader handles pagination automatically, respects the server\'s object ID limits, and can convert the result to any common spatial format.' },
       { type: 'paragraph', text: 'Here is the exact workflow using Geo Server Data Downloader (free, browser-based):' },
       { type: 'list', ordered: true, items: ['Open the Downloader page.', 'Paste your FeatureServer URL into the input field. You can paste either the root (with sublayers) or a specific layer.', 'Click "Add Layer". The tool fetches metadata and, if the service has multiple sublayers, shows a selection dialog.', 'The layer appears on the interactive map and in the Layers panel.', 'Click the green "Export" button to download it as GeoJSON — or click "Bulk Export" to choose Shapefile, KML, GeoPackage, CSV, or GPX instead.'] },
-      { type: 'callout', variant: 'info', title: 'Why this works better', text: 'The tool uses the server\'s returnIdsOnly mode to fetch every object ID in chunks, then queries features in batches of 1,000. This lets it download datasets with hundreds of thousands of features reliably.' },
+      { type: 'callout', variant: 'info', title: 'Why this works better', text: 'The tool uses the server\'s returnIdsOnly mode to fetch every object ID in chunks, then queries features in batches of 200. This lets it download datasets with hundreds of thousands of features reliably.' },
       { type: 'heading', level: 2, text: 'Troubleshooting common errors' },
       { type: 'heading', level: 3, text: '"Token Required"' },
       { type: 'paragraph', text: 'Some FeatureServers are secured and require an authentication token. If you see this error, the service is not publicly accessible. You will need to contact the service owner and request access — or find a public alternative.' },
@@ -1466,25 +1467,26 @@ export const BLOG_POSTS: BlogPost[] = [
   },
 ];
 
-/** Look up a single post by its slug. Returns undefined if not found. */
+/** Look up a single post by its slug. Returns undefined if not found (or merged into another post). */
 export function getPostBySlug(slug: string): BlogPost | undefined {
+  if (REDIRECTED_SLUGS[slug]) return undefined;
   return BLOG_POSTS.find((p) => p.slug === slug);
 }
 
-/** All posts sorted newest first. */
+/** Posts shown in the blog index, newest first. Thin posts stay hidden until they are expanded. */
 export function getSortedPosts(): BlogPost[] {
-  return [...BLOG_POSTS].sort(
+  return BLOG_POSTS.filter(isIndexable).sort(
     (a, b) =>
       new Date(b.datePublished).getTime() - new Date(a.datePublished).getTime()
   );
 }
 
-/** Get related posts by shared tags. Excludes the current post. */
+/** Get related posts by shared tags. Excludes the current post and any thin/merged posts. */
 export function getRelatedPosts(slug: string, limit = 3): BlogPost[] {
-  const current = getPostBySlug(slug);
+  const current = BLOG_POSTS.find((p) => p.slug === slug);
   if (!current) return [];
 
-  const scored = BLOG_POSTS.filter((p) => p.slug !== slug)
+  const scored = BLOG_POSTS.filter((p) => p.slug !== slug && isIndexable(p))
     .map((p) => ({
       post: p,
       score: p.tags.filter((t) => current.tags.includes(t)).length,
@@ -1492,5 +1494,19 @@ export function getRelatedPosts(slug: string, limit = 3): BlogPost[] {
     .filter((x) => x.score > 0)
     .sort((a, b) => b.score - a.score);
 
-  return scored.slice(0, limit).map((x) => x.post);
+  const picks = scored.slice(0, limit).map((x) => x.post);
+
+  // No (or few) shared tags: top up with the newest other quality posts so every article
+  // still links onward to something useful.
+  if (picks.length < limit) {
+    const rest = BLOG_POSTS.filter(
+      (p) => p.slug !== slug && isIndexable(p) && !picks.includes(p)
+    ).sort(
+      (a, b) =>
+        new Date(b.datePublished).getTime() - new Date(a.datePublished).getTime()
+    );
+    picks.push(...rest.slice(0, limit - picks.length));
+  }
+
+  return picks;
 }

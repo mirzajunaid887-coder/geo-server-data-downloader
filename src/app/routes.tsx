@@ -1,34 +1,52 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { Suspense, lazy } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { Home } from '../pages/Home';
-import { Downloader } from '../pages/Downloader';
-import { Discover } from '../pages/Discover';
-import { Documentation } from '../pages/Documentation';
-import { About } from '../pages/About';
-import { Privacy } from '../pages/Privacy';
-import { Terms } from '../pages/Terms';
-import { Contact } from '../pages/Contact';
-import { Blog } from '../pages/Blog';
-import { BlogPost } from '../pages/BlogPost';
-import { ExportProgress } from '../pages/ExportProgress';
-import { GISConverter } from '../pages/GISConverter';
+
+/**
+ * Every page except Home is code-split. Before this, visitors to ANY page (including a
+ * blog post) downloaded one ~2.3 MB bundle that contained the whole ArcGIS map SDK.
+ * Now the heavy map code loads only on /download, and /discover and /converter
+ * load their own code when opened.
+ */
+const Downloader = lazy(() => import('../pages/Downloader').then((m) => ({ default: m.Downloader })));
+const Discover = lazy(() => import('../pages/Discover').then((m) => ({ default: m.Discover })));
+const Documentation = lazy(() => import('../pages/Documentation').then((m) => ({ default: m.Documentation })));
+const About = lazy(() => import('../pages/About').then((m) => ({ default: m.About })));
+const Privacy = lazy(() => import('../pages/Privacy').then((m) => ({ default: m.Privacy })));
+const Terms = lazy(() => import('../pages/Terms').then((m) => ({ default: m.Terms })));
+const Contact = lazy(() => import('../pages/Contact').then((m) => ({ default: m.Contact })));
+const Blog = lazy(() => import('../pages/Blog').then((m) => ({ default: m.Blog })));
+const BlogPost = lazy(() => import('../pages/BlogPost').then((m) => ({ default: m.BlogPost })));
+const ExportProgress = lazy(() => import('../pages/ExportProgress').then((m) => ({ default: m.ExportProgress })));
+const GISConverter = lazy(() => import('../pages/GISConverter').then((m) => ({ default: m.GISConverter })));
+const NotFound = lazy(() => import('../pages/NotFound').then((m) => ({ default: m.NotFound })));
+
+const RouteFallback: React.FC = () => (
+  <div role="status" aria-live="polite" style={{ minHeight: '60vh', padding: '2rem 1rem', color: 'var(--text-muted)' }}>
+    Loading&hellip;
+  </div>
+);
 
 export const AppRoutes: React.FC = () => {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/downloader" element={<Downloader />} />
-      <Route path="/download" element={<Downloader />} />
-      <Route path="/discover" element={<Discover />} />
-      <Route path="/converter" element={<GISConverter />} />
-      <Route path="/documentation" element={<Documentation />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/contact" element={<Contact />} />
-      <Route path="/privacy" element={<Privacy />} />
-      <Route path="/terms" element={<Terms />} />
-      <Route path="/blog" element={<Blog />} />
-      <Route path="/blog/:slug" element={<BlogPost />} />
-      <Route path="/export-progress" element={<ExportProgress />} />
-    </Routes>
+    <Suspense fallback={<RouteFallback />}>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/download" element={<Downloader />} />
+        {/* Old duplicate URL: the server also sends a 301 (see vercel.json) */}
+        <Route path="/downloader" element={<Navigate to="/download" replace />} />
+        <Route path="/discover" element={<Discover />} />
+        <Route path="/converter" element={<GISConverter />} />
+        <Route path="/documentation" element={<Documentation />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
+        <Route path="/export-progress" element={<ExportProgress />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Suspense>
   );
 };

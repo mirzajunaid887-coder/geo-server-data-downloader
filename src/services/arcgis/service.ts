@@ -1,7 +1,8 @@
 import { ArcGISLayerMetadata } from '../../types/arcgis';
+import { cleanLayerUrl } from './query';
 
 export async function fetchArcGISMetadata(url: string): Promise<ArcGISLayerMetadata> {
-  const cleanUrl = url.split('?')[0];
+  const cleanUrl = cleanLayerUrl(url);
   const targetUrl = `${cleanUrl}?f=pjson`;
   
   const response = await fetch(targetUrl);

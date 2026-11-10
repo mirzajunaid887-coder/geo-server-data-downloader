@@ -8,7 +8,7 @@ export async function fetchObjectIds(url: string): Promise<number[]> {
     
     // GDD uses queryObjectIds with where: "1=1"
     const ids = await layer.queryObjectIds({ where: '1=1' });
-    return ids || [];
+    return (ids || []) as number[];
   } catch (error) {
     console.error('Failed to fetch Object IDs:', error);
     throw error;

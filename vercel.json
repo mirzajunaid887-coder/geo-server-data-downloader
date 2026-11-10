@@ -1,4 +1,70 @@
 {
   "installCommand": "npm install --ignore-scripts=false",
-  "buildCommand": "npm run build"
+  "buildCommand": "npm run build",
+  "redirects": [
+    {
+      "source": "/downloader",
+      "destination": "/download",
+      "permanent": true
+    },
+    {
+      "source": "/blog/how-to-download-data-from-arcgis-rest-services",
+      "destination": "/blog/how-to-download-arcgis-rest-featureserver-data",
+      "permanent": true
+    },
+    {
+      "source": "/blog/how-to-use-the-arcgis-rest-api-query-endpoint",
+      "destination": "/blog/how-to-use-arcgis-rest-api-query-parameters",
+      "permanent": true
+    },
+    {
+      "source": "/blog/understanding-coordinate-reference-systems-in-depth",
+      "destination": "/blog/understanding-coordinate-systems-and-projections",
+      "permanent": true
+    },
+    {
+      "source": "/blog/how-to-access-public-parcel-data-via-gis",
+      "destination": "/blog/how-to-find-free-parcel-data-us-counties",
+      "permanent": true
+    },
+    {
+      "source": "/blog/using-wfs-to-download-spatial-data",
+      "destination": "/blog/complete-guide-wfs-web-feature-service",
+      "permanent": true
+    },
+    {
+      "source": "/blog/geopackage-vs-shapefile-the-modern-standard",
+      "destination": "/blog/geojson-vs-shapefile-vs-geopackage",
+      "permanent": true
+    },
+    {
+      "source": "/blog/free-gis-data-sources-for-environmental-analysis",
+      "destination": "/blog/ten-free-gis-data-sources-every-analyst-should-know",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    }
+  ]
 }
