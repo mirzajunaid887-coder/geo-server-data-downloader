@@ -30,7 +30,8 @@ export const Contact: React.FC = () => {
 
         <section style={sectionStyle}>
   <h2 style={h2Style}>Send a Message</h2>
-  <p>Use the form below for questions, bug reports, or collaboration. I usually reply within a few days.</p>
+  <p>Use the form below for questions, bug reports, or collaboration. I usually reply within a few days. You can also email me directly at{' '}
+    <a href={`mailto:${CONTACT.email}`} style={linkStyle}>{CONTACT.email}</a>.</p>
   <ContactForm fallbackEmail={CONTACT.email} />
 </section>
 
@@ -87,8 +88,8 @@ export const Contact: React.FC = () => {
         <section style={sectionStyle}>
           <h2 style={h2Style}>Bug Reports and Feature Requests</h2>
           <p>
-            Found something broken or have an idea for a feature? Send me an
-            email with a short description and, if possible, the service URL
+            Found something broken or have an idea for a feature? Send me a
+            message with a short description and, if possible, the service URL
             you were trying to load. I keep a running list of improvements.
           </p>
         </section>

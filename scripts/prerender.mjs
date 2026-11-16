@@ -23,6 +23,10 @@ const MIME_TYPES = {
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
   '.ico': 'image/x-icon',
+  '.webp': 'image/webp',
+  '.mp4': 'video/mp4',
+  '.woff2': 'font/woff2',
+  '.wasm': 'application/wasm',
   '.webmanifest': 'application/manifest+json',
 };
 

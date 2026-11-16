@@ -2,24 +2,23 @@ import React, { useState, useRef } from 'react';
 import { UploadCloud, FileType, CheckCircle, AlertCircle, Loader2, Download, ShieldCheck, Zap, Info } from 'lucide-react';
 import JSZip from 'jszip';
 import { Link } from 'react-router-dom';
-import { SEO, buildFaqSchema } from '../components/SEO';
+import { SEO } from '../components/SEO';
 import { articleStyle, h1Style, sectionStyle, h2Style, ulStyle, linkStyle } from './Privacy';
 
 /* ============================================================
-   20 SUPPORTED FORMATS
+   17 SUPPORTED OUTPUT FORMATS
    ============================================================ */
 const FORMAT_CONFIG: Record<
   string,
   { driver: string; ext: string; mime: string; isZip: boolean; options?: string[]; forceWGS84?: boolean }
 > = {
   // --- Standard Web Formats ---
-  geojson: { driver: 'GeoJSON', ext: 'geojson', mime: 'application/geo+json', isZip: false },
-  topojson: { driver: 'TopoJSON', ext: 'topojson', mime: 'application/json', isZip: false },
-  geojsonl: { driver: 'GeoJSONSeq', ext: 'geojsonl', mime: 'application/geo+json-seq', isZip: false },
+  geojson: { driver: 'GeoJSON', ext: 'geojson', mime: 'application/geo+json', isZip: false, forceWGS84: true },
+  geojsonl: { driver: 'GeoJSONSeq', ext: 'geojsonl', mime: 'application/geo+json-seq', isZip: false, forceWGS84: true },
   fgb: { driver: 'FlatGeobuf', ext: 'fgb', mime: 'application/octet-stream', isZip: false },
   kml: { driver: 'KML', ext: 'kml', mime: 'application/vnd.google-earth.kml+xml', isZip: false, forceWGS84: true },
   gml: { driver: 'GML', ext: 'gml', mime: 'application/gml+xml', isZip: false },
-  rss: { driver: 'GeoRSS', ext: 'rss', mime: 'application/rss+xml', isZip: false, forceWGS84: true },
+  rss: { driver: 'GeoRSS', ext: 'rss', mime: 'application/rss+xml', isZip: false, forceWGS84: true, options: ['-dsco', 'USE_EXTENSIONS=YES'] },
 
   // --- Desktop GIS & Database Formats ---
   shp: { driver: 'ESRI Shapefile', ext: 'zip', mime: 'application/zip', isZip: true },
@@ -34,7 +33,6 @@ const FORMAT_CONFIG: Record<
   dxf: { driver: 'DXF', ext: 'dxf', mime: 'image/vnd.dxf', isZip: false },
   jml: { driver: 'JML', ext: 'jml', mime: 'application/vnd.google-earth.kml+xml', isZip: false },
   gmt: { driver: 'GMT', ext: 'gmt', mime: 'text/plain', isZip: false },
-  bna: { driver: 'BNA', ext: 'bna', mime: 'text/plain', isZip: false },
 
   // --- Tabular Format ---
   csv: { driver: 'CSV', ext: 'csv', mime: 'text/csv', isZip: false, options: ['-lco', 'GEOMETRY=AS_WKT'] },
@@ -83,7 +81,9 @@ export const GISConverter: React.FC = () => {
     try {
       let filesToProcess: File[] = [];
 
-      if (file.name.toLowerCase().endsWith('.zip')) {
+      const lowerName = file.name.toLowerCase();
+      const isKmz = lowerName.endsWith('.kmz');
+      if (lowerName.endsWith('.zip') || isKmz) {
         const zip = await JSZip.loadAsync(file);
         const extractedFiles: File[] = [];
 
@@ -96,13 +96,16 @@ export const GISConverter: React.FC = () => {
             );
           }
         }
-        filesToProcess = extractedFiles;
+        // A KMZ is a zipped KML: hand GDAL only the KML document, not the bundled icons.
+        filesToProcess = isKmz
+          ? extractedFiles.filter((f) => f.name.toLowerCase().endsWith('.kml'))
+          : extractedFiles;
       } else {
         filesToProcess = [file];
       }
 
       if (filesToProcess.length === 0) {
-        throw new Error('The uploaded zip file appears to be empty.');
+        throw new Error(isKmz ? 'This KMZ does not contain a KML document.' : 'The uploaded zip file appears to be empty.');
       }
 
       const gdalModule = await import('gdal3.js');
@@ -114,7 +117,17 @@ export const GISConverter: React.FC = () => {
 
       setStatus('converting');
 
-      const openResult = await gdal.open(filesToProcess);
+      const isCsvInput = filesToProcess.length === 1 && filesToProcess[0].name.toLowerCase().endsWith('.csv');
+      // CSV input: detect common longitude/latitude or WKT column names so point tables become real geometries.
+      const openOptions = isCsvInput
+        ? [
+            'X_POSSIBLE_NAMES=lon,lng,long,longitude,x,Lon,Lng,Longitude,X',
+            'Y_POSSIBLE_NAMES=lat,latitude,y,Lat,Latitude,Y',
+            'GEOM_POSSIBLE_NAMES=wkt,WKT,geometry,geom,the_geom,Geometry',
+            'KEEP_GEOM_COLUMNS=NO',
+          ]
+        : [];
+      const openResult = await gdal.open(filesToProcess, openOptions);
       if (!openResult || !openResult.datasets || openResult.datasets.length === 0) {
         throw new Error('GDAL could not read this file. Please ensure it is a valid GIS format.');
       }
@@ -126,14 +139,12 @@ export const GISConverter: React.FC = () => {
       // Build base options
       const options = ['-f', config.driver];
       
-      // Isolate only the spatial layer
-      const spatialLayerName = dataset.layers?.[0]?.name;
-      if (spatialLayerName) {
-        options.push('-sql', `SELECT * FROM "${spatialLayerName}"`);
+      // Single-file formats merge every source layer into one named layer (GeoJSON can only hold one).
+      // Zip formats (Shapefile, MapInfo TAB) write one file per source layer, so each keeps its own name
+      // and its own geometry type. Forcing one name onto several layers breaks mixed point/line/polygon files.
+      if (!config.isZip) {
+        options.push('-nln', safeName);
       }
-
-      // Force output layer name
-      options.push('-nln', safeName);
 
       // Add format-specific options
       if (config.options) {
@@ -143,6 +154,11 @@ export const GISConverter: React.FC = () => {
       // Force WGS84 for formats that strictly require it (KML, GPX, GeoRSS)
       if (config.forceWGS84) {
         options.push('-t_srs', 'EPSG:4326');
+      }
+
+      if (isCsvInput) {
+        // Plain CSV carries no CRS; assume WGS84 (the usual case for lon/lat columns).
+        options.push('-s_srs', 'EPSG:4326');
       }
 
       const outFileName = config.isZip ? safeName : `${safeName}.${config.ext}`;
@@ -179,7 +195,8 @@ export const GISConverter: React.FC = () => {
         blob = await zip.generateAsync({ type: 'blob' });
         
       } else {
-        const targetFile = outputFiles.find((f: any) => f.path.endsWith(`.${config.ext}`));
+        // GDAL's GeoRSS driver leaves a trailing dot on the output name ("file.rss."), so accept both.
+        const targetFile = outputFiles.find((f: any) => f.path.endsWith(`.${config.ext}`) || f.path.endsWith(`.${config.ext}.`));
         
         if (!targetFile) {
           throw new Error(`Conversion failed. GDAL could not produce the ${config.ext.toUpperCase()} file.`);
@@ -210,8 +227,18 @@ export const GISConverter: React.FC = () => {
         errorText = err.message || JSON.stringify(err);
       }
 
-      if (errorText.includes('.shx') || errorText.includes('.tab')) {
+      if (/source layer has no\s*coordinate system/i.test(errorText)) {
+        setErrorMessage('This file has no coordinate system (projection) defined, so it cannot be reprojected. Add a .prj file to your zip, or choose a format that keeps the original coordinates (GeoPackage, Shapefile, GML, DXF).');
+      } else if (/hDS' is NULL/i.test(errorText)) {
+        setErrorMessage(
+          targetFormat === 'gpx'
+            ? 'GPX can only store points and lines, so polygon data cannot be converted to it. Choose GeoJSON, KML, Shapefile or GeoPackage instead.'
+            : 'GDAL could not write this data as ' + (FORMAT_CONFIG[targetFormat]?.driver || targetFormat) + '. The file may contain geometry types this format cannot store. Try GeoPackage or GeoJSON instead.'
+        );
+      } else if (errorText.includes('.shx') || errorText.includes('.tab')) {
         setErrorMessage('The uploaded file is missing its required index or companion files. Please ensure your .zip contains all necessary components.');
+      } else if (/no layer|0 layers|datasets\[0\]/i.test(errorText)) {
+        setErrorMessage('No spatial layer was found in this file. For CSV input, include longitude/latitude columns (lon, lat, x, y) or a WKT geometry column.');
       } else if (errorText.includes('Unable to open datasource')) {
         setErrorMessage('Could not open the uploaded file. Please ensure it is a valid, uncorrupted GIS file.');
       } else {
@@ -225,24 +252,10 @@ export const GISConverter: React.FC = () => {
   return (
     <>
       <SEO
-        title="Free GIS Format Converter — 20+ Formats Supported"
-        description="Instantly convert GIS files online. 100% free, client-side converter supporting Shapefile, GeoJSON, KML, GeoPackage, CSV, GPX, TopoJSON, FlatGeobuf, DXF, GML, and more."
-        keywords="GIS converter, convert Shapefile to GeoJSON, GeoJSON to KML, KML to Shapefile, GIS file converter online, convert to GPX, convert to FlatGeobuf, convert to TopoJSON"
+        title="Free GIS Format Converter — 17 Formats Supported"
+        description="Instantly convert GIS files online. 100% free, client-side converter supporting Shapefile, GeoJSON, KML, GeoPackage, CSV, GPX, FlatGeobuf, DXF, GML, and more."
+        keywords="GIS converter, convert Shapefile to GeoJSON, GeoJSON to KML, KML to Shapefile, GIS file converter online, convert to GPX, convert to FlatGeobuf"
         path="/converter"
-        structuredData={buildFaqSchema([
-          {
-            question: 'How do I convert a Shapefile to GeoJSON?',
-            answer: 'Zip your Shapefile components (.shp, .shx, .dbf, .prj) together, upload the .zip file to our converter, select GeoJSON as the output format, and click Convert.'
-          },
-          {
-            question: 'Is my data uploaded to a server?',
-            answer: 'No. All processing is done entirely in your browser using WebAssembly (GDAL). Your data never leaves your computer.'
-          },
-          {
-            question: 'Can I convert a Shapefile to GPX?',
-            answer: 'Yes, simply upload your zipped Shapefile and select GPX from the output format dropdown.'
-          }
-        ])}
       />
 
       <div style={articleStyle}>
@@ -275,7 +288,7 @@ export const GISConverter: React.FC = () => {
               ref={fileInputRef}
               onChange={handleFileChange}
               style={{ display: 'none' }}
-              accept=".geojson,.json,.kml,.kmz,.zip,.gpkg,.csv,.gpx,.fgb,.gml,.dxf,.geojsonl,.topojson,.sqlite,.tab,.mif,.dgn,.jml,.gmt,.bna,.rss"
+              accept=".geojson,.json,.kml,.kmz,.zip,.gpkg,.csv,.gpx,.fgb,.gml,.dxf,.geojsonl,.topojson,.sqlite,.tab,.mif,.dgn,.jml,.gmt,.rss"
             />
             
             {file ? (
@@ -288,7 +301,7 @@ export const GISConverter: React.FC = () => {
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
                 <UploadCloud style={{ width: '2.5rem', height: '2.5rem', color: 'var(--text-muted)' }} />
                 <span style={{ fontWeight: 600, color: 'var(--text-main)' }}>Click or drag file to upload</span>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Supports 20+ GIS formats (.zip, .geojson, .kml, .gpkg, etc.)</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Supports .zip Shapefiles, GeoJSON, KML/KMZ, GeoPackage, CSV and more (.zip, .geojson, .kml, .gpkg, etc.)</span>
               </div>
             )}
           </div>
@@ -304,7 +317,6 @@ export const GISConverter: React.FC = () => {
             >
               <optgroup label="Standard Web Formats">
                 <option value="geojson">GeoJSON (.geojson)</option>
-                <option value="topojson">TopoJSON (.topojson)</option>
                 <option value="geojsonl">GeoJSON Sequence (.geojsonl)</option>
                 <option value="fgb">FlatGeobuf (.fgb)</option>
                 <option value="kml">Google Earth KML (.kml)</option>
@@ -324,7 +336,6 @@ export const GISConverter: React.FC = () => {
                 <option value="dxf">AutoCAD DXF (.dxf)</option>
                 <option value="jml">OpenJUMP JML (.jml)</option>
                 <option value="gmt">Generic Mapping Tools (.gmt)</option>
-                <option value="bna">Atlas BNA (.bna)</option>
               </optgroup>
               <optgroup label="Tabular Data">
                 <option value="csv">CSV with WKT (.csv)</option>
@@ -334,7 +345,7 @@ export const GISConverter: React.FC = () => {
             <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.75rem', fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: 1.4 }}>
               <Info style={{ width: '0.9rem', height: '0.9rem', flexShrink: 0, marginTop: '0.1rem' }} />
               <span>
-                <strong>Projection Note:</strong> Desktop and web formats will preserve your original coordinate system. Google Earth (KML), GPX, and GeoRSS will automatically reproject to WGS84.
+                <strong>Projection Note:</strong> Desktop and database formats (Shapefile, GeoPackage, GML, DXF and others) keep your original coordinate system. GeoJSON, Google Earth (KML), GPX, and GeoRSS are always reprojected to WGS84 (lon/lat), as those formats require.
               </span>
             </div>
           </div>
@@ -396,7 +407,7 @@ export const GISConverter: React.FC = () => {
           <section style={sectionStyle}>
             <h2 style={h2Style}>Supported Formats</h2>
             <p style={{ fontSize: '0.95rem', lineHeight: 1.75, color: 'var(--text-main)' }}>
-              We support over 20 vector formats, powered by the industry-standard GDAL library:
+              You can convert to 17 vector output formats, powered by the industry-standard GDAL library:
             </p>
             <ul style={ulStyle}>
               <li><strong>ESRI Shapefile</strong> — The universal standard for desktop GIS.</li>
@@ -408,14 +419,12 @@ export const GISConverter: React.FC = () => {
               <li><strong>FlatGeobuf (FGB)</strong> — An extremely fast, binary format optimized for web streaming.</li>
               <li><strong>GML</strong> — The XML-based OGC standard for government data exchange.</li>
               <li><strong>DXF</strong> — A CAD format compatible with AutoCAD and drafting software.</li>
-              <li><strong>TopoJSON</strong> — An extension of GeoJSON that encodes topology, reducing file size.</li>
               <li><strong>GeoJSON Sequence</strong> — Newline-delimited GeoJSON for processing massive datasets.</li>
               <li><strong>MapInfo TAB &amp; MIF</strong> — Legacy formats widely used in local government and utilities.</li>
               <li><strong>SQLite / SpatiaLite</strong> — Lightweight, file-based spatial databases.</li>
               <li><strong>MicroStation DGN</strong> — A CAD format common in engineering and infrastructure.</li>
               <li><strong>OpenJUMP JML</strong> — An open XML-based GIS format.</li>
               <li><strong>GMT</strong> — A format used for generating maps in Generic Mapping Tools.</li>
-              <li><strong>BNA</strong> — Atlas Boundary format.</li>
               <li><strong>GeoRSS</strong> — A simple XML format for geospatial feeds.</li>
             </ul>
           </section>

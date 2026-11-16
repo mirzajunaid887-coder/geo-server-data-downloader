@@ -10,24 +10,42 @@ export const Discover: React.FC = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<ArcGISOnlineItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [searched, setSearched] = useState(false);
+  const [total, setTotal] = useState(0);
+  const [nextStart, setNextStart] = useState(-1);
+  const [lastQuery, setLastQuery] = useState('');
   const navigate = useNavigate();
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const runSearch = async (q: string, start: number, append: boolean) => {
     setLoading(true);
+    setError('');
     try {
-      const res = await searchArcGISOnline(query);
-      setResults(res.results);
+      const res = await searchArcGISOnline(q, start);
+      setResults((prev) => (append ? [...prev, ...res.results] : res.results));
+      setTotal(res.total);
+      setNextStart(res.nextStart);
+      setLastQuery(q);
+      setSearched(true);
     } catch (err) {
       console.error(err);
+      setError('The ArcGIS Online search could not be reached. Check your connection and try again.');
     } finally {
       setLoading(false);
     }
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = query.trim();
+    if (!q) return;
+    setResults([]);
+    runSearch(q, 1, false);
+  };
+
   const handleAddToMap = (url: string) => {
-    const encodedUrl = encodeURIComponent(url);
-    navigate(`/downloader?url=${encodedUrl}`);
+    // The Downloader lives at /download. (/downloader redirects and drops the query string.)
+    navigate(`/download?url=${encodeURIComponent(url)}`);
   };
 
   return (
@@ -66,8 +84,27 @@ export const Discover: React.FC = () => {
           </div>
 
           {loading && (
-            <p style={{ textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+            <p style={{ textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-muted)' }} role="status">
               Searching ArcGIS Online...
+            </p>
+          )}
+
+          {error && (
+            <p role="alert" style={{ textAlign: 'center', fontSize: '0.875rem', color: 'var(--danger-color)', margin: 0 }}>
+              {error}
+            </p>
+          )}
+
+          {searched && !loading && !error && results.length === 0 && (
+            <p style={{ textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-muted)', margin: 0 }}>
+              No public feature or map services matched &ldquo;{lastQuery}&rdquo;. Try a broader keyword such as
+              &ldquo;parcels&rdquo;, &ldquo;zoning&rdquo; or &ldquo;flood zones&rdquo;.
+            </p>
+          )}
+
+          {results.length > 0 && (
+            <p style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>
+              Showing {results.length} of {total.toLocaleString()} results for &ldquo;{lastQuery}&rdquo;
             </p>
           )}
 
@@ -108,6 +145,19 @@ export const Discover: React.FC = () => {
               </div>
             ))}
           </div>
+
+          {nextStart > 0 && results.length > 0 && (
+            <div style={{ textAlign: 'center' }}>
+              <button
+                type="button"
+                className="btn-primary"
+                disabled={loading}
+                onClick={() => runSearch(lastQuery, nextStart, true)}
+              >
+                {loading ? 'Loading...' : 'Load more results'}
+              </button>
+            </div>
+          )}
         </div>
 
         {/* SEO Content Section */}

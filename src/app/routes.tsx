@@ -1,5 +1,11 @@
 import React, { Suspense, lazy } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+
+/** Old /downloader links: forward to /download and keep ?url=... */
+const DownloaderRedirect: React.FC = () => {
+  const { search } = useLocation();
+  return <Navigate to={`/download${search}`} replace />;
+};
 import { Home } from '../pages/Home';
 
 /**
@@ -34,7 +40,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/download" element={<Downloader />} />
         {/* Old duplicate URL: the server also sends a 301 (see vercel.json) */}
-        <Route path="/downloader" element={<Navigate to="/download" replace />} />
+        <Route path="/downloader" element={<DownloaderRedirect />} />
         <Route path="/discover" element={<Discover />} />
         <Route path="/converter" element={<GISConverter />} />
         <Route path="/documentation" element={<Documentation />} />

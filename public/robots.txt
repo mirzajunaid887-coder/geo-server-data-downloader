@@ -8,6 +8,7 @@ Allow: /
 # Do not crawl the background export worker — it's a utility
 # route, not user-facing content.
 Disallow: /export-progress
+Disallow: /export.html
 
 # ============================================================
 # Sitemap

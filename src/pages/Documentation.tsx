@@ -15,7 +15,7 @@ export const Documentation: React.FC = () => {
     <>
       <SEO
         title="Documentation and User Guide"
-        description="Complete guide to using Geo Server Data Downloader — load ArcGIS REST services, WFS endpoints, and ArcGIS Online datasets and export them as Shapefile, GeoJSON, KML, GeoPackage, or CSV."
+        description="Step-by-step guide to loading ArcGIS REST and WFS services, discovering ArcGIS Online datasets, exporting layers, and converting GIS files between formats, with troubleshooting tips."
         keywords="ArcGIS download guide, WFS tutorial, GIS export documentation, convert FeatureServer to Shapefile, download ArcGIS layer, gisblogs, Blogs For GIS, Geo-Informatics"
         path="/documentation"
         structuredData={buildFaqSchema([
@@ -190,6 +190,49 @@ export const Documentation: React.FC = () => {
         </section>
 
         <section style={sectionStyle}>
+          <h2 style={h2Style}>Loading WFS Services</h2>
+          <p>
+            Besides ArcGIS REST FeatureServer and MapServer layers, the
+            Downloader accepts OGC WFS endpoints. Paste a WFS GetCapabilities
+            URL (it usually ends with <code>?service=WFS&amp;request=GetCapabilities</code>)
+            into the URL box, choose a feature type, and export it the same
+            way as any other layer. Many government open-data portals publish
+            the same dataset as both ArcGIS REST and WFS, so try the other one
+            if a server blocks or throttles requests.
+          </p>
+        </section>
+
+        <section style={sectionStyle}>
+          <h2 style={h2Style}>Converting Files with the GIS Converter</h2>
+          <p>
+            Already have a file? The{' '}
+            <Link to="/converter" style={linkStyle}>
+              GIS Format Converter
+            </Link>{' '}
+            converts it in your browser with no upload. Choose your file, pick
+            an output format, and click <strong>Convert File</strong>.
+          </p>
+          <ul style={ulStyle}>
+            <li>
+              <strong>Input:</strong> zipped Shapefiles and MapInfo TAB sets,
+              GeoJSON, KML and KMZ, GeoPackage, GML, GPX, FlatGeobuf, DXF, and
+              CSV files that contain lon/lat columns or a WKT column.
+            </li>
+            <li>
+              <strong>Output:</strong> 17 formats. GeoJSON, KML, GPX and
+              GeoRSS are always written in WGS84; other formats keep the
+              original coordinate system.
+            </li>
+            <li>
+              <strong>Limits:</strong> GPX stores only points and lines, so
+              polygon layers cannot be converted to GPX. A Shapefile cannot mix
+              geometry types, so a file with points and lines becomes one
+              Shapefile per type inside the downloaded zip.
+            </li>
+          </ul>
+        </section>
+
+        <section style={sectionStyle}>
           <h2 style={h2Style}>Exporting Data</h2>
           <p>
             You can export a single layer or several layers at once. All
@@ -326,9 +369,10 @@ export const Documentation: React.FC = () => {
           </h3>
           <p>
             Very large layers (over ~50,000 features) may take a while to
-            process. Try exporting in smaller batches, or use a wired
-            connection. All processing is done locally, so performance
-            depends on your device.
+            process. Try exporting fewer layers at a time and keep the browser tab open
+            until the download finishes. All processing is done locally, so
+            performance depends on your device and on how quickly the
+            server answers.
           </p>
         </section>
 
