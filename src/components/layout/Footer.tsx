@@ -7,7 +7,7 @@ import { APP_CONFIG } from '../../config/app';
    👇 EDIT THESE VALUES WITH YOUR REAL LINKS
    ============================================================ */
 const CONTACT = {
-  email: 'gisgynix@gmail.com',
+    email: APP_CONFIG.CONTACT_EMAIL,
   fiverr: 'https://www.fiverr.com/gisgynix',
   upwork: 'https://www.upwork.com/freelancers/~014c5dfcb05a8b2acb',
   github: 'https://github.com/mirzajunaid887-coder',

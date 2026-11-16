@@ -6,7 +6,7 @@ import { articleStyle, h1Style, h2Style, sectionStyle, ulStyle, linkStyle } from
 
 export const About: React.FC = () => {
   const siteName = APP_CONFIG.APP_NAME;
-  const contactEmail = 'gisgynix@gmail.com';
+    const contactEmail = APP_CONFIG.CONTACT_EMAIL;
 
   return (
     <>
@@ -68,7 +68,33 @@ export const About: React.FC = () => {
             existed when I first started working with GIS data.
           </p>
         </section>
-
+                  <section style={sectionStyle}>
+          <h2 style={h2Style}>Credits and Open Source</h2>
+          <p>
+            {siteName} is based in part on{' '}
+            <a
+              href="https://github.com/mchaynes/geodatadownloader"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={linkStyle}
+            >
+              geodatadownloader
+            </a>
+            , an open-source project by Myles Haynes released under the MIT License.
+            The core download approach (reading a layer's object IDs, fetching features
+            in small pages, and converting the result in the browser) and the WFS support
+            follow that project's design, with modifications.
+          </p>
+          <p>
+            What this site adds: the ArcGIS Online discovery tool, the browser-based GIS
+            file converter, the documentation, and the guides in the blog. The full
+            license text is in the{' '}
+            <a href="/THIRD-PARTY-NOTICES.txt" style={linkStyle}>
+              third-party notices
+            </a>
+            .
+          </p>
+        </section>
         <section style={sectionStyle}>
           <h2 style={h2Style}>About the Developer</h2>
           <p>
@@ -166,7 +192,7 @@ This approach helps keep your files under your control while making the tool acc
         <section style={sectionStyle}>
           <h2 style={h2Style}>How It Works</h2>
           <p>
-            Geo Server Data Downloader <strong>React</strong>, <strong>Vite</strong>,{' '}
+                        Geo Server Data Downloader is built with <strong>React</strong>, <strong>Vite</strong>,{' '}
             <strong>TypeScript</strong>, <strong>Tailwind CSS</strong>, and the{' '}
             <strong>ArcGIS Maps SDK for JavaScript</strong>. For data processing and format conversion, it uses  <strong>gdal3.js</strong> (a WebAssembly 
             port of the industry-standard GDAL library). The application is hosted as a static website, allowing users to access its tools without installing a desktop application.

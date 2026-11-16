@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { ContentBlock } from '../../types/blog';
 
 const h2Style: React.CSSProperties = {
@@ -69,7 +70,88 @@ const calloutVariants: Record<
   },
 };
 
-export const ContentRenderer: React.FC<{ blocks: ContentBlock[] }> = ({ blocks }) => {
+/**
+ * Automatic internal links for plain text (used when a block has no hand-placed links).
+ * Each phrase links once per article, up to MAX_AUTO_LINKS per article.
+ */
+const AUTO_LINKS: [phrase: string, to: string][] = [
+  ['Geo Server Data Downloader', '/download'],
+  ['GIS Converter', '/converter'],
+  ['Discover tool', '/discover'],
+  ['Web Feature Service', '/blog/complete-guide-wfs-web-feature-service'],
+  ['WMS and WFS', '/blog/wms-vs-wfs-choosing-the-right-web-service'],
+  ['query parameters', '/blog/how-to-use-arcgis-rest-api-query-parameters'],
+  ['coordinate reference system', '/blog/understanding-coordinate-systems-and-projections'],
+  ['Shapefile to GeoJSON', '/blog/mastering-shapefile-to-geojson-conversion'],
+  ['KML to Shapefile', '/blog/converting-kml-to-shapefile-step-by-step'],
+  ['OpenStreetMap', '/blog/downloading-openstreetmap-data-for-gis'],
+  ['zoning data', '/blog/how-to-download-municipal-zoning-data'],
+  ['parcel data', '/blog/how-to-find-free-parcel-data-us-counties'],
+  ['raster data', '/blog/vector-vs-raster-data-in-gis'],
+  ['geocoding', '/blog/beginners-guide-to-geocoding-and-reverse-geocoding'],
+  ['GeoPackage', '/blog/geojson-vs-shapefile-vs-geopackage'],
+];
+const MAX_AUTO_LINKS = 4;
+
+const linkStyle: React.CSSProperties = {
+  color: 'var(--accent-color)',
+  textDecoration: 'underline',
+};
+
+// Hand-placed links are written in the post text as [anchor text](/path or https://...)
+const MD_LINK = /\[([^\]]+)\]\(([^)\s]+)\)/g;
+
+export const ContentRenderer: React.FC<{ blocks: ContentBlock[]; currentSlug?: string }> = ({
+  blocks,
+  currentSlug,
+}) => {
+  const linked = new Set<string>();
+
+  const renderLink = (label: string, to: string, key: string | number): React.ReactNode =>
+    to.startsWith('/') ? (
+      <Link key={key} to={to} style={linkStyle}>
+        {label}
+      </Link>
+    ) : (
+      <a key={key} href={to} target="_blank" rel="noopener noreferrer" style={linkStyle}>
+        {label}
+      </a>
+    );
+
+  const autoLink = (text: string): React.ReactNode => {
+    if (linked.size >= MAX_AUTO_LINKS) return text;
+    for (const [phrase, to] of AUTO_LINKS) {
+      if (linked.has(phrase) || to === `/blog/${currentSlug}`) continue;
+      const idx = text.indexOf(phrase);
+      if (idx === -1) continue;
+      linked.add(phrase);
+      return (
+        <>
+          {text.slice(0, idx)}
+          {renderLink(phrase, to, 'auto')}
+          {text.slice(idx + phrase.length)}
+        </>
+      );
+    }
+    return text;
+  };
+
+  const withLinks = (text: string): React.ReactNode => {
+    if (!text.includes('](')) return autoLink(text);
+    const parts: React.ReactNode[] = [];
+    let last = 0;
+    let n = 0;
+    for (const m of text.matchAll(MD_LINK)) {
+      const start = m.index ?? 0;
+      if (start > last) parts.push(text.slice(last, start));
+      if (m[2] === `/blog/${currentSlug}`) parts.push(m[1]);
+      else parts.push(renderLink(m[1], m[2], n++));
+      last = start + m[0].length;
+    }
+    if (last < text.length) parts.push(text.slice(last));
+    return <>{parts.map((p, i) => (typeof p === 'string' ? <React.Fragment key={`t${i}`}>{p}</React.Fragment> : p))}</>;
+  };
+
   return (
     <>
       {blocks.map((block, i) => {
@@ -84,7 +166,7 @@ export const ContentRenderer: React.FC<{ blocks: ContentBlock[] }> = ({ blocks }
           case 'paragraph':
             return (
               <p key={i} style={paragraphStyle}>
-                {block.text}
+                {withLinks(block.text)}
               </p>
             );
 
@@ -92,13 +174,13 @@ export const ContentRenderer: React.FC<{ blocks: ContentBlock[] }> = ({ blocks }
             return block.ordered ? (
               <ol key={i} style={listStyle}>
                 {block.items.map((item, j) => (
-                  <li key={j}>{item}</li>
+                  <li key={j}>{withLinks(item)}</li>
                 ))}
               </ol>
             ) : (
               <ul key={i} style={listStyle}>
                 {block.items.map((item, j) => (
-                  <li key={j}>{item}</li>
+                  <li key={j}>{withLinks(item)}</li>
                 ))}
               </ul>
             );
@@ -138,7 +220,7 @@ export const ContentRenderer: React.FC<{ blocks: ContentBlock[] }> = ({ blocks }
                   </div>
                 )}
                 <div style={{ fontSize: '0.9rem', lineHeight: 1.6 }}>
-                  {block.text}
+                  {withLinks(block.text)}
                 </div>
               </aside>
             );

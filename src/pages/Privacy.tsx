@@ -5,7 +5,7 @@ import { APP_CONFIG } from '../config/app';
 export const Privacy: React.FC = () => {
   const siteName = APP_CONFIG.APP_NAME;
   const siteDomain = APP_CONFIG.APP_DOMAIN;
-  const contactEmail = 'gisgynix@gmail.com';
+    const contactEmail = APP_CONFIG.CONTACT_EMAIL;
   const lastUpdated = 'October 5, 2026';
 
   return (
@@ -69,6 +69,9 @@ export const Privacy: React.FC = () => {
             <li>
               <strong>Voluntary contact:</strong> If you email us, we receive
               your email address and any information you choose to share.
+              If you use the contact form, the name, email address and message 
+              you enter are sent to our form-processing provider, Web3Forms, 
+              which delivers them to us by email. We use this information only to reply to you.
             </li>
           </ul>
         </section>

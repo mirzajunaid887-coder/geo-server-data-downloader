@@ -6,7 +6,7 @@ import { articleStyle, h1Style, h2Style, metaStyle, sectionStyle, ulStyle, linkS
 export const Terms: React.FC = () => {
   const siteName = APP_CONFIG.APP_NAME;
   const siteDomain = APP_CONFIG.APP_DOMAIN;
-  const contactEmail = 'gisgynix@gmail.com';
+    const contactEmail = APP_CONFIG.CONTACT_EMAIL;
   const lastUpdated = 'October 5, 2026';
 
   return (

@@ -2,9 +2,11 @@ import React from 'react';
 import { Mail, Briefcase, MessageCircle, Linkedin } from 'lucide-react';
 import { SEO } from '../components/SEO';
 import { articleStyle, h1Style, h2Style, sectionStyle, linkStyle } from './Privacy';
+import { APP_CONFIG } from '../config/app';
+import ContactForm from '../components/ContactForm';
 
 const CONTACT = {
-  email: 'gisgynix@gmail.com',
+    email: APP_CONFIG.CONTACT_EMAIL,
   fiverr: 'https://www.fiverr.com/gisgynix',
   upwork: 'https://www.upwork.com/freelancers/~014c5dfcb05a8b2acb',
   linkedin: 'https://www.linkedin.com/in/muhammad-junaid-baig-38b102247/',
@@ -27,21 +29,10 @@ export const Contact: React.FC = () => {
         </p>
 
         <section style={sectionStyle}>
-          <h2 style={h2Style}>Email</h2>
-          <p>
-            The fastest way to get a response is by email. I usually reply
-            within 1–2 business days.
-          </p>
-          <p>
-            <a
-              href={`mailto:${CONTACT.email}`}
-              style={{ ...linkStyle, display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-            >
-              <Mail style={{ width: '1rem', height: '1rem' }} />
-              {CONTACT.email}
-            </a>
-          </p>
-        </section>
+  <h2 style={h2Style}>Send a Message</h2>
+  <p>Use the form below for questions, bug reports, or collaboration. I usually reply within a few days.</p>
+  <ContactForm fallbackEmail={CONTACT.email} />
+</section>
 
         <section style={sectionStyle}>
           <h2 style={h2Style}>Freelance GIS Work</h2>
