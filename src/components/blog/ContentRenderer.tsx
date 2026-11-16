@@ -226,6 +226,78 @@ export const ContentRenderer: React.FC<{ blocks: ContentBlock[]; currentSlug?: s
             );
           }
 
+          case 'image':
+            return (
+              <figure key={i} style={{ margin: '0 0 1.25rem' }}>
+                <img
+                  src={block.src}
+                  alt={block.alt}
+                  width={block.width}
+                  height={block.height}
+                  loading="lazy"
+                  decoding="async"
+                  style={{
+                    display: 'block',
+                    maxWidth: '100%',
+                    height: 'auto',
+                    borderRadius: '0.4rem',
+                    border: '1px solid var(--border-color)',
+                  }}
+                />
+                {block.caption && (
+                  <figcaption
+                    style={{
+                      fontSize: '0.8rem',
+                      lineHeight: 1.5,
+                      color: 'var(--text-muted)',
+                      marginTop: '0.4rem',
+                    }}
+                  >
+                    {block.caption}
+                  </figcaption>
+                )}
+              </figure>
+            );
+
+          case 'video':
+            return (
+              <figure key={i} style={{ margin: '0 0 1.25rem' }}>
+                <video
+                  src={block.src}
+                  poster={block.poster}
+                  width={block.width}
+                  height={block.height}
+                  aria-label={block.label}
+                  controls
+                  playsInline
+                  preload="metadata"
+                  {...(block.autoplay ? { autoPlay: true, muted: true, loop: true } : {})}
+                  style={{
+                    display: 'block',
+                    maxWidth: '100%',
+                    height: 'auto',
+                    borderRadius: '0.4rem',
+                    border: '1px solid var(--border-color)',
+                    backgroundColor: '#000',
+                  }}
+                >
+                  Your browser does not support embedded video. {block.label}
+                </video>
+                {block.caption && (
+                  <figcaption
+                    style={{
+                      fontSize: '0.8rem',
+                      lineHeight: 1.5,
+                      color: 'var(--text-muted)',
+                      marginTop: '0.4rem',
+                    }}
+                  >
+                    {block.caption}
+                  </figcaption>
+                )}
+              </figure>
+            );
+
           case 'table':
             return (
               <div

@@ -1,1 +1,0 @@
-const n={brand:"lightbulb",danger:"exclamationMarkTriangle",info:"information",success:"checkCircle",warning:"exclamationMarkTriangle"},a={danger:"exclamationMarkTriangleF",info:"informationF",success:"checkCircleF",warning:"exclamationMarkTriangleF"};export{n as K,a};
