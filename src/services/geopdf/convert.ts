@@ -47,32 +47,30 @@ async function loadPdfjs() {
   return pdfjsPromise;
 }
 
-let gdalPromise: Promise<any> | null = null;
 async function loadGdal() {
-  if (!gdalPromise) {
-    gdalPromise = (async () => {
-      const mod: any = await import('gdal3.js');
-      const init = mod.default || mod;
-      return init({ path: 'https://cdn.jsdelivr.net/npm/gdal3.js@2.8.1/dist/package', useWorker: false });
-    })().catch((e) => { gdalPromise = null; throw e; });
-  }
-  return gdalPromise;
+  const mod: any = await import('gdal3.js');
+  const init = mod.default || mod;
+  return init({ path: 'https://cdn.jsdelivr.net/npm/gdal3.js@2.8.1/dist/package', useWorker: false });
+}
+
+/** Opens the PDF once so many maps can be drawn from it without re-reading the file. */
+export async function openPdf(pdfBytes: ArrayBuffer): Promise<any> {
+  const pdfjs = await loadPdfjs();
+  const task = pdfjs.getDocument({ data: new Uint8Array(pdfBytes.slice(0)) });
+  return task.promise;
 }
 
 export async function convertViewport(
-  pdfBytes: ArrayBuffer,
+  pdf: any,
   vp: GeoViewport,
   opts: ConvertOptions,
 ): Promise<ConvertResult> {
   const say = opts.onStatus || (() => {});
   const { width, height } = outputSize(vp, opts.dpi);
+  if (opts.signal?.aborted) throw new DOMException('Cancelled', 'AbortError');
   if (width * height > MAX_PIXELS) throw new Error('That resolution is too large for a browser. Choose a lower DPI.');
 
-  say('Loading PDF engine…');
-  const pdfjs = await loadPdfjs();
-  const task = pdfjs.getDocument({ data: new Uint8Array(pdfBytes.slice(0)) });
-  const pdf = await task.promise;
-  try {
+  {
     const page = await pdf.getPage(vp.pageIndex + 1);
     const scale = opts.dpi / 72;
     const base = page.getViewport({ scale });
@@ -104,14 +102,14 @@ export async function convertViewport(
     const png: Blob = await new Promise((res, rej) => canvas.toBlob((b) => (b ? res(b) : rej(new Error('Could not encode the image.'))), 'image/png'));
     // keep a small preview
     const pv = document.createElement('canvas');
-    const k = Math.min(1, 900 / Math.max(width, height));
+    const k = Math.min(1, 480 / Math.max(width, height));
     pv.width = Math.round(width * k); pv.height = Math.round(height * k);
     pv.getContext('2d')!.drawImage(canvas, 0, 0, pv.width, pv.height);
-    const previewUrl = pv.toDataURL('image/jpeg', 0.85);
+    const previewUrl = pv.toDataURL('image/jpeg', 0.8);
     canvas.width = canvas.height = 0; // release memory
 
     say('Writing GeoTIFF…');
-    const gdal = await loadGdal();
+    const gdal = await loadGdal(); // a fresh engine per map, so memory is released between maps
     const file = new File([png], 'page.png', { type: 'image/png' });
     const opened = await gdal.open([file]);
     if (!opened?.datasets?.length) throw new Error('The converter engine could not read the rendered image.');
@@ -148,7 +146,5 @@ export async function convertViewport(
       blob: new Blob([bytes as BlobPart], { type: 'image/tiff' }),
       width, height, dpi: opts.dpi, georef, previewUrl, info,
     };
-  } finally {
-    try { await pdf.destroy(); } catch { /* ignore */ }
   }
 }
