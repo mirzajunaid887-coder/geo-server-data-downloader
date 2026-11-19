@@ -698,3 +698,88 @@ h3 {
     box-shadow: var(--shadow-lg);
   }
 }
+/* ------------------------------------------------------------------
+ * Small-screen robustness
+ * ---------------------------------------------------------------- */
+
+/* Long URLs inside <code> (documentation, blog) must wrap instead of widening the page. */
+code,
+kbd {
+  overflow-wrap: anywhere;
+}
+
+pre {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+pre code {
+  overflow-wrap: normal;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Pill buttons used for suggestions and tags (Discover). */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.9rem;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: var(--accent-soft);
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.chip-quiet {
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  min-height: 1.6rem;
+}
+
+.chip:hover {
+  border-color: var(--accent-color);
+}
+
+/* Touch screens: stand-alone links and buttons need a comfortable tap area.
+ * (Links inside a sentence are exempt, as in WCAG 2.2 target size.) */
+@media (pointer: coarse) {
+  .touch-target,
+  footer a,
+  .app-logo {
+    display: inline-flex !important;
+    align-items: center;
+    min-height: 2.75rem !important;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    min-height: 2.5rem;
+  }
+
+  .chip {
+    min-height: 2.5rem;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.8rem;
+  }
+
+  .chip-quiet {
+    min-height: 2.25rem;
+    font-size: 0.78rem;
+  }
+
+  input,
+  select,
+  textarea {
+    /* 16px stops iOS Safari from zooming the page when a field is focused. */
+    font-size: 16px !important;
+  }
+}

@@ -73,7 +73,7 @@ export const Footer: React.FC = () => {
             Free, browser-based tool for exploring and downloading ArcGIS REST,
             WFS, and other spatial web services as Shapefile, GeoJSON, KML,
             GeoPackage, GPX and CSV. Plus you can also download the data available at
-            ArcGIS Online Store directly through the discovery tool.
+            ArcGIS Online directly through the Discovery tool.
           </p>
         </div>
 

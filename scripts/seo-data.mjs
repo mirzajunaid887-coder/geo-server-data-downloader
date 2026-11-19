@@ -14,6 +14,7 @@ export const CORE_ROUTES = [
   '/',
   '/download',
   '/converter',
+  '/geopdf-to-geotiff',
   '/discover',
   '/documentation',
   '/blog',

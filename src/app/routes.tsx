@@ -25,6 +25,7 @@ const Blog = lazy(() => import('../pages/Blog').then((m) => ({ default: m.Blog }
 const BlogPost = lazy(() => import('../pages/BlogPost').then((m) => ({ default: m.BlogPost })));
 const ExportProgress = lazy(() => import('../pages/ExportProgress').then((m) => ({ default: m.ExportProgress })));
 const GISConverter = lazy(() => import('../pages/GISConverter').then((m) => ({ default: m.GISConverter })));
+const GeoPdfToGeoTiff = lazy(() => import('../pages/GeoPdfToGeoTiff').then((m) => ({ default: m.GeoPdfToGeoTiff })));
 const NotFound = lazy(() => import('../pages/NotFound').then((m) => ({ default: m.NotFound })));
 
 const RouteFallback: React.FC = () => (
@@ -43,6 +44,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="/downloader" element={<DownloaderRedirect />} />
         <Route path="/discover" element={<Discover />} />
         <Route path="/converter" element={<GISConverter />} />
+        <Route path="/geopdf-to-geotiff" element={<GeoPdfToGeoTiff />} />
         <Route path="/documentation" element={<Documentation />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />

@@ -99,7 +99,7 @@ export const Blog: React.FC = () => {
               >
                 <span
                   style={{
-                    fontSize: '0.65rem',
+                    fontSize: '0.72rem',
                     fontWeight: 700,
                     textTransform: 'uppercase',
                     letterSpacing: '0.05em',

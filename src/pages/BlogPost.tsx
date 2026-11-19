@@ -90,6 +90,7 @@ export const BlogPost: React.FC = () => {
       >
         <Link
           to="/blog"
+          className="touch-target"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -108,7 +109,7 @@ export const BlogPost: React.FC = () => {
           <span
             style={{
               display: 'inline-block',
-              fontSize: '0.68rem',
+              fontSize: '0.72rem',
               fontWeight: 700,
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
