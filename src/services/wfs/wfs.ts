@@ -66,6 +66,53 @@ export function isWfsUrl(rawUrl: string): boolean {
   }
 }
 
+const WMS_PARAMS = new Set([
+  'service', 'request', 'version', 'layers', 'layer', 'styles', 'format', 'transparent', 'width', 'height',
+  'srs', 'crs', 'bbox', 'bgcolor', 'exceptions', 'time', 'elevation', 'sld', 'sld_body', 'query_layers',
+  'info_format', 'feature_count', 'x', 'y', 'i', 'j', 'tiled', 'tilesorigin',
+]);
+
+/** True for WMS links (map images), e.g. ?service=WMS&request=GetMap..., or paths ending in /wms or /WMSServer. */
+export function isWmsUrl(rawUrl: string): boolean {
+  try {
+    const url = new URL(rawUrl.trim());
+    const service = url.searchParams.get('service');
+    if (service) return service.toUpperCase() === 'WMS';
+    const path = url.pathname.toLowerCase().replace(/\/+$/, '');
+    return path.endsWith('/wms') || path.endsWith('/wmsserver');
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * A WMS only draws pictures, but the same server usually offers the real data through WFS.
+ * GeoServer / MapServer / ArcGIS Server keep the two side by side, so swap the end of the path
+ * and carry the layer names over so the matching feature type can be picked automatically.
+ */
+export function wmsToWfs(rawUrl: string): { baseUrl: string; layerNames: string[] } {
+  const url = new URL(rawUrl.trim());
+  const layers = (url.searchParams.get('layers') || url.searchParams.get('layer') || '')
+    .split(',').map((l) => l.trim()).filter(Boolean);
+  for (const key of [...url.searchParams.keys()]) {
+    if (WMS_PARAMS.has(key.toLowerCase())) url.searchParams.delete(key);
+  }
+  url.pathname = url.pathname
+    .replace(/\/+$/, '')
+    .replace(/\/wmsserver$/i, '/WFSServer')
+    .replace(/\/wms$/i, '/wfs');
+  url.hash = '';
+  return { baseUrl: url.toString(), layerNames: layers };
+}
+
+/** Does a WFS feature type name match a layer name from a WMS link (with or without a workspace prefix)? */
+export function featureTypeMatches(ftName: string, layer: string): boolean {
+  const a = ftName.toLowerCase(), b = layer.toLowerCase();
+  if (a === b) return true;
+  const strip = (v: string) => v.split(':').pop() || v;
+  return !b.includes(':') || !a.includes(':') ? strip(a) === strip(b) : false;
+}
+
 /** Endpoint without the WFS protocol params, but keeping any vendor params (map=..., etc). */
 export function normalizeWfsBaseUrl(rawUrl: string): string {
   try {

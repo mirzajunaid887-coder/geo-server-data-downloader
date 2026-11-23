@@ -16,11 +16,17 @@
     <loc>https://www.geo-server-data-downloader.com/discover</loc>
   </url>
   <url>
+    <loc>https://www.geo-server-data-downloader.com/data</loc>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/data/parcels-by-city</loc>
+  </url>
+  <url>
     <loc>https://www.geo-server-data-downloader.com/documentation</loc>
   </url>
   <url>
     <loc>https://www.geo-server-data-downloader.com/blog</loc>
-    <lastmod>2026-11-16</lastmod>
+    <lastmod>2026-11-23</lastmod>
   </url>
   <url>
     <loc>https://www.geo-server-data-downloader.com/about</loc>
@@ -35,11 +41,47 @@
     <loc>https://www.geo-server-data-downloader.com/terms</loc>
   </url>
   <url>
-    <loc>https://www.geo-server-data-downloader.com/blog/mastering-shapefile-to-geojson-conversion</loc>
-    <lastmod>2026-11-16</lastmod>
+    <loc>https://www.geo-server-data-downloader.com/data/parcel-data</loc>
+    <lastmod>2026-11-23</lastmod>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/data/zoning-data</loc>
+    <lastmod>2026-11-23</lastmod>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/data/flood-zone-data</loc>
+    <lastmod>2026-11-23</lastmod>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/data/building-footprints</loc>
+    <lastmod>2026-11-23</lastmod>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/data/census-boundaries</loc>
+    <lastmod>2026-11-23</lastmod>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/data/roads-data</loc>
+    <lastmod>2026-11-23</lastmod>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/blog/how-to-find-free-parcel-data-us-counties</loc>
+    <lastmod>2026-11-23</lastmod>
   </url>
   <url>
     <loc>https://www.geo-server-data-downloader.com/blog/wms-vs-wfs-choosing-the-right-web-service</loc>
+    <lastmod>2026-11-23</lastmod>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/blog/how-to-extract-data-from-arcgis-online</loc>
+    <lastmod>2026-11-23</lastmod>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/blog/convert-geopdf-to-geotiff</loc>
+    <lastmod>2026-11-23</lastmod>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/blog/mastering-shapefile-to-geojson-conversion</loc>
     <lastmod>2026-11-16</lastmod>
   </url>
   <url>
@@ -52,10 +94,6 @@
   </url>
   <url>
     <loc>https://www.geo-server-data-downloader.com/blog/downloading-openstreetmap-data-for-gis</loc>
-    <lastmod>2026-11-16</lastmod>
-  </url>
-  <url>
-    <loc>https://www.geo-server-data-downloader.com/blog/how-to-extract-data-from-arcgis-online</loc>
     <lastmod>2026-11-16</lastmod>
   </url>
   <url>
@@ -85,10 +123,6 @@
   <url>
     <loc>https://www.geo-server-data-downloader.com/blog/how-to-export-data-from-arcgis-pro-to-csv</loc>
     <lastmod>2026-11-16</lastmod>
-  </url>
-  <url>
-    <loc>https://www.geo-server-data-downloader.com/blog/how-to-find-free-parcel-data-us-counties</loc>
-    <lastmod>2026-10-06</lastmod>
   </url>
   <url>
     <loc>https://www.geo-server-data-downloader.com/blog/complete-guide-wfs-web-feature-service</loc>

@@ -26,6 +26,8 @@ const BlogPost = lazy(() => import('../pages/BlogPost').then((m) => ({ default: 
 const ExportProgress = lazy(() => import('../pages/ExportProgress').then((m) => ({ default: m.ExportProgress })));
 const GISConverter = lazy(() => import('../pages/GISConverter').then((m) => ({ default: m.GISConverter })));
 const GeoPdfToGeoTiff = lazy(() => import('../pages/GeoPdfToGeoTiff').then((m) => ({ default: m.GeoPdfToGeoTiff })));
+const DataIndex = lazy(() => import('../pages/DataIndex').then((m) => ({ default: m.DataIndex })));
+const DataTopicPage = lazy(() => import('../pages/DataTopic').then((m) => ({ default: m.DataTopicPage })));
 const NotFound = lazy(() => import('../pages/NotFound').then((m) => ({ default: m.NotFound })));
 
 const RouteFallback: React.FC = () => (
@@ -45,6 +47,9 @@ export const AppRoutes: React.FC = () => {
         <Route path="/discover" element={<Discover />} />
         <Route path="/converter" element={<GISConverter />} />
         <Route path="/geopdf-to-geotiff" element={<GeoPdfToGeoTiff />} />
+        <Route path="/data" element={<DataIndex />} />
+        <Route path="/data/parcels-by-city" element={<Navigate to="/data" replace />} />
+        <Route path="/data/:slug" element={<DataTopicPage />} />
         <Route path="/documentation" element={<Documentation />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />

@@ -1,7 +1,8 @@
 import { BlogPost } from '../types/blog';
 import { REDIRECTED_SLUGS, isIndexable } from './blogSeo';
+import { applyExtensions } from './blogExtensions';
 
-export const BLOG_POSTS: BlogPost[] = [
+const BASE_POSTS: BlogPost[] = [
   // ==================================================================
   // POST 1 (Existing)
   // ==================================================================
@@ -1670,6 +1671,9 @@ with open(out, "w", newline="", encoding="utf-8") as f:
     ],
   },
 ];
+
+/** Base posts plus the additions and new posts from blogExtensions.ts */
+export const BLOG_POSTS: BlogPost[] = applyExtensions(BASE_POSTS);
 
 /** Look up a single post by its slug. Returns undefined if not found (or merged into another post). */
 export function getPostBySlug(slug: string): BlogPost | undefined {

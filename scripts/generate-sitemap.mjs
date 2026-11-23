@@ -8,7 +8,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { loadBlog, CORE_ROUTES, SITE_URL } from './seo-data.mjs';
 
-const { BLOG_POSTS, isIndexable, REDIRECTED_SLUGS, MIN_INDEXABLE_WORDS } = await loadBlog();
+const { DATA_TOPICS, BLOG_POSTS, isIndexable, REDIRECTED_SLUGS, MIN_INDEXABLE_WORDS } = await loadBlog();
 
 // ---- keep vercel.json redirects in sync -------------------------------------------------
 const vercel = JSON.parse(await readFile('vercel.json', 'utf8'));
@@ -36,6 +36,7 @@ const xml = [
   '<?xml version="1.0" encoding="UTF-8"?>',
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
   ...CORE_ROUTES.map((r) => url(r, r === '/blog' ? newest : undefined)),
+  ...DATA_TOPICS.map((t) => url(`/data/${t.slug}`, t.dateModified)),
   ...posts.map((p) => url(`/blog/${p.slug}`, p.dateModified)),
   '</urlset>',
   '',

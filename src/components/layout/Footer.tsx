@@ -157,6 +157,26 @@ export const Footer: React.FC = () => {
             </li>
             <li>
               <Link
+                to="/data"
+                style={footerLinkStyle}
+                onMouseEnter={hoverOn}
+                onMouseLeave={hoverOff}
+              >
+                Parcel Data by City
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/geopdf-to-geotiff"
+                style={footerLinkStyle}
+                onMouseEnter={hoverOn}
+                onMouseLeave={hoverOff}
+              >
+                GeoPDF to GeoTIFF
+              </Link>
+            </li>
+            <li>
+              <Link
                 to="/privacy"
                 style={footerLinkStyle}
                 onMouseEnter={hoverOn}

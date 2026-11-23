@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { Database, Globe, Compass, BookOpen, Info, Menu, X, Newspaper, RefreshCw, FileImage } from 'lucide-react';
+import { Database, Globe, Compass, BookOpen, Info, Menu, X, Newspaper, RefreshCw, FileImage, MapPinned } from 'lucide-react';
 import { APP_CONFIG } from '../../config/app';
 
 const NAV_ITEMS = [
@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { to: '/discover', label: 'Discover AGOL', icon: Compass },
   { to: '/converter', label: 'Converter', icon: RefreshCw },
   { to: '/geopdf-to-geotiff', label: 'GeoPDF to TIFF', icon: FileImage },
+  { to: '/data', label: 'Parcel Data', icon: MapPinned },
   { to: '/documentation', label: 'Documentation', icon: BookOpen },
   { to: '/blog', label: 'Blog', icon: Newspaper },
   { to: '/about', label: 'About', icon: Info },

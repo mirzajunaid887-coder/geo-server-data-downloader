@@ -16,6 +16,7 @@ export const CORE_ROUTES = [
   '/converter',
   '/geopdf-to-geotiff',
   '/discover',
+  '/data',
   '/documentation',
   '/blog',
   '/about',
@@ -29,6 +30,7 @@ export async function loadBlog() {
     stdin: {
       contents: [
         "export { BLOG_POSTS } from './src/data/blogPosts';",
+        "export { DATA_TOPICS } from './src/data/dataTopics';",
         "export { isIndexable, countWords, REDIRECTED_SLUGS, MIN_INDEXABLE_WORDS } from './src/data/blogSeo';",
       ].join('\n'),
       resolveDir: ROOT,

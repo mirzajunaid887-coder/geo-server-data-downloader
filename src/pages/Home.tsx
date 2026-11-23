@@ -144,7 +144,7 @@ export const Home: React.FC = () => {
             ))}
           </ul>
           <p style={{ ...muted, marginTop: '0.75rem' }}>
-            More in the <Link to="/blog" style={{ color: 'var(--accent-color)' }}>blog</Link> and the <Link to="/documentation" style={{ color: 'var(--accent-color)' }}>documentation</Link>.
+            Looking for a specific dataset? Browse <Link to="/data" style={{ color: 'var(--accent-color)' }}>parcel data by city</Link> and the guides for zoning, flood zones, building footprints, Census boundaries and roads, or convert a map PDF with the <Link to="/geopdf-to-geotiff" style={{ color: 'var(--accent-color)' }}>GeoPDF to GeoTIFF converter</Link>. More in the <Link to="/blog" style={{ color: 'var(--accent-color)' }}>blog</Link> and the <Link to="/documentation" style={{ color: 'var(--accent-color)' }}>documentation</Link>.
           </p>
         </section>
 

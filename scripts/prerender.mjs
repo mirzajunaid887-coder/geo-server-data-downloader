@@ -141,9 +141,10 @@ async function main() {
 
   const browser = await launchBrowser();
 
-  const { BLOG_POSTS, REDIRECTED_SLUGS } = await loadBlog();
+  const { BLOG_POSTS, REDIRECTED_SLUGS, DATA_TOPICS } = await loadBlog();
   const routes = [
     ...CORE_ROUTES,
+    ...DATA_TOPICS.map((t) => `/data/${t.slug}`),
     ...BLOG_POSTS.filter((p) => !REDIRECTED_SLUGS[p.slug]).map((p) => `/blog/${p.slug}`),
     NOT_FOUND_ROUTE,
   ];

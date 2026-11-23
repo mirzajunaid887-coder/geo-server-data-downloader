@@ -6,6 +6,9 @@ import { fetchObjectIds } from '../services/arcgis/objectIds';
 import { fetchFeaturesBatch } from '../services/arcgis/query';
 import {
   isWfsUrl,
+  isWmsUrl,
+  wmsToWfs,
+  featureTypeMatches,
   normalizeWfsBaseUrl,
   fetchWfsCapabilities,
   fetchWfsFeatureCollection,
@@ -140,6 +143,30 @@ export const Downloader: React.FC = () => {
     setError(null);
 
     try {
+      if (isWmsUrl(cleanUrl)) {
+        // A WMS link only draws a picture. Use the same server's WFS to get the actual data.
+        setProgress('This is a WMS (map image) link. Looking for the matching WFS data service...');
+        const { baseUrl, layerNames } = wmsToWfs(cleanUrl);
+        let caps;
+        try {
+          caps = await fetchWfsCapabilities(baseUrl);
+        } catch {
+          throw new Error(
+            'This is a WMS link, which only serves map pictures, not downloadable data. ' +
+              'We looked for the same server\'s WFS service at ' + baseUrl + ' but it did not respond. ' +
+              'Ask the data provider for their WFS link (it usually ends in /wfs or /ows).'
+          );
+        }
+        const wanted = caps.featureTypes.filter((ft) => layerNames.some((l) => featureTypeMatches(ft.name, l)));
+        if (wanted.length > 0 || caps.featureTypes.length === 1) {
+          addWfsLayers(baseUrl, caps.version, wanted.length > 0 ? wanted : caps.featureTypes);
+        } else {
+          setPendingWfs({ baseUrl, version: caps.version, serviceTitle: caps.serviceTitle, featureTypes: caps.featureTypes });
+          setProgress('');
+        }
+        return;
+      }
+
       if (isWfsUrl(cleanUrl)) {
         setProgress('Reading WFS capabilities...');
         const baseUrl = normalizeWfsBaseUrl(cleanUrl);
