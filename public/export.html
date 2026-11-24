@@ -22,6 +22,19 @@
   .error { display: none; align-items: center; gap: 0.5rem; font-size: 0.78rem; color: #ef4444; background: rgba(239, 68, 68, 0.1); padding: 0.6rem; border-radius: 0.375rem; }
   .done { display: none; flex-direction: column; align-items: center; gap: 0.6rem; padding: 1rem 0; text-align: center; }
   .done p { margin: 0; font-size: 0.85rem; color: #a7f3d0; }
+  .pre { display: none; flex-direction: column; gap: 0.6rem; font-size: 0.8rem; }
+  .pre .facts { color: #e5e7eb; margin: 0; line-height: 1.5; }
+  .pre .warn { color: #fbbf24; background: rgba(251, 191, 36, 0.1); padding: 0.55rem; border-radius: 0.375rem; margin: 0; line-height: 1.5; }
+  .pre .fields { color: #9ca3af; font-size: 0.72rem; margin: 0; word-break: break-word; }
+  .pre label { display: flex; flex-direction: column; gap: 0.25rem; color: #9ca3af; font-size: 0.72rem; }
+  .pre input, .pre select { background: #1f2937; color: #f3f4f6; border: 1px solid var(--border-color); border-radius: 0.375rem; padding: 0.45rem; font-size: 0.8rem; font-family: inherit; }
+  .pre .row { display: flex; gap: 0.5rem; }
+  .pre .row input { flex: 1; min-width: 0; }
+  button.sec-btn { background: #374151; border: none; color: #f3f4f6; padding: 0.45rem 0.8rem; border-radius: 0.375rem; font-size: 0.78rem; cursor: pointer; }
+  .bar { display: none; height: 8px; border-radius: 4px; background: #1f2937; overflow: hidden; }
+  .bar div { height: 100%; width: 0; background: var(--accent-color); transition: width 0.3s ease; }
+  .keep { display: none; font-size: 0.74rem; color: #fbbf24; margin: 0; line-height: 1.5; }
+  button.close-btn[disabled] { opacity: 0.45; cursor: not-allowed; }
   button.close-btn { background: var(--accent-color); border: none; color: white; padding: 0.5rem 1.1rem; border-radius: 0.375rem; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
 </style>
 </head>
@@ -32,7 +45,27 @@
     <div class="spinner" id="spinner"></div>
     <p class="title" id="title">Preparing export...</p>
     <p class="detail" id="detail"></p>
+    <div class="bar" id="bar"><div id="barFill"></div></div>
+    <p class="keep" id="keep">Large layer: keep this tab open until the download finishes. It saves to disk as it goes, so it will not run out of memory, but it can take several minutes. You can keep using other tabs.</p>
     <div class="log" id="log"></div>
+    <div class="pre" id="pre">
+      <p class="facts" id="preFacts"></p>
+      <p class="warn" id="preWarn" style="display:none"></p>
+      <p class="fields" id="preFields"></p>
+      <label>Only download features where (optional, ArcGIS SQL)
+        <span class="row"><input id="preWhere" type="text" placeholder="e.g. ZIP = '77002'" autocomplete="off" /><button class="sec-btn" id="preCheck" type="button">Check count</button></span>
+      </label>
+      <label>Format
+        <select id="preFormat">
+          <option value="shp">ESRI Shapefile (.zip)</option>
+          <option value="geojson">GeoJSON</option>
+          <option value="csv">CSV (geometry as WKT)</option>
+          <option value="gpkg">GeoPackage (.gpkg) - up to 100,000 features</option>
+          <option value="kml">KML (always WGS84) - up to 100,000 features</option>
+        </select>
+      </label>
+      <button class="close-btn" id="preStart" type="button">Start download</button>
+    </div>
     <div class="error" id="error"></div>
     <div class="done" id="done">
       <p id="doneMsg">Download complete.</p>
@@ -75,11 +108,19 @@
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js" onerror="showError('Failed to load JSZip from the CDN. Check your internet connection and try again.')"></script>
 <script src="https://cdn.jsdelivr.net/npm/@terraformer/arcgis@2.1.2/dist/t-arcgis.umd.js" onerror="showError('Failed to load the Esri JSON converter from the CDN. Check your internet connection and try again.')"></script>
 <script src="https://cdn.jsdelivr.net/npm/gdal3.js@2.8.1/dist/package/gdal3.js" onerror="showError('Failed to load GDAL WebAssembly from the CDN. Check your internet connection and try again.')"></script>
+<script src="/stream-export.js"></script>
 
 <script>
   function baseUrl(serviceUrl) {
     return String(serviceUrl || "").trim().split("#")[0].split("?")[0].replace(/\/query\/?$/i, "").replace(/\/+$/, "");
   }
+
+  // Single-layer "Download now" exports:
+  //  - Shapefile, GeoJSON and CSV of ANY size are streamed to disk (stream-export.js), no size limit.
+  //  - GeoPackage and KML need GDAL, which works in memory: fine up to GDAL_MAX features (warning above GDAL_AUTO).
+  var GDAL_AUTO = (window.CONFIG && window.CONFIG.streamAt) || 25000;
+  var GDAL_MAX = (window.CONFIG && window.CONFIG.gdalMax) || 100000;
+  function isStreamFormat(f) { return f === "shp" || f === "geojson" || f === "csv"; }
 
   var PAGE_SIZE = 200;
   var CONCURRENCY = 6;
@@ -118,9 +159,34 @@
     return json;
   }
 
-  async function fetchObjectIds(serviceUrl) {
-    const data = await arcgisRequest(baseUrl(serviceUrl) + "/query", { where: "1=1", returnIdsOnly: "true" });
+  async function fetchObjectIds(serviceUrl, where) {
+    const data = await arcgisRequest(baseUrl(serviceUrl) + "/query", { where: where || "1=1", returnIdsOnly: "true" });
     return data.objectIds || [];
+  }
+
+  async function fetchCount(serviceUrl, where) {
+    const data = await arcgisRequest(baseUrl(serviceUrl) + "/query", { where: where || "1=1", returnCountOnly: "true" });
+    return typeof data.count === "number" ? data.count : null;
+  }
+
+  // Esri spatial reference -> a name GDAL understands (EPSG:n, ESRI:n or WKT).
+  function srsString(sr) {
+    if (!sr) return null;
+    const id = sr.latestWkid || sr.wkid;
+    if (id) return (id >= 100000 ? "ESRI:" : "EPSG:") + id;
+    return sr.wkt || null;
+  }
+  // Short, readable name for messages (WKT -> its quoted name).
+  function srsLabel(srs) {
+    const m = /^(?:PROJCS|GEOGCS|PROJCRS|GEOGCRS)\["([^"]+)"/.exec(srs || "");
+    return m ? m[1] : srs;
+  }
+  // What to send as outSR so the server returns coordinates in that same system.
+  function outSrParam(sr) {
+    if (!sr) return null;
+    if (sr.wkid) return String(sr.wkid);
+    if (sr.wkt) return JSON.stringify({ wkt: sr.wkt });
+    return null;
   }
 
   async function fetchLayerInfo(serviceUrl) {
@@ -133,7 +199,15 @@
         if (!oidField && f.type === "esriFieldTypeOID") oidField = f.name;
       }
     });
-    return { fieldTypes: fieldTypes, oidField: oidField || meta.objectIdField || "OBJECTID" };
+    return {
+      fieldTypes: fieldTypes,
+      oidField: oidField || meta.objectIdField || "OBJECTID",
+      sr: (meta.extent && meta.extent.spatialReference) || meta.spatialReference || null,
+      geometryType: meta.geometryType || "",
+      fields: meta.fields || [],
+      maxRecordCount: meta.maxRecordCount || 1000,
+      fieldNames: (meta.fields || []).map(function (f) { return f.name; }),
+    };
   }
 
   function hasValidGeometry(f) {
@@ -146,8 +220,11 @@
   }
 
   // One page of Esri JSON features. Mirrors geodatadownloader: where OID IN (...), f=json, outSR=4326.
-  async function queryPage(base, oidField, ids) {
-    const common = { outFields: "*", returnGeometry: "true", outSR: "4326" };
+  async function queryPage(base, oidField, ids, opts) {
+    opts = opts || {};
+    const common = { outFields: "*", returnGeometry: "true" };
+    // Default: WGS84 (lon/lat). Native mode: ask for the layer's own coordinate system.
+    if (opts.outSR) common.outSR = opts.outSR; else if (!opts.native) common.outSR = "4326";
     const attempts = [
       Object.assign({}, common, { where: oidField + " IN (" + ids.join(",") + ")" }),
       Object.assign({}, common, { objectIds: ids.join(",") }),
@@ -163,14 +240,14 @@
     }
     if (ids.length > 1) {
       const mid = Math.ceil(ids.length / 2);
-      const left = await queryPage(base, oidField, ids.slice(0, mid));
-      const right = await queryPage(base, oidField, ids.slice(mid));
+      const left = await queryPage(base, oidField, ids.slice(0, mid), opts);
+      const right = await queryPage(base, oidField, ids.slice(mid), opts);
       return left.concat(right);
     }
     throw new Error("Query failed for feature " + oidField + "=" + ids[0] + ": " + (lastError && lastError.message));
   }
 
-  async function fetchFeaturesBatch(serviceUrl, ids, oidField, onProgress) {
+  async function fetchFeaturesBatch(serviceUrl, ids, oidField, onProgress, opts) {
     const base = baseUrl(serviceUrl);
     const pages = [];
     for (let i = 0; i < ids.length; i += PAGE_SIZE) pages.push(ids.slice(i, i + PAGE_SIZE));
@@ -181,7 +258,7 @@
       while (true) {
         const i = next++;
         if (i >= pages.length) return;
-        const esriFeatures = (await queryPage(base, oidField, pages[i])).filter(hasValidGeometry);
+        const esriFeatures = (await queryPage(base, oidField, pages[i], opts)).filter(hasValidGeometry);
         const fc = window.Terraformer.arcgisToGeoJSON({ features: esriFeatures, spatialReference: { wkid: 4326 } });
         results[i] = fc.features || [];
         done++;
@@ -383,10 +460,139 @@
     });
   }
 
+  function $(id) { return document.getElementById(id); }
+
+  var GEOM_LABELS = { esriGeometryPolygon: "polygons", esriGeometryPolyline: "lines", esriGeometryPoint: "points", esriGeometryMultipoint: "points", esriGeometryEnvelope: "envelopes" };
+
+  // Single-layer "Download now" check: count the features (optionally filtered) before downloading.
+  // Small layers start by themselves. Big ones wait here so the tab does not run out of memory.
+  async function runPreflight(layer, format, where) {
+    setTitle("Checking the layer...");
+    setDetail("Reading layer details and counting features...");
+    const info = await fetchLayerInfo(layer.url);
+    let count = await fetchCount(layer.url, where);
+    if (count !== null && count > 0 && (count <= GDAL_AUTO || isStreamFormat(format))) return { format: format, where: where, info: info, count: count };
+
+    $("spinner").style.display = "none";
+    setTitle(layer.name);
+    setDetail("");
+    $("pre").style.display = "flex";
+    $("preFormat").value = format;
+    $("preWhere").value = where;
+    if (window.CONFIG.whereHint) $("preWhere").placeholder = "e.g. " + String(window.CONFIG.whereHint);
+    const crsLabel = srsLabel(srsString(info.sr)) || "unknown coordinate system";
+    $("preFields").textContent = info.fieldNames.length ? "Fields: " + info.fieldNames.slice(0, 14).join(", ") + (info.fieldNames.length > 14 ? ", ..." : "") : "";
+
+    function render(message) {
+      const geom = GEOM_LABELS[info.geometryType] || "features";
+      const fmt = $("preFormat").value;
+      $("preFacts").textContent = (count === null ? "Could not count the features" : count.toLocaleString() + " " + geom) + " \u00b7 " + crsLabel;
+      let warn = message || "";
+      let blocked = false;
+      if (!warn) {
+        if (count === 0) { warn = "No features match. Change the filter."; blocked = true; }
+        else if (!isStreamFormat(fmt) && count !== null && count > GDAL_MAX) { warn = "GeoPackage and KML are built in memory and are limited to " + GDAL_MAX.toLocaleString() + " features. Choose Shapefile, GeoJSON or CSV: those are written straight to disk and have no size limit."; blocked = true; }
+        else if (!isStreamFormat(fmt) && count !== null && count > GDAL_AUTO) { warn = "This is a large layer for GeoPackage/KML. It is built in this tab's memory and can run out of memory on a small computer. Shapefile, GeoJSON and CSV have no such limit."; }
+        else if (count === null) { warn = "The server did not report a count. You can still try the download."; }
+      } else blocked = count === 0;
+      const w = $("preWarn");
+      w.style.display = warn ? "block" : "none";
+      w.textContent = warn;
+      $("preStart").disabled = blocked;
+    }
+    render();
+
+    $("preFormat").onchange = function () { render(); };
+    return new Promise(function (resolve) {
+      let busy = false;
+      async function recount() {
+        const w = $("preWhere").value.trim();
+        try { count = await fetchCount(layer.url, w); render(); return true; }
+        catch (e) { count = null; render("The server rejected that filter: " + (e && e.message ? e.message : e)); $("preStart").disabled = true; return false; }
+      }
+      $("preCheck").onclick = async function () { if (busy) return; busy = true; await recount(); busy = false; };
+      $("preStart").onclick = async function () {
+        if (busy) return; busy = true;
+        const ok = await recount();
+        busy = false;
+        if (!ok || $("preStart").disabled) return;
+        if (!isStreamFormat($("preFormat").value) && count !== null && count > GDAL_MAX) return;
+        $("pre").style.display = "none";
+        $("spinner").style.display = "block";
+        resolve({ format: $("preFormat").value, where: $("preWhere").value.trim(), info: info, count: count });
+      };
+    });
+  }
+
+  function setBar(frac) {
+    $("bar").style.display = "block";
+    $("barFill").style.width = Math.max(0, Math.min(100, Math.round(frac * 1000) / 10)) + "%";
+  }
+
+  // The shapefile .prj text for a coordinate system, produced by GDAL from a one-point probe file.
+  async function makePrj(gdal, srs) {
+    const probe = new File([JSON.stringify({ type: "FeatureCollection", features: [{ type: "Feature", properties: { a: 1 }, geometry: { type: "Point", coordinates: [0, 0] } }] })], "prj_probe.geojson");
+    const opened = await gdal.open(probe);
+    await gdal.ogr2ogr(opened.datasets[0], ["-f", "ESRI Shapefile", "-a_srs", srs], "prj_probe_out");
+    const outs = await gdal.getOutputFiles();
+    const prj = outs.find(function (f) { return /prj_probe_out[^/]*\.prj$/i.test(f.path); });
+    if (!prj) throw new Error("Could not create the projection file for " + srs + ".");
+    const bytes = await gdal.getFileBytes(prj.path);
+    try { await gdal.close(opened.datasets[0]); } catch (e) { /* ignore */ }
+    return new TextDecoder().decode(bytes);
+  }
+
+  // Layers too big for memory: stream Shapefile / GeoJSON / CSV straight to disk.
+  async function runStreamExport(gdal, layer, layerInfo, ids, format, native, layerSrs, queryOpts, fileBase, safeName) {
+    if (!window.GddStream) throw new Error("The large-download engine did not load. Reload this page and try again.");
+    $("keep").style.display = "block";
+    setTitle("Downloading " + layer.name);
+    const srs = layerSrs || "EPSG:4326";
+    let prjText = null;
+    if (format === "shp") { setDetail("Preparing the projection file..."); prjText = await makePrj(gdal, srs); }
+    const res = await window.GddStream.run({
+      layerName: layer.name,
+      base: baseUrl(layer.url),
+      info: layerInfo,
+      ids: ids,
+      format: format,
+      native: native,
+      srs: srs,
+      outSR: queryOpts.outSR || null,
+      fileBase: fileBase || safeName,
+      maxRecordCount: layerInfo.maxRecordCount,
+      partBytes: window.CONFIG.partBytes,
+      forceZip64: window.CONFIG.forceZip64,
+      prjText: prjText,
+      deps: { arcgisRequest: arcgisRequest, hasValidGeometry: hasValidGeometry, applyDateFormatting: applyDateFormatting, Terraformer: window.Terraformer },
+      ui: {
+        status: setDetail,
+        progress: function (frac, text) { setBar(frac); if (text) setDetail(text); },
+        log: log,
+      },
+    });
+    setTitle("Starting download...");
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(res.file);
+    link.download = res.filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    let note = "";
+    if (native) note = format === "csv" ? " CSV files carry no projection information: the coordinates are in " + srsLabel(srs) + "." : " Coordinate system: " + srsLabel(srs) + ".";
+    if (res.parts > 1) note += " The shapefile was split into " + res.parts + " parts because one shapefile cannot pass 2 GB.";
+    $("keep").style.display = "none";
+    $("bar").style.display = "none";
+    showDone(res.filename + " (" + res.features.toLocaleString() + " features) has been saved to your downloads." + note);
+  }
+
   async function run() {
     try {
       const layers = window.CONFIG.layers;
-      const format = window.CONFIG.format;
+      let format = window.CONFIG.format;
+      let where = String(window.CONFIG.where || "").trim();
+      const native = window.CONFIG.crs === "native";
+      const fileBase = window.CONFIG.filename ? String(window.CONFIG.filename).replace(/[^a-zA-Z0-9_-]/g, "_") : "";
 
       setTitle("Validating layer endpoints...");
       for (const layer of layers) {
@@ -396,6 +602,12 @@
         if (!res.ok) throw new Error(`Cannot reach "${layer.name}" (HTTP ${res.status}).`);
         const meta = await res.json();
         if (meta.error) throw new Error(meta.error.message || `ArcGIS service error for "${layer.name}".`);
+      }
+
+      if (window.CONFIG.preflight && layers.length === 1 && layers[0].type !== "wfs") {
+        const pre = await runPreflight(layers[0], format, where);
+        format = pre.format;
+        where = pre.where;
       }
 
       setTitle("Initializing download engine...");
@@ -420,6 +632,7 @@
 
         let features;
         let layerCrs;
+        let layerSrs = null;
         if (layer.type === "wfs") {
           setDetail("Requesting features from the WFS server...");
           const wfsResult = await fetchWfsCollection(layer, function (done, total) {
@@ -434,14 +647,33 @@
           const layerInfo = await fetchLayerInfo(layer.url);
           const fieldTypes = layerInfo.fieldTypes;
 
-          setDetail("Fetching Object IDs from FeatureServer...");
-          const ids = await fetchObjectIds(layer.url);
+          const queryOpts = {};
+          if (native) {
+            layerSrs = srsString(layerInfo.sr);
+            queryOpts.native = true;
+            queryOpts.outSR = outSrParam(layerInfo.sr);
+            if (!layerSrs) throw new Error(`"${layer.name}" does not report its coordinate system, so its original projection cannot be kept. Use the Downloader page instead.`);
+            log(`${layer.name}: keeping the original coordinate system (${layerSrs}).`);
+          }
+
+          setDetail(where ? "Fetching Object IDs for the filter..." : "Fetching Object IDs from FeatureServer...");
+          const ids = await fetchObjectIds(layer.url, where);
           if (!ids || ids.length === 0) throw new Error(`No features or Object IDs returned for layer "${layer.name}".`);
           log(`${layer.name}: ${ids.length.toLocaleString()} features found.`);
 
+          if (window.CONFIG.preflight && layers.length === 1) {
+            if (isStreamFormat(format) && ids.length > GDAL_AUTO) {
+              await runStreamExport(gdal, layer, layerInfo, ids, format, native, layerSrs, queryOpts, fileBase, safeName);
+              return;
+            }
+            if (!isStreamFormat(format) && ids.length > GDAL_MAX) {
+              throw new Error("GeoPackage and KML are limited to " + GDAL_MAX.toLocaleString() + " features. This layer has " + ids.length.toLocaleString() + ". Choose Shapefile, GeoJSON or CSV, which are written straight to disk with no size limit.");
+            }
+          }
+
           const rawFeatures = await fetchFeaturesBatch(layer.url, ids, layerInfo.oidField, (chunkIndex, totalChunks) => {
             setDetail(`Downloading features: chunk ${chunkIndex} / ${totalChunks}`);
-          });
+          }, queryOpts);
           if (!rawFeatures || rawFeatures.length === 0) throw new Error(`Failed to retrieve feature records for layer "${layer.name}".`);
           features = applyDateFormatting(rawFeatures, fieldTypes);
         }
@@ -455,10 +687,12 @@
         if (!openResult || !openResult.datasets || openResult.datasets.length === 0) {
           throw new Error(`GDAL could not open the downloaded data for layer "${layer.name}".`);
         }
-        layerDatasets.push({ name: safeName, dataset: openResult.datasets[0] });
+        layerDatasets.push({ name: safeName, dataset: openResult.datasets[0], srs: layerSrs });
       }
 
       let blob, filename;
+      // Label the data with its real coordinate system (no reprojection) when native mode is on.
+      const aSrs = function (item) { return item.srs ? ["-a_srs", item.srs] : []; };
 
       async function collectLayerOutputFiles(zipInstance) {
         const outputFiles = await gdal.getOutputFiles();
@@ -480,9 +714,9 @@
         let gpkgPath = null;
         for (let j = 0; j < layerDatasets.length; j++) {
           const item = layerDatasets[j];
-          const options = j === 0
+          const options = (j === 0
             ? ["-f", "GPKG", "-nln", item.name]
-            : ["-update", "-append", "-f", "GPKG", "-nln", item.name];
+            : ["-update", "-append", "-f", "GPKG", "-nln", item.name]).concat(aSrs(item));
           setDetail(j === 0 ? `Creating GeoPackage with ${item.name}...` : `Appending ${item.name} to GeoPackage...`);
           gpkgPath = await gdal.ogr2ogr(item.dataset, options, "download");
         }
@@ -490,19 +724,19 @@
         setDetail("Finalizing GeoPackage download...");
         const finalBuffer = await gdal.getFileBytes(gpkgPath);
         blob = new Blob([finalBuffer], { type: "application/x-sqlite3" });
-        filename = "download.gpkg";
+        filename = fileBase ? fileBase + ".gpkg" : "download.gpkg";
       } else if (format === "shp") {
         setTitle("Creating ESRI Shapefiles...");
         for (let k = 0; k < layerDatasets.length; k++) {
           const item = layerDatasets[k];
           setDetail(`Converting ${item.name} to Shapefile (${k + 1}/${layerDatasets.length})...`);
-          await gdal.ogr2ogr(item.dataset, ["-f", "ESRI Shapefile"], item.name);
+          await gdal.ogr2ogr(item.dataset, ["-f", "ESRI Shapefile"].concat(aSrs(item)), item.name);
         }
         setDetail("Collecting Shapefile components...");
         await collectLayerOutputFiles(mainZip);
         setDetail("Compressing Shapefiles into ZIP archive...");
         blob = await mainZip.generateAsync({ type: "blob" });
-        filename = "download.zip";
+        filename = fileBase ? fileBase + "_shapefile.zip" : "download.zip";
       } else {
         setTitle(`Converting to ${format.toUpperCase()}...`);
         const driverMap = { geojson: "GeoJSON", csv: "CSV", kml: "KML", gpx: "GPX" };
@@ -510,7 +744,7 @@
         for (let m = 0; m < layerDatasets.length; m++) {
           const item = layerDatasets[m];
           setDetail(`Processing ${item.name} (${m + 1}/${layerDatasets.length})...`);
-          const options = ["-f", driver];
+          const options = ["-f", driver].concat(aSrs(item));
           if (driver === "CSV") {
             options.push("-lco", "GEOMETRY=AS_WKT");
           }
@@ -520,7 +754,7 @@
         await collectLayerOutputFiles(mainZip);
         setDetail("Compressing archive files...");
         blob = await mainZip.generateAsync({ type: "blob" });
-        filename = `gis_bulk_export_${format}.zip`;
+        filename = fileBase ? `${fileBase}_${format}.zip` : `gis_bulk_export_${format}.zip`;
       }
 
       for (const item of layerDatasets) {
@@ -535,7 +769,12 @@
       link.click();
       document.body.removeChild(link);
 
-      showDone(`${filename} has been saved to your downloads.`);
+      const crsNote = layerDatasets[0] && layerDatasets[0].srs
+        ? (format === "kml" || format === "gpx"
+            ? " KML and GPX are always WGS84 (EPSG:4326), so the data was reprojected."
+            : " Coordinate system: " + srsLabel(layerDatasets[0].srs) + ".")
+        : "";
+      showDone(`${filename} has been saved to your downloads.` + crsNote);
     } catch (err) {
       console.error("Export error:", err);
       showError((err && err.message) || "Failed to complete export pipeline.");

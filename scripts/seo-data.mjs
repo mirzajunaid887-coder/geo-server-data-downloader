@@ -5,6 +5,7 @@
  */
 import { build } from 'esbuild';
 import { resolve } from 'node:path';
+import { readFile } from 'node:fs/promises';
 
 const ROOT = resolve('.');
 
@@ -45,4 +46,9 @@ export async function loadBlog() {
   });
   const code = result.outputFiles[0].text;
   return import('data:text/javascript;base64,' + Buffer.from(code).toString('base64'));
+}
+
+/** Cities from src/data/parcelCities.json (written by generate-parcel-data.mjs, which runs first). */
+export async function loadParcelCityList() {
+  return JSON.parse(await readFile(resolve(ROOT, 'src/data/parcelCities.json'), 'utf8'));
 }

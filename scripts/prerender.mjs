@@ -4,7 +4,7 @@ import { readFile, writeFile, mkdir, stat } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { resolve, dirname, extname } from 'node:path';
 import { createServer } from 'node:http';
-import { loadBlog, CORE_ROUTES } from './seo-data.mjs';
+import { loadBlog, loadParcelCityList, CORE_ROUTES } from './seo-data.mjs';
 
 const DIST = resolve('dist');
 const IS_LINUX = process.platform === 'linux';
@@ -145,6 +145,7 @@ async function main() {
   const routes = [
     ...CORE_ROUTES,
     ...DATA_TOPICS.map((t) => `/data/${t.slug}`),
+    ...(await loadParcelCityList()).map((c) => `/data/parcels/${c.slug}`),
     ...BLOG_POSTS.filter((p) => !REDIRECTED_SLUGS[p.slug]).map((p) => `/blog/${p.slug}`),
     NOT_FOUND_ROUTE,
   ];

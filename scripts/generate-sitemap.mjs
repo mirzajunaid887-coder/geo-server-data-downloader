@@ -6,8 +6,9 @@
  * Runs automatically before `vite build` (see package.json).
  */
 import { readFile, writeFile } from 'node:fs/promises';
-import { loadBlog, CORE_ROUTES, SITE_URL } from './seo-data.mjs';
+import { loadBlog, loadParcelCityList, CORE_ROUTES, SITE_URL } from './seo-data.mjs';
 
+const parcelCities = (await loadParcelCityList()).filter((c) => c.indexable);
 const { DATA_TOPICS, BLOG_POSTS, isIndexable, REDIRECTED_SLUGS, MIN_INDEXABLE_WORDS } = await loadBlog();
 
 // ---- keep vercel.json redirects in sync -------------------------------------------------
@@ -37,6 +38,7 @@ const xml = [
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
   ...CORE_ROUTES.map((r) => url(r, r === '/blog' ? newest : undefined)),
   ...DATA_TOPICS.map((t) => url(`/data/${t.slug}`, t.dateModified)),
+  ...parcelCities.map((c) => url(`/data/parcels/${c.slug}`, c.checked || undefined)),
   ...posts.map((p) => url(`/blog/${p.slug}`, p.dateModified)),
   '</urlset>',
   '',
@@ -44,6 +46,6 @@ const xml = [
 
 await writeFile('public/sitemap.xml', xml);
 console.log(
-  `sitemap.xml: ${CORE_ROUTES.length} core pages + ${posts.length} indexable posts ` +
+  `sitemap.xml: ${CORE_ROUTES.length} core pages + ${parcelCities.length} city parcel pages + ${posts.length} indexable posts ` +
     `(${BLOG_POSTS.length - posts.length} posts excluded: merged or under ${MIN_INDEXABLE_WORDS} words)`
 );
