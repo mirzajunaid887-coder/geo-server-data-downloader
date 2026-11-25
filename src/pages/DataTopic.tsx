@@ -5,6 +5,7 @@ import { SEO, buildBreadcrumbSchema, buildFaqSchema } from '../components/SEO';
 import { ContentRenderer } from '../components/blog/ContentRenderer';
 import { getDataTopic, DATA_TOPICS } from '../data/dataTopics';
 import { getPostBySlug } from '../data/blogPosts';
+import { CityLinks } from '../components/data/CityLinks';
 
 export const DataTopicPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -72,6 +73,8 @@ export const DataTopicPage: React.FC = () => {
             </div>
           ))}
         </section>
+
+        {topic.slug === 'parcel-data' && <CityLinks />}
 
         {(posts.length > 0 || topics.length > 0) && (
           <aside style={{ marginTop: '2.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)' }}>

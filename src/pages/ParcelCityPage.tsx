@@ -142,7 +142,7 @@ export const ParcelCityPage: React.FC = () => {
           <li>Download the file and open it in QGIS, ArcGIS Pro or any GIS tool. Check the coordinate system first if you will measure areas.</li>
         </ol>
         <p style={{ ...pS, marginTop: '0.75rem' }}>
-          New to parcel data? Read the <Link to="/data/parcel-data">parcel data guide</Link>or search other layers in <Link to="/discover">Discover</Link>.
+          New to parcel data? Read the <Link to="/data/parcel-data">US parcel data guide</Link>{' '}or search other layers with <Link to="/discover">Discover: find ArcGIS parcel services</Link>.
         </p>
 
         <section style={{ marginTop: '2.5rem' }}>

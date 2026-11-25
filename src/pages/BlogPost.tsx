@@ -4,9 +4,13 @@ import { Clock, Calendar, ArrowLeft, User } from 'lucide-react';
 import { SEO } from '../components/SEO';
 import { ContentRenderer } from '../components/blog/ContentRenderer';
 import { AdSlot } from '../components/ads/AdSlot';
+import { CityLinks } from '../components/data/CityLinks';
 import { ADSENSE_SLOT_ARTICLE } from '../config/ads';
 import { getPostBySlug, getRelatedPosts } from '../data/blogPosts';
 import { REDIRECTED_SLUGS, isIndexable, countWords } from '../data/blogSeo';
+
+/** Posts about getting parcel data: they list the city pages so readers and Google can reach them. */
+const PARCEL_POSTS = ['how-to-find-free-parcel-data-us-counties', 'how-to-filter-arcgis-data-before-downloading'];
 
 export const BlogPost: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -240,6 +244,8 @@ export const BlogPost: React.FC = () => {
           <Link to="/about" style={{ color: 'var(--accent-color)' }}>About the author</Link>. Spotted a mistake or an outdated step?{' '}
           <Link to="/contact" style={{ color: 'var(--accent-color)' }}>Tell us</Link> and we will fix it.
         </section>
+
+        {PARCEL_POSTS.includes(post.slug) && <CityLinks />}
 
         {/* Related guides */}
         {related.length > 0 && (

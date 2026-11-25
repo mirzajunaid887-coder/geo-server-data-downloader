@@ -89,7 +89,7 @@ export const DATA_TOPICS: DataTopic[] = [
       { q: 'What format should I choose?', a: 'GeoPackage for large layers or long field names, Shapefile for older software, GeoJSON for web maps. Shapefile field names are cut to 10 characters.' },
     ],
     relatedPosts: ['how-to-find-free-parcel-data-us-counties', 'how-to-filter-arcgis-data-before-downloading', 'geojson-vs-shapefile-vs-geopackage'],
-    relatedTopics: ['zoning-data', 'census-boundaries', 'flood-zone-data'],
+    relatedTopics: ['zoning-data', 'census-boundaries', 'flood-zone-data', 'building-footprints', 'roads-data'],
   },
   {
     slug: 'zoning-data',
@@ -135,7 +135,7 @@ export const DATA_TOPICS: DataTopic[] = [
       { q: 'Why are the zone codes different from city to city?', a: 'Each local government writes its own code. Compare categories and read the ordinance, not just the letters.' },
     ],
     relatedPosts: ['how-to-download-municipal-zoning-data', 'how-to-find-free-parcel-data-us-counties', 'how-to-filter-arcgis-data-before-downloading'],
-    relatedTopics: ['parcel-data', 'flood-zone-data', 'census-boundaries'],
+    relatedTopics: ['parcel-data', 'flood-zone-data', 'census-boundaries', 'building-footprints'],
   },
   {
     slug: 'flood-zone-data',
@@ -178,7 +178,7 @@ export const DATA_TOPICS: DataTopic[] = [
       { q: 'Is the flood zone map enough to decide on flood insurance?', a: 'No. Ask your insurer or the local floodplain administrator. This tool only gives you the data.' },
     ],
     relatedPosts: ['how-to-filter-arcgis-data-before-downloading', 'how-to-download-arcgis-rest-featureserver-data', 'understanding-coordinate-systems-and-projections'],
-    relatedTopics: ['parcel-data', 'zoning-data', 'census-boundaries'],
+    relatedTopics: ['parcel-data', 'zoning-data', 'census-boundaries', 'building-footprints', 'roads-data'],
   },
   {
     slug: 'building-footprints',
@@ -220,7 +220,7 @@ export const DATA_TOPICS: DataTopic[] = [
       { q: 'Which file format is best for millions of footprints?', a: 'GeoPackage. Shapefile has a 2 GB limit and short field names, and GeoJSON gets very large.' },
     ],
     relatedPosts: ['downloading-openstreetmap-data-for-gis', 'geojson-vs-shapefile-vs-geopackage', 'how-to-filter-arcgis-data-before-downloading'],
-    relatedTopics: ['parcel-data', 'roads-data', 'flood-zone-data'],
+    relatedTopics: ['parcel-data', 'roads-data', 'flood-zone-data', 'zoning-data'],
   },
   {
     slug: 'census-boundaries',

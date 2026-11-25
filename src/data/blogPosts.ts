@@ -137,6 +137,7 @@ const BASE_POSTS: BlogPost[] = [
     content: [
       { type: 'paragraph', text: 'Parcel data — the legal boundaries of land ownership — is one of the most requested GIS datasets in the world. It powers property tax systems, urban planning, real estate analysis, environmental research, and much more.' },
       { type: 'paragraph', text: 'The good news: in the United States, parcel data is almost always public. The bad news: it is scattered across thousands of county and municipal GIS portals, each with its own format, licensing terms, and download process. This guide shows you how to find it efficiently.' },
+      { type: 'paragraph', text: 'Starting from a list of addresses instead of parcel numbers? [Geocode the addresses first](/blog/beginners-guide-to-geocoding-and-reverse-geocoding), then join them to the parcel layer by location.' },
       { type: 'heading', level: 2, text: 'Who publishes parcel data?' },
       { type: 'paragraph', text: 'Parcel data is almost always maintained at the county level. In most states, the county assessor or the county GIS department is the authoritative source.' },
       { type: 'list', items: ['County assessor offices — maintain ownership and valuation records', 'County GIS departments — publish the spatial parcel layer', 'State-level GIS clearinghouses — aggregate county data into statewide layers', 'Regional councils of governments (COGs) — sometimes host regional compilations', 'Private aggregators (Regrid, CoreLogic, LightBox) — paid, but useful for gaps'] },
@@ -260,6 +261,7 @@ const BASE_POSTS: BlogPost[] = [
     excerpt: 'Need to get ArcGIS Online data into Excel? This guide shows you how to export any feature layer to CSV with proper handling of dates, geometry, and attributes.',
     content: [
       { type: 'paragraph', text: 'ArcGIS Online is home to millions of authoritative geospatial datasets — parcels, boundaries, infrastructure, environmental data, and much more. But if you need that data in Excel for analysis, reporting, or sharing with non-GIS colleagues, the process is not obvious.' },
+      { type: 'paragraph', text: 'Working in ArcGIS Pro instead of ArcGIS Online? See [how to export data from ArcGIS Pro to CSV](/blog/how-to-export-data-from-arcgis-pro-to-csv).' },
       { type: 'paragraph', text: 'This guide shows you the fastest way to convert any ArcGIS Online layer into a spreadsheet-friendly format, including how to keep the spatial geometry as a WKT column.' },
       { type: 'heading', level: 2, text: 'Why the "Export to CSV" button is not enough' },
       { type: 'paragraph', text: 'If you use ArcGIS Online\'s built-in "Export Data" feature, you will get a few limitations:' },
@@ -628,6 +630,7 @@ const BASE_POSTS: BlogPost[] = [
     content: [
       { type: 'paragraph', text: 'If you are new to GIS, one of the first things that overwhelms you is the sheer number of file formats. Shapefiles, GeoJSON, KML, GeoPackage, GeoTIFF, LAS, NetCDF, GML... the list seems endless.' },
       { type: 'paragraph', text: 'The good news is that all these formats fall into just a few categories. Once you understand the categories, the specific formats make much more sense.' },
+      { type: 'paragraph', text: 'If you only need a table for Excel, CSV is the simplest choice. [Here is how to export ArcGIS data to CSV](/blog/how-to-export-data-from-arcgis-pro-to-csv), including the geometry column.' },
       { type: 'heading', level: 2, text: 'The two fundamental data types' },
       { type: 'paragraph', text: 'Every spatial dataset is either vector or raster.' },
       { type: 'heading', level: 3, text: 'Vector data' },
@@ -1340,6 +1343,7 @@ out geom;` },
     excerpt: 'Learn where to find free municipal zoning data and how to download it in GIS formats like Shapefile or GeoJSON for urban planning analysis.',
     content: [
       { type: 'paragraph', text: 'Zoning decides what can be built where, which makes it the starting point for site selection, development feasibility and community planning. There is no single national zoning dataset in the United States. Zoning is set by cities and counties, so each place publishes its own map in its own way. This guide explains where to look, how to download a zoning layer, and how to use it without misreading it.' },
+      { type: 'paragraph', text: 'Zoning is often joined to parcels. If your sites are only addresses, [geocode them](/blog/beginners-guide-to-geocoding-and-reverse-geocoding) first, then see [parcel data for big US cities](/data).' },
       { type: 'heading', level: 2, text: 'Where to find zoning data' },
       { type: 'list', items: ['City or county open data portal: search for the place name together with "open data" or "GIS data".', 'The planning department website: look for "maps", "GIS" or "zoning map".', 'ArcGIS Online and ArcGIS Hub: many local governments publish zoning here. Search for the city and the word zoning, or use the [Discover tool](/discover) on this site.', 'Regional councils and state portals: some aggregate data across several municipalities.', 'The online zoning viewer: if only a viewer exists, the data behind it may still be a public ArcGIS service.'] },
       { type: 'heading', level: 2, text: 'Why zoning data needs careful reading' },
