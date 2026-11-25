@@ -22,7 +22,31 @@
       "For ownership and valuation details, the assessor's own search and data products may offer more than this outline layer."
     ],
     "filterExample": "",
-    "checked": null,
+    "checked": "2026-11-23",
+    "indexable": true
+  },
+  {
+    "slug": "meridian-id",
+    "city": "Meridian",
+    "county": "Ada County",
+    "state": "Idaho",
+    "stateCode": "ID",
+    "url": "https://gis.meridiancity.org/server/rest/services/CD/Parcel_public_Webservice/FeatureServer/0",
+    "publisher": "Meridian City",
+    "about": [
+      "Additional parcel information can be found on the Ada County Assessors Land Records/GIS website at: http://www.adacountyassessor.org/propsys/index.jsp. For specific zoning questions and information about City Code, contact the Current Planning section of the Planning Division at 208.884.5533, planning@meridiancity.org, or www.meridiancity.org/planning. This map us typically updated monthly from Ada County Land Records."
+    ],
+    "coverage": [
+      "Meridian parcel data is managed by Ada County. Meridian City updates their parcel layer on their official source on monthly bases from Ada County."
+    ],
+    "fields": [
+      "PARCEL, ADDRESS, ZONING"
+    ],
+    "watchOut": [
+      "Meridian City is using Ada County parcel data. So make sure to verify the data from official Ada County sources."
+    ],
+    "filterExample": "",
+    "checked": "2026-11-24",
     "indexable": true
   },
   {
@@ -52,7 +76,31 @@
       "Coordinates are in Illinois State Plane East (feet). Distances and areas come out in feet."
     ],
     "filterExample": "",
-    "checked": null,
+    "checked": "2026-11-23",
+    "indexable": true
+  },
+  {
+    "slug": "las-vegas-nv",
+    "city": "Las Vegas",
+    "county": "Clark County",
+    "state": "Nevada",
+    "stateCode": "NV",
+    "url": "https://services1.arcgis.com/F1v0ufATbBQScMtY/ArcGIS/rest/services/ZONING/FeatureServer/5",
+    "publisher": "Las Vegas City",
+    "about": [
+      "This parcel data is also used for Las Vegas City Zoning. It includes the parcel level zoning information. Original parcel data might be different. Please cross check that before using this data."
+    ],
+    "coverage": [
+      "This data covers the entire city of Las Vegas, NV juridiction."
+    ],
+    "fields": [
+      "PARCEL, ZONE"
+    ],
+    "watchOut": [
+      "If you are using this data please make sure you also cross check it with original parcel data."
+    ],
+    "filterExample": "",
+    "checked": "2026-11-25",
     "indexable": true
   },
   {
@@ -83,7 +131,7 @@
       "Assessment practices differ by county, so values are not strictly comparable across counties."
     ],
     "filterExample": "",
-    "checked": null,
+    "checked": "2026-11-23",
     "indexable": true
   },
   {
@@ -113,7 +161,7 @@
       "For the county-wide appraisal data, check the Harris County Appraisal District as well."
     ],
     "filterExample": "",
-    "checked": null,
+    "checked": "2026-11-23",
     "indexable": true
   }
 ]

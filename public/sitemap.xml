@@ -19,9 +19,6 @@
     <loc>https://www.geo-server-data-downloader.com/data</loc>
   </url>
   <url>
-    <loc>https://www.geo-server-data-downloader.com/data/parcels-by-city</loc>
-  </url>
-  <url>
     <loc>https://www.geo-server-data-downloader.com/documentation</loc>
   </url>
   <url>
@@ -62,6 +59,30 @@
   </url>
   <url>
     <loc>https://www.geo-server-data-downloader.com/data/roads-data</loc>
+    <lastmod>2026-11-23</lastmod>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/data/parcels/phoenix-az</loc>
+    <lastmod>2026-11-23</lastmod>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/data/parcels/meridian-id</loc>
+    <lastmod>2026-11-24</lastmod>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/data/parcels/chicago-il</loc>
+    <lastmod>2026-11-23</lastmod>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/data/parcels/las-vegas-nv</loc>
+    <lastmod>2026-11-25</lastmod>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/data/parcels/new-york-ny</loc>
+    <lastmod>2026-11-23</lastmod>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/data/parcels/houston-tx</loc>
     <lastmod>2026-11-23</lastmod>
   </url>
   <url>
