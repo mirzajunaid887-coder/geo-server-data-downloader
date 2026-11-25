@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev":   "node scripts/generate-parcel-data.mjs && vite",
-     "build": "node scripts/generate-parcel-data.mjs && node scripts/generate-sitemap.mjs && node ./node_modules/vite/bin/vite.js build && node scripts/prerender.mjs",
+     "build": "node scripts/generate-parcel-data.mjs && node scripts/generate-sitemap.mjs && node ./node_modules/vite/bin/vite.js build && node scripts/prerender.mjs && node scripts/indexnow.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
