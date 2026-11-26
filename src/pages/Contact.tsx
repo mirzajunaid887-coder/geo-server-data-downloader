@@ -24,8 +24,7 @@ export const Contact: React.FC = () => {
       <article style={articleStyle}>
         <h1 style={h1Style}>Contact</h1>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
-          Have a question, spotted a bug, or want to hire me for a WebGIS
-          project? Here's how to reach me.
+          Have a question, spotted a bug, or want to hire me for any kind of GIS work wether it's about stanardizing the parcel/zoning data. Or you need custom webGIS applications? Here's how to reach me.
         </p>
 
         <section style={sectionStyle}>
@@ -38,12 +37,14 @@ export const Contact: React.FC = () => {
         <section style={sectionStyle}>
           <h2 style={h2Style}>Freelance GIS Work</h2>
           <p>
-            I'm available for hire on Fiverr and Upwork. If you need help
+            I'm available for hire on Fiverr and Upwork as-well. If you need help
             with:
           </p>
           <ul style={{ paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <li>Building a custom GIS web application</li>
+            <li>Building a custom webGIS applications</li>
             <li>Automating spatial data extraction or conversion</li>
+            <li>GIS/Remote Sensing Analysis</li>
+            <li>Standardizing Parcel/Zoning Vector Data</li>
             <li>Migrating or integrating ArcGIS REST services</li>
             <li>Debugging an existing geospatial workflow</li>
           </ul>

@@ -8,9 +8,9 @@
     "url": "https://gis.mcassessor.maricopa.gov/arcgis/rest/services/ParcelOutline/MapServer/0",
     "publisher": "Maricopa County Assessor",
     "officialUrl": "https://maps.mcassessor.maricopa.gov/",
-    "license": "User should indenpendtly research and verify information within this dataset or map before relying on it",
+    "license": "",
     "about": [
-      "Parcel outlines from the county assessor, covering Phoenix and the rest of the county."
+      "Parcel outlines published by the Maricopa County Assessor in its ParcelOutline map service. Phoenix is part of Maricopa County, so the layer covers the whole county, not only the city. It is mainly a boundary layer for mapping parcels, and its attribute list can be smaller than a full assessor table."
     ],
     "coverage": [
       "Phoenix parcels are maintained by the county assessor, so this layer covers all of Maricopa County. Use the live details below for the exact fields and the feature count."
@@ -21,7 +21,8 @@
     ],
     "watchOut": [
       "Phoenix is a part of a very large county. Filter by city or area before you download.",
-      "For ownership and valuation details, the assessor's own search and data products may offer more than this outline layer."
+      "For ownership and valuation details, the assessor's own search and data products may offer more than this outline layer.",
+      "The publisher's disclaimer says users should independently research and verify the information in this dataset or map before relying on it."
     ],
     "filterExample": "",
     "checked": "2026-11-23",
@@ -38,16 +39,20 @@
     "officialUrl": "https://gis.meridiancity.org/portal/apps/instant/sidebar/index.html?appid=c14c56d218cf4de6897bf14b061b8d53",
     "license": "",
     "about": [
-      "Additional parcel information can be found on the Ada County Assessors Land Records/GIS website at: http://www.adacountyassessor.org/propsys/index.jsp. For specific zoning questions and information about City Code, contact the Current Planning section of the Planning Division at 208.884.5533, planning@meridiancity.org, or www.meridiancity.org/planning. This map us typically updated monthly from Ada County Land Records."
+      "Parcels for the City of Meridian, Idaho, published by Meridian City GIS. The parcel data is managed by Ada County, and Meridian refreshes its layer from Ada County Land Records about once a month. The layer lists the parcel number, address and zoning. For additional parcel information, use the Ada County Assessor's Land Records website."
     ],
     "coverage": [
-      "Meridian parcel data is managed by Ada County. Meridian City updates their parcel layer on their official source on monthly bases from Ada County."
+      "Meridian parcel data is managed by Ada County. Meridian City updates its copy of the layer roughly monthly from Ada County Land Records. Check the live extent below to see how far the layer reaches before you assume it covers the whole county."
     ],
     "fields": [
-      "PARCEL, ADDRESS, ZONING"
+      "PARCEL: the parcel number.",
+      "ADDRESS: the site address.",
+      "ZONING: the zoning district.",
+      "The live field list below shows the exact attributes."
     ],
     "watchOut": [
-      "Meridian City is using Ada County parcel data. So make sure to verify the data from official Ada County sources."
+      "Meridian City uses Ada County parcel data, so verify the data against the official Ada County sources.",
+      "Because the city copies from the county about monthly, a very recent county change may not appear yet."
     ],
     "filterExample": "",
     "checked": "2026-11-24",
@@ -64,7 +69,7 @@
     "officialUrl": "https://maps.cookcountyil.gov/cookviewer/",
     "license": "",
     "about": [
-      "The county parcel layer behind the Cook County viewer. It covers Chicago and the suburbs."
+      "The county parcel layer behind the Cook County viewer, published by Cook County GIS as \"Parcels Current\". Chicago parcels are part of it together with the suburbs, so the layer covers all of Cook County. For each parcel it lists the parcel number (PIN), address, property class, assessed values and tax district names."
     ],
     "coverage": [
       "Chicago parcels come from the county, not the city. This layer is named \"Parcels Current\" and covers the whole of Cook County, so you can filter by city or township to get Chicago only."
@@ -96,16 +101,19 @@
     "officialUrl": "https://experience.arcgis.com/experience/50802b61584341ad8096b907621c48be",
     "license": "",
     "about": [
-      "This parcel data is also used for Las Vegas City Zoning. It includes the parcel level zoning information. Original parcel data might be different. Please cross check that before using this data."
+      "A zoning layer for the City of Las Vegas that is built on parcel shapes, so each parcel record carries its zoning district. It is published by the City of Las Vegas and is also used for the city's own zoning map. It is not the original assessor parcel file, and the parcel shapes may differ from it."
     ],
     "coverage": [
-      "This data covers the entire city of Las Vegas, NV juridiction."
+      "This data covers the jurisdiction of the City of Las Vegas, Nevada, which lies in Clark County. Check the live extent below to see how far the layer reaches."
     ],
     "fields": [
-      "PARCEL, ZONE"
+      "PARCEL: the parcel number.",
+      "ZONE: the zoning code of the parcel.",
+      "The live field list below shows the exact attributes."
     ],
     "watchOut": [
-      "If you are using this data please make sure you also cross check it with original parcel data."
+      "This is a zoning layer on parcel shapes, not the official assessor parcel file. Cross check parcel boundaries and numbers with the original county parcel data before relying on them.",
+      "Zoning changes over time. Confirm the current zoning with the City of Las Vegas planning department for any decision."
     ],
     "filterExample": "",
     "checked": "2026-11-25",
@@ -122,16 +130,19 @@
     "officialUrl": "https://las-cruces.maps.arcgis.com/apps/instant/basic/index.html?appid=e7813e63da3d4f40a1d4a9b3c7c16633",
     "license": "",
     "about": [
-      "Parcel Base Zoning data for the city of Las Cruces. This data includes the zoning information for each parcel. Original Parcel data might be different please cross check the information before using this data."
+      "Parcel base zoning data for the City of Las Cruces, New Mexico, published by the city (layer name 2025_Zoning_Code). Each parcel record carries its zoning class and zoning sub-district. It is a zoning layer built on parcel shapes, so it may differ from the original parcel data."
     ],
     "coverage": [
-      "This data covers the entire city of Las Cruces, NM juridiction."
+      "This data covers the jurisdiction of the City of Las Cruces, New Mexico, in Doña Ana County. Check the live extent below to see how far the layer reaches."
     ],
     "fields": [
-      "ZONECLASS, Sub_Zoning_District, Char_Over"
+      "ZONECLASS: the zoning class.",
+      "Sub_Zoning_District: the zoning sub-district.",
+      "Char_Over: an overlay field. See the live field list below for its exact meaning."
     ],
     "watchOut": [
-      "If you are using this data please make sure you also cross check it with original parcel data."
+      "This is a zoning layer on parcel shapes, not the official parcel file. Cross check parcel boundaries and numbers with the original parcel data before relying on them.",
+      "Zoning changes over time. Confirm the current zoning with the City of Las Cruces for any decision."
     ],
     "filterExample": "",
     "checked": "2026-11-26",
@@ -146,9 +157,9 @@
     "url": "https://nysgeohub.ny.gov/arcgis/rest/services/Parcels/NYS_Tax_Parcels_Public/FeatureServer/1",
     "publisher": "NYS ITS Geospatial Services",
     "officialUrl": "https://gis.ny.gov/parcels",
-    "license": "The license for this dataset is unspecified",
+    "license": "",
     "about": [
-      "A statewide layer assembled from county parcel files, including New York City."
+      "A statewide tax parcel layer published by NYS ITS Geospatial Services. It combines county parcel geometry with state assessment rolls and, for New York City, MapPLUTO. Only counties that have authorised public sharing are included, so it is not a complete map of the state. Each parcel carries address, ownership, property class and assessed value fields."
     ],
     "coverage": [
       "This is not every county in the state. The service description says it contains tax parcel data only for counties that authorised public sharing (36 counties as of May 2026), built from county parcel geometry, state assessment rolls and NYC MapPLUTO. Filter or group by COUNTY_NAME to see which counties are present before you start."
@@ -164,7 +175,8 @@
       "Counties that do not share publicly are missing, so a blank area on the map is not necessarily empty land.",
       "The data is an annual snapshot. Check the roll year and spatial year fields for each county.",
       "Coordinates are in Web Mercator. Reproject to a local projected system before measuring area.",
-      "Assessment practices differ by county, so values are not strictly comparable across counties."
+      "Assessment practices differ by county, so values are not strictly comparable across counties.",
+      "The service lists no license. Confirm the terms of use with NYS ITS Geospatial Services before you republish the data."
     ],
     "filterExample": "",
     "checked": "2026-11-23",
@@ -173,7 +185,7 @@
   {
     "slug": "fayetteville-nc",
     "city": "Fayetteville",
-    "county": "Cumberland",
+    "county": "Cumberland County",
     "state": "North Carolina",
     "stateCode": "NC",
     "url": "https://gismaps.fayettevillenc.gov/cofpublicgis/rest/services/Base/Parcels/MapServer/0",
@@ -181,16 +193,18 @@
     "officialUrl": "https://map.viewprogis.com/vp/fayetteville-nc?widget=8841cfd6-f683-4f3a-9e0c-26a67e914386",
     "license": "",
     "about": [
-      "Parcel outlines from the City assessor, covering Fayetteville city."
+      "A parcel layer published by the City of Fayetteville, North Carolina, in its ViewPro public GIS map service (Base/Parcels). It covers parcels in the city of Fayetteville. Only a short attribute list is known for it, with zoning as the main field, so use the live field list below to see everything it contains."
     ],
     "coverage": [
       "Published by the City of Fayetteville as part of its ViewPro Map service. Use the live extent below to see how far the layer reaches. Check coverage in the map before assuming it covers the whole city."
     ],
     "fields": [
-      "ZONING"
+      "ZONING: the zoning code of the parcel.",
+      "The live field list below shows the full set of attributes."
     ],
     "watchOut": [
-      "If you are using this data please make sure you also cross check it with original parcel data."
+      "Cross check the parcel boundaries and numbers with the original county parcel data before relying on them.",
+      "The layer is published as a map service, so very large pulls may take time."
     ],
     "filterExample": "",
     "checked": "2026-11-26",
@@ -207,7 +221,7 @@
     "officialUrl": "https://experience.arcgis.com/experience/024f52f00e214e8691463ecb84dca725",
     "license": "",
     "about": [
-      "City-published parcels with tax, land use and flood fields."
+      "Parcels published by the City of Houston GIS in its HoustonMap service (Cadastral layer). Each parcel has a tax account ID, site and mailing address, property class, land use, appraised values and acreage. It also includes handy city fields such as flood zone and council district."
     ],
     "coverage": [
       "Published by the City of Houston as part of its HoustonMap service. Use the live extent below to see how far the layer reaches. The layer extent is larger than the city limits proper, so check coverage in the map before assuming it covers the whole county."

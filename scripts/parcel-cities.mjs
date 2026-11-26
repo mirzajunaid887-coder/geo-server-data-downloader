@@ -251,6 +251,9 @@ export function buildCities(rows, today = new Date()) {
     }
     // Optional: only fill this when the publisher states a license or terms page. It is never guessed.
     const license = clean(get(r, 'license'));
+    if (license && !/^https?:\/\//i.test(license)) {
+      warnings.push(`${label}, ${st.code}: License is text, not a web address. It is shown on the page as a "Publisher's note" and is NOT used as the license in the structured data. Put a license web address here only if the publisher gives one.`);
+    }
 
     const about = paragraphs(get(r, 'about'));
     const coverage = paragraphs(get(r, 'coverage'));

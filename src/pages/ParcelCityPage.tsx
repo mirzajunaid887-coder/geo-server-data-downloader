@@ -8,7 +8,7 @@ import { PARCEL_CITIES, cityLabel, cityPath, getParcelCity } from '../data/parce
 
 const h2: React.CSSProperties = { fontSize: '1.25rem', fontWeight: 800, margin: '2rem 0 0.5rem' };
 const ulS: React.CSSProperties = { paddingLeft: '1.2rem', margin: 0, lineHeight: 1.8, fontSize: '0.95rem' };
-const pS: React.CSSProperties = { fontSize: '0.97rem', lineHeight: 1.75, margin: '0 0 0.6rem' };
+const pS: React.CSSProperties = { fontSize: '0.97rem', lineHeight: 1.75, margin: '0 0 0.6rem', overflowWrap: 'anywhere' };
 
 const prettyDate = (iso: string) =>
   new Date(iso + 'T00:00:00Z').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
@@ -63,7 +63,8 @@ export const ParcelCityPage: React.FC = () => {
     isAccessibleForFree: true,
     distribution: [{ '@type': 'DataDownload', contentUrl: c.url, encodingFormat: 'ArcGIS REST' }],
     ...(c.officialUrl ? { sameAs: c.officialUrl } : {}),
-    ...(c.license ? { license: c.license } : {}),
+    // Only a real web address goes into the structured data. A sentence such as "license unspecified" or a disclaimer is not a license.
+    ...(/^https?:\/\//i.test(c.license) ? { license: c.license } : {}),
   };
 
   return (
@@ -95,7 +96,9 @@ export const ParcelCityPage: React.FC = () => {
           {c.county && <><dt style={{ fontWeight: 700 }}>County</dt><dd style={{ margin: 0 }}>{c.county}</dd></>}
           {c.publisher && <><dt style={{ fontWeight: 700 }}>Published by</dt><dd style={{ margin: 0 }}>{c.publisher}</dd></>}
           {c.officialUrl && <><dt style={{ fontWeight: 700 }}>Official source page</dt><dd style={{ margin: 0 }}><a href={c.officialUrl} target="_blank" rel="noopener noreferrer">{(() => { try { return new URL(c.officialUrl).hostname.replace(/^www\./, ''); } catch { return 'Open official page'; } })()}</a></dd></>}
-          {c.license && <><dt style={{ fontWeight: 700 }}>License</dt><dd style={{ margin: 0 }}>{/^https?:\/\//i.test(c.license) ? <a href={c.license} target="_blank" rel="noopener noreferrer">Publisher's license terms</a> : c.license}</dd></>}
+          {c.license && (/^https?:\/\//i.test(c.license)
+            ? <><dt style={{ fontWeight: 700 }}>License</dt><dd style={{ margin: 0 }}><a href={c.license} target="_blank" rel="noopener noreferrer">Publisher's license terms</a></dd></>
+            : <><dt style={{ fontWeight: 700 }}>Publisher's note</dt><dd style={{ margin: 0, overflowWrap: 'anywhere' }}>{c.license}</dd></>)}
           {c.checked && <><dt style={{ fontWeight: 700 }}>Link last checked</dt><dd style={{ margin: 0 }}><time dateTime={c.checked}>{prettyDate(c.checked)}</time></dd></>}
         </dl>
 
