@@ -141,6 +141,8 @@ const ALIASES = {
   coverage: ['coverage', 'coveragenotes'],
   fields: ['keyfields', 'fields', 'whatisinside', 'inside'],
   filterExample: ['filterexample', 'downloadfilter', 'examplefilter', 'whereexample'],
+  officialUrl: ['officialpageurl', 'officialurl', 'officialwebsite', 'officialwebsiteurl', 'datasetpage', 'datasetpageurl', 'sourcepage', 'sourcepageurl', 'citywebsite', 'citywebsiteurl'],
+  license: ['licenseurl', 'license', 'licence', 'licenceurl', 'termsofuse'],
   watchOut: ['watchout', 'watchouts', 'watchoutfor', 'notes', 'caveats'],
 };
 
@@ -241,6 +243,15 @@ export function buildCities(rows, today = new Date()) {
       if (age > STALE_DAYS) warnings.push(`${label}, ${st.code}: link last checked ${checked} (${Math.round(age)} days ago). Please re-check it.`);
     }
 
+    // Optional: the official page about this dataset (open data portal page, city GIS page).
+    let officialUrl = clean(get(r, 'officialUrl'));
+    if (officialUrl && !/^https?:\/\/[^\s]+\.[^\s]+$/i.test(officialUrl)) {
+      warnings.push(`${label}, ${st.code}: Official_Page_URL "${officialUrl}" is not a full web address (https://...). It was ignored.`);
+      officialUrl = '';
+    }
+    // Optional: only fill this when the publisher states a license or terms page. It is never guessed.
+    const license = clean(get(r, 'license'));
+
     const about = paragraphs(get(r, 'about'));
     const coverage = paragraphs(get(r, 'coverage'));
     const fields = items(get(r, 'fields'));
@@ -259,6 +270,8 @@ export function buildCities(rows, today = new Date()) {
       stateCode: st.code,
       url,
       publisher: clean(get(r, 'publisher')),
+      officialUrl,
+      license,
       about,
       coverage,
       fields,

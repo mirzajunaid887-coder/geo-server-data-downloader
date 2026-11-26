@@ -62,7 +62,8 @@ export const ParcelCityPage: React.FC = () => {
     spatialCoverage: where,
     isAccessibleForFree: true,
     distribution: [{ '@type': 'DataDownload', contentUrl: c.url, encodingFormat: 'ArcGIS REST' }],
-    ...(c.checked ? { dateModified: c.checked } : {}),
+    ...(c.officialUrl ? { sameAs: c.officialUrl } : {}),
+    ...(c.license ? { license: c.license } : {}),
   };
 
   return (
@@ -93,6 +94,8 @@ export const ParcelCityPage: React.FC = () => {
           <dt style={{ fontWeight: 700 }}>Place</dt><dd style={{ margin: 0 }}>{c.city}, {c.state}</dd>
           {c.county && <><dt style={{ fontWeight: 700 }}>County</dt><dd style={{ margin: 0 }}>{c.county}</dd></>}
           {c.publisher && <><dt style={{ fontWeight: 700 }}>Published by</dt><dd style={{ margin: 0 }}>{c.publisher}</dd></>}
+          {c.officialUrl && <><dt style={{ fontWeight: 700 }}>Official source page</dt><dd style={{ margin: 0 }}><a href={c.officialUrl} target="_blank" rel="noopener noreferrer">{(() => { try { return new URL(c.officialUrl).hostname.replace(/^www\./, ''); } catch { return 'Open official page'; } })()}</a></dd></>}
+          {c.license && <><dt style={{ fontWeight: 700 }}>License</dt><dd style={{ margin: 0 }}>{/^https?:\/\//i.test(c.license) ? <a href={c.license} target="_blank" rel="noopener noreferrer">Publisher's license terms</a> : c.license}</dd></>}
           {c.checked && <><dt style={{ fontWeight: 700 }}>Link last checked</dt><dd style={{ margin: 0 }}><time dateTime={c.checked}>{prettyDate(c.checked)}</time></dd></>}
         </dl>
 

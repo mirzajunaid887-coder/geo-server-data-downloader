@@ -13,6 +13,10 @@ export interface ParcelCity {
   stateCode: string;
   url: string;
   publisher: string;
+  /** Optional official page about the dataset (open data portal or city GIS page), or ''. */
+  officialUrl: string;
+  /** Optional license name or URL stated by the publisher, or ''. */
+  license: string;
   about: string[];
   coverage: string[];
   fields: string[];

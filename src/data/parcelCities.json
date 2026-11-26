@@ -7,6 +7,8 @@
     "stateCode": "AZ",
     "url": "https://gis.mcassessor.maricopa.gov/arcgis/rest/services/ParcelOutline/MapServer/0",
     "publisher": "Maricopa County Assessor",
+    "officialUrl": "https://maps.mcassessor.maricopa.gov/",
+    "license": "User should indenpendtly research and verify information within this dataset or map before relying on it",
     "about": [
       "Parcel outlines from the county assessor, covering Phoenix and the rest of the county."
     ],
@@ -33,6 +35,8 @@
     "stateCode": "ID",
     "url": "https://gis.meridiancity.org/server/rest/services/CD/Parcel_public_Webservice/FeatureServer/0",
     "publisher": "Meridian City",
+    "officialUrl": "https://gis.meridiancity.org/portal/apps/instant/sidebar/index.html?appid=c14c56d218cf4de6897bf14b061b8d53",
+    "license": "",
     "about": [
       "Additional parcel information can be found on the Ada County Assessors Land Records/GIS website at: http://www.adacountyassessor.org/propsys/index.jsp. For specific zoning questions and information about City Code, contact the Current Planning section of the Planning Division at 208.884.5533, planning@meridiancity.org, or www.meridiancity.org/planning. This map us typically updated monthly from Ada County Land Records."
     ],
@@ -57,6 +61,8 @@
     "stateCode": "IL",
     "url": "https://gis.cookcountyil.gov/traditional/rest/services/cookviewer3DynamicLabels/MapServer/0",
     "publisher": "Cook County GIS",
+    "officialUrl": "https://maps.cookcountyil.gov/cookviewer/",
+    "license": "",
     "about": [
       "The county parcel layer behind the Cook County viewer. It covers Chicago and the suburbs."
     ],
@@ -87,6 +93,8 @@
     "stateCode": "NV",
     "url": "https://services1.arcgis.com/F1v0ufATbBQScMtY/ArcGIS/rest/services/ZONING/FeatureServer/5",
     "publisher": "Las Vegas City",
+    "officialUrl": "https://experience.arcgis.com/experience/50802b61584341ad8096b907621c48be",
+    "license": "",
     "about": [
       "This parcel data is also used for Las Vegas City Zoning. It includes the parcel level zoning information. Original parcel data might be different. Please cross check that before using this data."
     ],
@@ -104,6 +112,32 @@
     "indexable": true
   },
   {
+    "slug": "las-cruces-nm",
+    "city": "Las Cruces",
+    "county": "Dona Ana County",
+    "state": "New Mexico",
+    "stateCode": "NM",
+    "url": "https://services1.arcgis.com/ejcbAsQEUUGWEyzb/ArcGIS/rest/services/2025_Zoning_Code/FeatureServer/0",
+    "publisher": "Las Cruces City",
+    "officialUrl": "https://las-cruces.maps.arcgis.com/apps/instant/basic/index.html?appid=e7813e63da3d4f40a1d4a9b3c7c16633",
+    "license": "",
+    "about": [
+      "Parcel Base Zoning data for the city of Las Cruces. This data includes the zoning information for each parcel. Original Parcel data might be different please cross check the information before using this data."
+    ],
+    "coverage": [
+      "This data covers the entire city of Las Cruces, NM juridiction."
+    ],
+    "fields": [
+      "ZONECLASS, Sub_Zoning_District, Char_Over"
+    ],
+    "watchOut": [
+      "If you are using this data please make sure you also cross check it with original parcel data."
+    ],
+    "filterExample": "",
+    "checked": "2026-11-26",
+    "indexable": true
+  },
+  {
     "slug": "new-york-ny",
     "city": "New York",
     "county": "Statewide layer (includes New York City)",
@@ -111,6 +145,8 @@
     "stateCode": "NY",
     "url": "https://nysgeohub.ny.gov/arcgis/rest/services/Parcels/NYS_Tax_Parcels_Public/FeatureServer/1",
     "publisher": "NYS ITS Geospatial Services",
+    "officialUrl": "https://gis.ny.gov/parcels",
+    "license": "The license for this dataset is unspecified",
     "about": [
       "A statewide layer assembled from county parcel files, including New York City."
     ],
@@ -135,6 +171,32 @@
     "indexable": true
   },
   {
+    "slug": "fayetteville-nc",
+    "city": "Fayetteville",
+    "county": "Cumberland",
+    "state": "North Carolina",
+    "stateCode": "NC",
+    "url": "https://gismaps.fayettevillenc.gov/cofpublicgis/rest/services/Base/Parcels/MapServer/0",
+    "publisher": "Fayetteville City",
+    "officialUrl": "https://map.viewprogis.com/vp/fayetteville-nc?widget=8841cfd6-f683-4f3a-9e0c-26a67e914386",
+    "license": "",
+    "about": [
+      "Parcel outlines from the City assessor, covering Fayetteville city."
+    ],
+    "coverage": [
+      "Published by the City of Fayetteville as part of its ViewPro Map service. Use the live extent below to see how far the layer reaches. Check coverage in the map before assuming it covers the whole city."
+    ],
+    "fields": [
+      "ZONING"
+    ],
+    "watchOut": [
+      "If you are using this data please make sure you also cross check it with original parcel data."
+    ],
+    "filterExample": "",
+    "checked": "2026-11-26",
+    "indexable": true
+  },
+  {
     "slug": "houston-tx",
     "city": "Houston",
     "county": "Harris County",
@@ -142,6 +204,8 @@
     "stateCode": "TX",
     "url": "https://mycity2.houstontx.gov/gisweb02/rest/services/HoustonMap/Cadastral/MapServer/0",
     "publisher": "City of Houston GIS",
+    "officialUrl": "https://experience.arcgis.com/experience/024f52f00e214e8691463ecb84dca725",
+    "license": "",
     "about": [
       "City-published parcels with tax, land use and flood fields."
     ],
