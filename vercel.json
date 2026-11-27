@@ -41,6 +41,16 @@
       "source": "/blog/free-gis-data-sources-for-environmental-analysis",
       "destination": "/blog/ten-free-gis-data-sources-every-analyst-should-know",
       "permanent": true
+    },
+    {
+      "source": "/blog/mastering-shapefile-to-geojson-conversion",
+      "destination": "/blog/convert-shapefile-to-geojson-online",
+      "permanent": true
+    },
+    {
+      "source": "/blog/convert-geopdf-to-geotiff",
+      "destination": "/blog/how-to-convert-geopdf-to-geotiff",
+      "permanent": true
     }
   ],
   "headers": [

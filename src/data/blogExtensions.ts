@@ -1,4 +1,5 @@
 import type { BlogPost, ContentBlock } from '../types/blog';
+import { GUIDE_POSTS } from './blogGuides';
 
 /**
  * Additions to existing posts (inserted before the closing "Summary" section) and brand-new posts.
@@ -47,6 +48,28 @@ export const EXTENSIONS: Record<string, { modified: string; blocks: ContentBlock
       ]),
       p('Our [Downloader](/download) does this swap for you. Paste the WMS link, and it looks for the WFS on the same server, picks the feature type that matches the layers parameter and loads it. If the server has no WFS, it tells you so, and then the only option is to ask the data owner for a download link.'),
       callout('info', 'Not every WMS has a WFS', 'Some servers publish a layer only as a picture on purpose, for example for licensing reasons. In that case no tool can extract the vector data from the WMS.'),
+      h2('Can you use WMS and WFS together?'),
+      p('Yes, and it is a common pattern in WebGIS development. Consider a zoning application: WMS displays the zoning map with its colours and symbols, while WFS provides the actual zoning polygons and attribute information. Users look at the map through WMS, and the application requests individual features through WFS only when someone needs detail or a spatial analysis. This combines fast visualisation with access to the underlying data.'),
+      h2('How to connect WMS and WFS in QGIS'),
+      p('QGIS can connect to both services from the Data Source Manager (Layer, then Data Source Manager).'),
+      h3('Add a WMS layer'),
+      ol([
+        'Open QGIS and the Data Source Manager.',
+        'Select WMS/WMTS.',
+        'Click New and enter the WMS service URL.',
+        'Connect to the service.',
+        'Select a layer and click Add.',
+      ]),
+      h3('Add a WFS layer'),
+      ol([
+        'In the Data Source Manager, select WFS / OGC API - Features.',
+        'Create a new connection using the WFS service URL.',
+        'Connect to the server.',
+        'Select the feature layer you need.',
+        'Add it to your project.',
+      ]),
+      p('The WMS layer displays as a map image, while the WFS layer gives you vector features that you can inspect, filter and analyse in QGIS. Always check the server capabilities, output formats, access permissions and feature limits before requesting large datasets.'),
+      p('For more detail on the standards, see the GeoServer reference pages for [WMS](https://docs.geoserver.org/main/en/user/services/wms/reference/) and [WFS](https://docs.geoserver.org/main/en/user/services/wfs/reference.html).'),
       h2('Find public WFS and ArcGIS services by topic'),
       p('If you are looking for datasets and not a specific link, our [parcel data by city](/data) page lists official layers for big US cities and counties, and the guides there cover zoning, flood zones, building footprints, Census boundaries and roads.'),
     ],
@@ -65,74 +88,8 @@ export const EXTENSIONS: Record<string, { modified: string; blocks: ContentBlock
   },
 };
 
-export const NEW_POSTS: BlogPost[] = [
-  {
-    slug: 'convert-geopdf-to-geotiff',
-    title: 'How to Convert a GeoPDF to a GeoTIFF (Keep the Projection)',
-    description:
-      'What a GeoPDF is, how its georeferencing works, and how to convert each page and inset map to a GeoTIFF that keeps the same coordinate system. Free, in your browser.',
-    keywords: 'convert GeoPDF to GeoTIFF, GeoPDF to GeoTIFF online, GeoPDF georeferencing, PDF to GeoTIFF with projection, ArcGIS PDF export GeoTIFF',
-    author: 'Muhammad Junaid Baig',
-    datePublished: '2026-11-23',
-    dateModified: '2026-11-23',
-    readingTimeMinutes: 7,
-    category: 'Tutorial',
-    tags: ['GeoPDF', 'GeoTIFF', 'Raster', 'Tutorial'],
-    excerpt: 'A GeoPDF is a map that knows where it is. Here is how to turn it into a GeoTIFF that lines up with your other layers.',
-    content: [
-      p('A GeoPDF looks like any PDF map, but it also stores where on Earth the map sits. GIS programs such as ArcGIS Pro, ArcMap and QGIS can export one, and organisations often send maps in this format because anyone can open it in a normal PDF reader. The problem starts when you want to use the map as a layer. A plain PDF has no place in a GIS project, and a GeoPDF only works as a layer in programs that read the georeferencing.'),
-      p('Converting the GeoPDF to a GeoTIFF solves this. A GeoTIFF is an image that carries its coordinate system and position, so it opens in any GIS, web mapping library or image tool that supports GeoTIFF.'),
-      h2('How a GeoPDF stores its location'),
-      p('The PDF standard defines a way to attach a coordinate system to part of a page. A page can hold one or more "viewports", each one a rectangle on the page that is georeferenced. For each viewport the file stores three things:'),
-      ul([
-        'The rectangle of the map area on the page, in PDF points (1/72 inch).',
-        'A coordinate system, usually written as WKT text, for example an Albers or UTM projection.',
-        'Control points that pair positions on the page with latitude and longitude values.',
-      ]),
-      p('That is why a single page can contain several georeferenced maps, such as a main map plus insets for Alaska and Hawaii. Each viewport has its own control points and sometimes its own projection.'),
-      h2('What the conversion does'),
-      ol([
-        'Reads every page of the PDF and lists each georeferenced viewport.',
-        'Draws the chosen viewport as an image at the resolution you pick (DPI).',
-        'Converts the control points into the PDF\'s own coordinate system and fits the position of the image to them.',
-        'Writes a GeoTIFF with that coordinate system and extent.',
-      ]),
-      callout('info', 'It is an image of the map', 'The GeoTIFF is a picture of what the PDF shows. Vector lines, polygons and text are not rebuilt as data, and PDF layers are merged into one image.'),
-      h2('Convert a GeoPDF to GeoTIFF with this site'),
-      ol([
-        'Open the [GeoPDF to GeoTIFF converter](/geopdf-to-geotiff).',
-        'Upload the PDF. The tool reads every page and lists each map and inset it finds.',
-        'Tick the maps you want, or leave them all ticked to convert everything.',
-        'Choose a resolution. 150 DPI is a good start. Use 300 DPI or more when you need fine detail.',
-        'Press Convert, then download each GeoTIFF or all of them as one ZIP.',
-      ]),
-      p('The file never leaves your computer. The conversion happens in your browser, so even large or sensitive maps stay private.'),
-      h2('Choosing the resolution'),
-      p('The pixel size on the ground depends on the map scale and the DPI. A national map at 150 DPI has pixels of several kilometres, which is fine for an overview. A city map at 300 DPI has pixels of a few metres. Higher DPI makes the file larger without adding information the PDF does not contain, so test a low value first and increase it only if the result is too coarse.'),
-      h2('Check the result in your GIS'),
-      ul([
-        'Open the GeoTIFF with a known reference layer, such as state boundaries or a basemap, and check that features line up.',
-        'Look at the layer properties to confirm the coordinate system matches the PDF.',
-        'If the position is off, the PDF may have been georeferenced with a different datum than expected. Try the layer in the PDF\'s original software to compare.',
-      ]),
-      h2('What it cannot convert'),
-      ul([
-        'PDFs with no georeferencing. If the export option "Georeference information" was turned off, the PDF holds only a picture.',
-        'Scanned maps. A scan has no embedded location, so it must be georeferenced in a GIS first.',
-        'Older TerraGo-style GeoPDFs. They use a different internal structure.',
-      ]),
-      h2('Related tools'),
-      p('To pull the actual vector data instead of a picture, use the [Downloader](/download) with the data source behind the map. To convert vector formats, use the [Converter](/converter). For help finding the data, see our [US data guides](/data).'),
-      h2('Frequently asked questions'),
-      h3('Does the GeoTIFF use the same projection as the PDF?'),
-      p('Yes. The coordinate system stored in the PDF is written into the GeoTIFF.'),
-      h3('Can I convert a PDF with many pages?'),
-      p('Yes. Pick the pages and insets you want, or convert all of them in one run.'),
-      h3('Why is my output so large?'),
-      p('The image size depends on the page size and DPI. Lower the DPI to make the file smaller.'),
-    ],
-  },
-];
+/** New posts. The step-by-step converter guides live in blogGuides.ts. */
+export const NEW_POSTS: BlogPost[] = [...GUIDE_POSTS];
 
 /** Inserts extension blocks before the last heading of a post (its "Summary"/"Wrapping up"). */
 export function applyExtensions(posts: BlogPost[]): BlogPost[] {

@@ -211,6 +211,24 @@
     "indexable": true
   },
   {
+    "slug": "fargo-nd",
+    "city": "Fargo",
+    "county": "Cass",
+    "state": "North Dakota",
+    "stateCode": "ND",
+    "url": "https://gis.cityoffargo.com/arcgis/rest/services/Basemap/FargoParcels/MapServer/0",
+    "publisher": "Fargo City",
+    "officialUrl": "https://gis.cityoffargo.com/link/wab/",
+    "license": "",
+    "about": [],
+    "coverage": [],
+    "fields": [],
+    "watchOut": [],
+    "filterExample": "",
+    "checked": null,
+    "indexable": false
+  },
+  {
     "slug": "houston-tx",
     "city": "Houston",
     "county": "Harris County",

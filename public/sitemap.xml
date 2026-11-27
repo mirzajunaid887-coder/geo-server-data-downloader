@@ -23,7 +23,7 @@
   </url>
   <url>
     <loc>https://www.geo-server-data-downloader.com/blog</loc>
-    <lastmod>2026-11-23</lastmod>
+    <lastmod>2026-11-27</lastmod>
   </url>
   <url>
     <loc>https://www.geo-server-data-downloader.com/about</loc>
@@ -94,6 +94,14 @@
     <lastmod>2026-11-23</lastmod>
   </url>
   <url>
+    <loc>https://www.geo-server-data-downloader.com/blog/how-to-convert-geopdf-to-geotiff</loc>
+    <lastmod>2026-11-27</lastmod>
+  </url>
+  <url>
+    <loc>https://www.geo-server-data-downloader.com/blog/convert-shapefile-to-geojson-online</loc>
+    <lastmod>2026-11-27</lastmod>
+  </url>
+  <url>
     <loc>https://www.geo-server-data-downloader.com/blog/how-to-find-free-parcel-data-us-counties</loc>
     <lastmod>2026-11-23</lastmod>
   </url>
@@ -104,14 +112,6 @@
   <url>
     <loc>https://www.geo-server-data-downloader.com/blog/how-to-extract-data-from-arcgis-online</loc>
     <lastmod>2026-11-23</lastmod>
-  </url>
-  <url>
-    <loc>https://www.geo-server-data-downloader.com/blog/convert-geopdf-to-geotiff</loc>
-    <lastmod>2026-11-23</lastmod>
-  </url>
-  <url>
-    <loc>https://www.geo-server-data-downloader.com/blog/mastering-shapefile-to-geojson-conversion</loc>
-    <lastmod>2026-11-16</lastmod>
   </url>
   <url>
     <loc>https://www.geo-server-data-downloader.com/blog/converting-gis-data-to-kml-for-google-earth</loc>

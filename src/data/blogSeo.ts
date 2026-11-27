@@ -24,6 +24,8 @@ export const REDIRECTED_SLUGS: Record<string, string> = {
   'how-to-access-public-parcel-data-via-gis': 'how-to-find-free-parcel-data-us-counties',
   'using-wfs-to-download-spatial-data': 'complete-guide-wfs-web-feature-service',
   'geopackage-vs-shapefile-the-modern-standard': 'geojson-vs-shapefile-vs-geopackage',
+  'mastering-shapefile-to-geojson-conversion': 'convert-shapefile-to-geojson-online',
+  'convert-geopdf-to-geotiff': 'how-to-convert-geopdf-to-geotiff',
   'free-gis-data-sources-for-environmental-analysis': 'ten-free-gis-data-sources-every-analyst-should-know',
 };
 

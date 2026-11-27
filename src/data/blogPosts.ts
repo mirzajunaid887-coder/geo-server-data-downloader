@@ -746,51 +746,6 @@ const BASE_POSTS: BlogPost[] = [
   },
 
   // ==================================================================
-  // POST 13 (NEW)
-  // ==================================================================
-  {
-    slug: 'mastering-shapefile-to-geojson-conversion',
-    title: 'How to Convert Shapefile to GeoJSON (Free Guide)',
-    description: 'Convert a Shapefile to GeoJSON the right way: reproject to WGS84, handle field names and encoding, and shrink files for web maps.',
-    keywords: 'convert shapefile to GeoJSON, shapefile to GeoJSON, GeoJSON conversion, ogr2ogr GeoJSON, reproject to WGS84, shapefile web map',
-    author: 'Muhammad Junaid Baig',
-    datePublished: '2026-11-01',
-    dateModified: '2026-11-16',
-    readingTimeMinutes: 4,
-    category: 'Tutorial',
-    tags: ['Shapefile', 'GeoJSON', 'Conversion', 'Web Mapping'],
-    excerpt: 'A comprehensive guide on converting legacy Shapefiles into modern GeoJSON for web applications. Learn the best practices and avoid common conversion pitfalls.',
-    content: [
-      { type: 'paragraph', text: 'If you are moving from desktop GIS to web mapping, converting Shapefiles to GeoJSON is one of the first skills you need. The Shapefile is the long-standing exchange format for desktop GIS, while GeoJSON is the format that web mapping libraries read natively. The conversion looks like a single click, but several things change quietly on the way: the [coordinate system](/blog/understanding-coordinate-systems-and-projections), field names, data types, text encoding and file size. This guide explains each of them so you can check your result instead of trusting it.' },
-      { type: 'heading', level: 2, text: 'Why convert Shapefile to GeoJSON?' },
-      { type: 'paragraph', text: 'Shapefiles are excellent for archiving and desktop analysis, but a browser cannot read them directly. GeoJSON is a JSON-based format, so JavaScript can parse it with no extra software, and every major web mapping library can display it.' },
-      { type: 'list', items: ['Native support in Leaflet, MapLibre GL JS, OpenLayers and most other web mapping libraries.', 'Readable in any text editor, which makes debugging a bad record much easier.', 'One file instead of a bundle of .shp, .shx, .dbf and .prj files that must stay together.', 'Works well with Git, so changes to a small dataset can be reviewed as text.'] },
-      { type: 'heading', level: 2, text: 'What changes during conversion' },
-      { type: 'table', headers: ['Item', 'In the Shapefile', 'In the GeoJSON'], rows: [['Coordinate system', 'Any projection, stored in the .prj file', 'WGS84 longitude and latitude (EPSG:4326) in the current specification'], ['Field names', 'Limited to 10 characters', 'No practical limit'], ['Dates', 'Date only, no time of day', 'Written as text, usually in ISO 8601 form'], ['Missing values', 'Often stored as blanks or zeros', 'Can be a true null'], ['Text encoding', 'Set by a .cpg file or a code page, and often missing', 'UTF-8'], ['Files', 'Several files that must travel together', 'A single file']] },
-      { type: 'heading', level: 2, text: 'The coordinate system step that people miss' },
-      { type: 'paragraph', text: 'RFC 7946, the current GeoJSON specification, defines coordinates as longitude and latitude in WGS84. A Shapefile in State Plane feet or UTM metres therefore has to be reprojected during conversion. If the tool skips this, the file will load but the features will land far from where they belong, usually near the coordinate origin off the coast of Africa. Open the .prj file in a text editor before you start so you know what the source coordinate system is, and check a few features on a basemap afterwards.' },
-      { type: 'code', language: 'bash', code: `ogr2ogr -f GeoJSON -t_srs EPSG:4326 \\
-  -lco COORDINATE_PRECISION=6 \\
-  parcels.geojson parcels.shp` },
-      { type: 'paragraph', text: 'The command above uses [GDAL](/blog/top-5-tools-for-gis-data-conversion). The -t_srs option reprojects to WGS84, and COORDINATE_PRECISION=6 rounds coordinates to six decimal places, which is roughly the size of a hand at the equator and is plenty for most mapping.' },
-      { type: 'heading', level: 2, text: 'Converting in your browser' },
-      { type: 'image', src: '/images/blog/converter-geojson.png', alt: 'GIS Converter with GeoJSON selected as the output format', caption: 'Converting a Shapefile to GeoJSON in the browser.', width: 1200, height: 675 },
-      { type: 'paragraph', text: 'You do not need to install GDAL or QGIS for a one-off conversion. Our converter runs in the browser, so the file you choose is processed on your own computer.' },
-      { type: 'list', ordered: true, items: ['Zip the Shapefile components (.shp, .shx, .dbf and .prj) into one archive.', 'Open the [GIS Converter](/converter) tool and upload the ZIP.', 'Choose GeoJSON as the output format.', 'Run the conversion and download the .geojson file.', 'Open it in a viewer and compare the feature count with the original.'] },
-      { type: 'callout', variant: 'warning', title: 'Include the .prj file', text: 'Without the .prj file a converter cannot know the source coordinate system. It may assume the data is already in longitude and latitude, and the result will be in the wrong place if it is not.' },
-      { type: 'heading', level: 2, text: 'Common problems and how to spot them' },
-      { type: 'list', items: ['Accented characters appear as question marks or odd symbols. The .dbf file was written in a legacy code page and no .cpg file declared it. Re-run the conversion with the correct source encoding.', 'Very large integers lose digits. JavaScript numbers are only exact up to 9,007,199,254,740,991, so long ID numbers such as some parcel or account numbers are safer stored as text before conversion.', 'Polygons with holes fill in. Check that the source geometry is valid. Self-intersecting rings sometimes need repairing in your GIS before export.', 'Dates look wrong. A Shapefile date has no time or time zone. If a tool adds a time, treat it as midnight with no meaning.', 'The file will not load in a web map. A single bad coordinate, such as a value outside -180 to 180 or -90 to 90, will make some libraries reject the whole file.'] },
-      { type: 'heading', level: 2, text: 'Making the GeoJSON light enough for the web' },
-      { type: 'paragraph', text: 'GeoJSON stores coordinates as text, so files are usually much larger than the Shapefile they came from. For a map that real visitors will load, reduce the size before publishing:' },
-      { type: 'list', items: ['Round coordinates to six decimal places, or fewer for coarse overview maps.', 'Remove attribute columns the map never uses.', 'Simplify geometry with a tool such as Mapshaper. Simplification removes vertices, so keep the original for analysis.', 'Serve the file with Gzip or Brotli compression, which shrinks text files dramatically.', 'For very large datasets, consider vector tiles instead of one big GeoJSON file.'] },
-      { type: 'heading', level: 2, text: 'A short checklist after converting' },
-      { type: 'list', ordered: true, items: ['The feature count matches the source.', 'A few features are in the correct place on a basemap.', 'Field names and values are still recognisable, including accents.', 'The file size is acceptable for how it will be used.', 'You still have the original Shapefile as your master copy.'] },
-      { type: 'heading', level: 2, text: 'Summary' },
-      { type: 'paragraph', text: 'Converting a Shapefile to GeoJSON is easy to do and easy to get subtly wrong. Confirm the source coordinate system, expect field names and types to change, check the result on a map, and optimise the file before it goes on a website.' },
-    ],
-  },
-
-  // ==================================================================
   // POST 14 (NEW)
   // ==================================================================
   {
@@ -838,15 +793,15 @@ const BASE_POSTS: BlogPost[] = [
   // ==================================================================
   {
     slug: 'wms-vs-wfs-choosing-the-right-web-service',
-    title: 'WMS vs WFS: Differences and When to Use Each',
-    description: 'WMS returns map images, WFS returns the actual vector data. See the differences, example requests, version pitfalls and when to use each one.',
-    keywords: 'WMS vs WFS, difference between WMS and WFS, Web Map Service, Web Feature Service, OGC standards, GetMap, GetFeature',
+    title: 'WMS vs WFS: Key Differences and When to Use Each',
+    description: 'Understand WMS vs WFS in GIS. Learn their key differences, how they work, and when to use each for WebGIS, spatial analysis, and geographic data access.',
+    keywords: 'WMS vs WFS, WMS and WFS difference, Web Map Service, Web Feature Service, WMS vs WFS in QGIS, OGC web services, WFS GIS data, WebGIS services, GetMap, GetFeature',
     author: 'Muhammad Junaid Baig',
     datePublished: '2026-11-01',
     dateModified: '2026-11-16',
     readingTimeMinutes: 5,
     category: 'Guide',
-    tags: ['WMS', 'WFS', 'OGC', 'Web Mapping'],
+    tags: ['WMS', 'WFS', 'OGC', 'Web Mapping', 'WebGIS'],
     excerpt: 'A clear comparison of WMS and WFS. Learn why one returns images and the other returns raw data, and when to use each in your GIS projects.',
     content: [
       { type: 'paragraph', text: 'Sooner or later every GIS user pastes a web service URL into a tool and gets either a pretty picture or a table of features, and it is not always obvious why. The URL probably pointed at one of two Open Geospatial Consortium (OGC) standards: WMS or WFS. They look similar from the outside, since both are served over HTTP and both describe themselves with a capabilities document, but they answer different questions. WMS answers "what does this area look like?" and WFS answers "what features are in this area, and what are their attributes?"' },
@@ -1513,7 +1468,7 @@ out geom;` },
     tags: ['Tools', 'Conversion', 'GDAL', 'QGIS'],
     excerpt: 'Compare the top 5 tools for converting GIS data. Find the right solution for your skill level and workflow.',
     content: [
-      { type: 'paragraph', text: 'Converting spatial data from one format to another is a routine part of GIS work. [Shapefile to GeoJSON](/blog/mastering-shapefile-to-geojson-conversion), KML to GeoPackage, CSV to Shapefile. There are many tools that can do it, and the best one depends on how often you convert, how much data you have and what else you need to do with it. Here are five that cover most situations. One of them is our own browser converter, so keep that in mind when weighing the comparison.' },
+      { type: 'paragraph', text: 'Converting spatial data from one format to another is a routine part of GIS work. [Shapefile to GeoJSON](/blog/convert-shapefile-to-geojson-online), KML to GeoPackage, CSV to Shapefile. There are many tools that can do it, and the best one depends on how often you convert, how much data you have and what else you need to do with it. Here are five that cover most situations. One of them is our own browser converter, so keep that in mind when weighing the comparison.' },
       { type: 'heading', level: 2, text: 'What is geospatial data conversion?' },
       { type: 'paragraph', text: 'Geospatial data conversion means changing spatial data from one format or coordinate system to another, for example from Shapefile to GeoJSON, or from State Plane to WGS84. A good conversion keeps the geometry, the attributes and the coordinate system intact, or tells you clearly what it could not keep.' },
       { type: 'heading', level: 2, text: '1. GDAL and ogr2ogr' },
